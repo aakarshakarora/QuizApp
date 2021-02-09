@@ -29,7 +29,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
 
   final titles = ['Give Quiz', 'Past Quiz Score'];
   final titleIcon = [
-    Icon(Icons.event_note_sharp),
+    Icon(Icons.event_note),
     Icon(Icons.update),
   ];
   final FirebaseAuth _auth = FirebaseAuth.instance;

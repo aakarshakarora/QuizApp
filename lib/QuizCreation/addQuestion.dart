@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/Dashboard/F_Dashboard/dashboardFaculty.dart';
 import 'package:quiz_app/Utilities/buttons.dart';
-
+int currentCount=1;
 class AddQuestion extends StatefulWidget {
   @override
   AddQuestion(this.accessCode,this.questionCount);
@@ -20,7 +20,7 @@ class _AddQuestionState extends State<AddQuestion> {
   final TextEditingController _option2Controller = TextEditingController();
   final TextEditingController _option3Controller = TextEditingController();
   final TextEditingController _option4Controller = TextEditingController();
-  int currentCount=1;
+
   _buildQuestionField() {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 5),
@@ -149,12 +149,13 @@ class _AddQuestionState extends State<AddQuestion> {
   @override
   void initState() {
     // TODO: implement initState
-    print(currentCount);
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -178,11 +179,11 @@ class _AddQuestionState extends State<AddQuestion> {
                         context: context,
                         text: 'Submit',
                         onPressed: () async {
-                          print(_buildQuestionController.value);
-                          print(_option1Controller.value);
-                          print(_option2Controller.value);
-                          print(_option3Controller.value);
-                          print(_option4Controller.value);
+                          print(_buildQuestionController.text);
+                          print(_option1Controller.text);
+                          print(_option2Controller.text);
+                          print(_option3Controller.text);
+                          print(_option4Controller.text);
                           if (_formKey.currentState.validate()) {
                             FirebaseFirestore.instance
                                 .collection('Quiz')
@@ -229,7 +230,11 @@ class _AddQuestionState extends State<AddQuestion> {
                               "Ques": _buildQuestionController.text,
                             }).then((_) {
                               //_displaySnackBar(context);
-
+                              setState(() {
+                                currentCount++;
+                                print(currentCount);
+                                print(widget.questionCount);
+                              });
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
