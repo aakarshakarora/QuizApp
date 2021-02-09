@@ -5,6 +5,7 @@ import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:quiz_app/MyProfile/F_Profile/profileFaculty.dart';
 import 'package:quiz_app/Pages/FuturePage.dart';
 import 'package:quiz_app/Pages/startPage.dart';
+import 'package:quiz_app/QuizCreation/quizDesc.dart';
 
 
 import 'package:url_launcher/url_launcher.dart';
@@ -232,11 +233,11 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
                         ),
                         onTap: () {
                           if (index == 0) {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //       builder: (context) => AddRequest()),
-                            // );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => QuizDesc()),
+                            );
                           }
                           if (index == 1) {
                             // Navigator.push(
