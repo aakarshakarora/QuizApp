@@ -478,7 +478,9 @@ class _QuizDescState extends State<QuizDesc> {
                             print(descriptionController.toString());
                             if (_formKey.currentState.validate()) {
 
-                              //Add SubCollection
+
+
+
                               FirebaseFirestore.instance
                                   .collection('Quiz').doc(accessCode)
                                   .set({
@@ -491,12 +493,13 @@ class _QuizDescState extends State<QuizDesc> {
                                 "endDate": endDate,
                                 "CreationDate": requestDate,
                                 "Creator": docRef
-                              }).then((_) {
+                              }) .then((_) {
+
+
+
                                 _displaySnackBar(context);
-                                descriptionController.clear();
-                                subjectNameController.clear();
-                                startDate = null;
-                                endDate = null;
+
+
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -507,6 +510,13 @@ class _QuizDescState extends State<QuizDesc> {
                               });
                             }
                           }
+                          await FirebaseFirestore
+                              .instance
+                              .collection('Quiz')
+                              .doc(accessCode)
+                              .collection(
+                              accessCode).add({ }
+                          );
                         },
                         minWidth: 200.0,
                         height: 50.0,
