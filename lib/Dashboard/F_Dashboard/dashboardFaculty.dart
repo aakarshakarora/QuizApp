@@ -31,7 +31,7 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
 
   final titles = ['Create Quiz', 'Preview Quiz'];
   final titleIcon = [
-    Icon(Icons.event_note_sharp),
+    Icon(Icons.event_note),
     Icon(Icons.update),
   ];
   final FirebaseAuth _auth = FirebaseAuth.instance;
