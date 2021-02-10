@@ -6,6 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:quiz_app/Pages/FuturePage.dart';
 import 'dart:math';
 
+import 'package:quiz_app/QuizCreation/addQuestion.dart';
+
 
 class QuizDesc extends StatefulWidget {
   @override
@@ -503,20 +505,14 @@ class _QuizDescState extends State<QuizDesc> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => FuturePage()),
+                                      builder: (context) => AddQuestion(accessCode,questionCount)),
                                 );
                               }).catchError((onError) {
                                 _displayError(context, onError);
                               });
                             }
                           }
-                          await FirebaseFirestore
-                              .instance
-                              .collection('Quiz')
-                              .doc(accessCode)
-                              .collection(
-                              accessCode).add({ }
-                          );
+
                         },
                         minWidth: 200.0,
                         height: 50.0,
