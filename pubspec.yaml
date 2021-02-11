@@ -29,6 +29,12 @@ dependencies:
   image_picker: ^0.6.7+12
   url_launcher: ^5.5.3
   intl: ^0.16.1
+  excel: ^1.1.5
+  syncfusion_flutter_xlsio: ^18.4.42-beta
+  path_provider: ^1.6.27
+  open_file: ^3.0.3
+
+
   flutter:
     sdk: flutter
 
