@@ -8,7 +8,6 @@ import 'dart:math';
 
 import 'package:quiz_app/QuizCreation/addQuestion.dart';
 
-
 class QuizDesc extends StatefulWidget {
   @override
   _QuizDescState createState() => _QuizDescState();
@@ -40,8 +39,6 @@ class _QuizDescState extends State<QuizDesc> {
   int questionCount = 1;
   int maxScore = 1;
 
-
-
   DateTime startDate;
   DateTime endDate;
   DateTime requestDate = DateTime.now();
@@ -50,14 +47,66 @@ class _QuizDescState extends State<QuizDesc> {
   bool endDateError = false;
   bool read = false;
 
-  static const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  static const _chars =
+      'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
   Random _rnd = Random();
 
   String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
       length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 
   String accessCode;
-
+  List questionCountList = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50
+  ];
 
   //Enter description
   _buildDescriptionField() {
@@ -65,8 +114,7 @@ class _QuizDescState extends State<QuizDesc> {
       padding: EdgeInsets.symmetric(vertical: 5),
       child: TextFormField(
         controller: descriptionController,
-        decoration:InputDecoration(
-            labelText: 'Enter Description:'),
+        decoration: InputDecoration(labelText: 'Enter Description:'),
         // ignore: missing_return
         validator: (String value) {
           if (value.isEmpty) {
@@ -99,8 +147,9 @@ class _QuizDescState extends State<QuizDesc> {
       ),
     );
   }
+
   Widget _scoreCountSlider() {
-    return Row(
+    return Column(
       children: [
         Text("Max Score: ",
             style: TextStyle(
@@ -109,21 +158,19 @@ class _QuizDescState extends State<QuizDesc> {
                 fontWeight: FontWeight.w500,
                 color: Colors.black)),
         Container(
-          width: 150,
+          width: MediaQuery.of(context).size.width,
           child: Slider(
               min: 1,
-              max: 40,
+              max: 50,
               // activeColor: peach,
               inactiveColor: Colors.grey,
-              divisions: 20,
+              divisions: 40,
               value: maxScore.toDouble(),
               onChanged: (double value) {
                 setState(() {
                   maxScore = value.round();
                   _formKey.currentState.save();
                   print("test");
-
-
                 });
               }),
         ),
@@ -137,8 +184,7 @@ class _QuizDescState extends State<QuizDesc> {
     );
   }
 
-
-  //Day Count Button
+  //Day Count Dropdown
   Widget _questionCount() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -152,40 +198,20 @@ class _QuizDescState extends State<QuizDesc> {
         SizedBox(
           width: 5,
         ),
-        FlatButton(
-          shape: CircleBorder(),
-          //color: peach,
-          onPressed: minus,
-          child: new Icon(
-            Icons.remove,
-            color: Colors.black,
-          ),
-          //backgroundColor: Colors.white,
-        ),
-        SizedBox(
-          width: 5,
-        ),
-        new Text(
-          '$questionCount',
-          style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-              fontFamily: 'PoppinsBold'),
-        ),
-        SizedBox(
-          width: 5,
-        ),
-        FlatButton(
-          shape: CircleBorder(),
-          //color: peach,
-          onPressed: add,
-          child: new Icon(
-            Icons.add,
-            color: Colors.black,
-          ),
-          // backgroundColor: Colors.white,
-        ),
+        DropdownButton(
+          value: questionCount,
+          onChanged: (newValue) {
+            setState(() {
+              questionCount = newValue;
+            });
+          },
+          items: questionCountList.map((valueItem) {
+            return DropdownMenuItem(
+              value: valueItem,
+              child: Text(valueItem.toString()),
+            );
+          }).toList(),
+        )
       ],
     );
   }
@@ -193,11 +219,11 @@ class _QuizDescState extends State<QuizDesc> {
   @override
   Widget build(BuildContext context) {
     DocumentReference docRef =
-    FirebaseFirestore.instance.collection('Faculty').doc(userID);
+        FirebaseFirestore.instance.collection('Faculty').doc(userID);
     setState(() {
       print(docRef.toString());
     });
-
+    print(questionCountList);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blueAccent,
@@ -205,7 +231,7 @@ class _QuizDescState extends State<QuizDesc> {
         title: Text(
           'Create Quiz',
           style:
-          TextStyle(fontFamily: 'PoppinsBold', fontWeight: FontWeight.bold),
+              TextStyle(fontFamily: 'PoppinsBold', fontWeight: FontWeight.bold),
         ),
       ),
       body: SingleChildScrollView(
@@ -238,7 +264,7 @@ class _QuizDescState extends State<QuizDesc> {
                               height: 41,
                               decoration: BoxDecoration(
                                 borderRadius:
-                                BorderRadius.all(Radius.circular(12)),
+                                    BorderRadius.all(Radius.circular(12)),
 //                                border: Border.all(
 //                                    color: Color.fromRGBO(248, 248, 255, 1)),
                               ),
@@ -291,7 +317,7 @@ class _QuizDescState extends State<QuizDesc> {
                                 child: Text(
                                     startDate != null
                                         ? DateFormat('d MMM y on h:mm a')
-                                        .format(startDate)
+                                            .format(startDate)
                                         : 'Select Date & Time',
                                     style: TextStyle(
                                         fontFamily: 'Poppins',
@@ -302,12 +328,12 @@ class _QuizDescState extends State<QuizDesc> {
                             ),
                             startDateError
                                 ? Text(
-                              "Start Time is Required",
-                              style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  color: Colors.red,
-                                  fontSize: 11),
-                            )
+                                    "Start Time is Required",
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        color: Colors.red,
+                                        fontSize: 11),
+                                  )
                                 : Container(),
                           ],
                         ),
@@ -318,7 +344,7 @@ class _QuizDescState extends State<QuizDesc> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(12)),
                         border:
-                        Border.all(color: Color.fromRGBO(248, 248, 255, 1)),
+                            Border.all(color: Color.fromRGBO(248, 248, 255, 1)),
                       ),
                       child: FlatButton(
                         onPressed: () async {
@@ -330,7 +356,7 @@ class _QuizDescState extends State<QuizDesc> {
                                 endDate = value.add(Duration(
                                     hours: endDate != null ? endDate.hour : 0,
                                     minutes:
-                                    endDate != null ? endDate.minute : 0));
+                                        endDate != null ? endDate.minute : 0));
                               });
                             } else if (startDate != null) {
                               setState(() {
@@ -393,7 +419,7 @@ class _QuizDescState extends State<QuizDesc> {
                                   setState(() {
                                     endDate = value.add(Duration(
                                         hours:
-                                        endDate != null ? endDate.hour : 0,
+                                            endDate != null ? endDate.hour : 0,
                                         minutes: endDate != null
                                             ? endDate.minute
                                             : 0));
@@ -410,7 +436,7 @@ class _QuizDescState extends State<QuizDesc> {
                                     var newDate = endDate.add(Duration(
                                         hours: value.hour - endDate.hour,
                                         minutes:
-                                        value.minute - endDate.minute));
+                                            value.minute - endDate.minute));
                                     if (startDate != null &&
                                         newDate.isAfter(startDate)) {
                                       setState(() {
@@ -430,7 +456,7 @@ class _QuizDescState extends State<QuizDesc> {
                             child: Text(
                                 endDate != null
                                     ? DateFormat('d MMM y on h:mm a')
-                                    .format(endDate)
+                                        .format(endDate)
                                     : 'Select Date & Time',
                                 style: TextStyle(
                                     fontFamily: 'Poppins',
@@ -441,17 +467,16 @@ class _QuizDescState extends State<QuizDesc> {
                         ),
                         endDateError
                             ? Text(
-                          "End Time is Required",
-                          style: TextStyle(
-                              fontFamily: 'Poppins',
-                              color: Colors.red,
-                              fontSize: 11),
-                        )
+                                "End Time is Required",
+                                style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    color: Colors.red,
+                                    fontSize: 11),
+                              )
                             : Container(),
                       ],
                     ),
-
-                    Text("Access Code :"+accessCode)
+                    Text("Access Code :" + accessCode)
                   ],
                 ),
 
@@ -468,7 +493,8 @@ class _QuizDescState extends State<QuizDesc> {
                     builder: (BuildContext context) {
                       return MaterialButton(
                         onPressed: () async {
-                          if (startDate == null || endDate == null) {
+                          if ((startDate == null || endDate == null) &&
+                              (_formKey.currentState.validate())) {
                             setState(() {
                               startDate == null ? startDateError = true : null;
                               endDate == null ? endDateError = true : null;
@@ -479,40 +505,36 @@ class _QuizDescState extends State<QuizDesc> {
                             print(subjectName);
                             print(descriptionController.toString());
                             if (_formKey.currentState.validate()) {
-
-
-
-
                               FirebaseFirestore.instance
-                                  .collection('Quiz').doc(accessCode)
+                                  .collection('Quiz')
+                                  .doc(accessCode)
                                   .set({
                                 "Description": descriptionController.text,
                                 "SubjectName": subjectNameController.text,
-                                "AccessCode":accessCode,
-                                "QuestionCount":questionCount,
-                                "MaxScore":maxScore,
+                                "AccessCode": accessCode,
+                                "QuestionCount": questionCount,
+                                "MaxScore": maxScore,
                                 "startDate": startDate,
                                 "endDate": endDate,
                                 "CreationDate": requestDate,
                                 "Creator": docRef
-                              }) .then((_) {
-
-
-
+                              }).then((_) {
                                 _displaySnackBar(context);
-
-
+                                // descriptionController.clear();
+                                // subjectNameController.clear();
+                                // startDate = null;
+                                // endDate = null;
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => AddQuestion(accessCode,questionCount)),
+                                      builder: (context) =>
+                                          AddQuestion(accessCode,questionCount)),
                                 );
                               }).catchError((onError) {
                                 _displayError(context, onError);
                               });
                             }
                           }
-
                         },
                         minWidth: 200.0,
                         height: 50.0,
@@ -538,18 +560,18 @@ class _QuizDescState extends State<QuizDesc> {
   _displaySnackBar(BuildContext context) {
     final snackBar = SnackBar(
         content: Text(
-          'Desciption Added Successfully',
-          style: TextStyle(fontFamily: 'Poppins'),
-        ));
+      'Desciption Added Successfully',
+      style: TextStyle(fontFamily: 'Poppins'),
+    ));
     Scaffold.of(context).showSnackBar(snackBar);
   }
 
   _displayError(BuildContext context, onError) {
     final snackBar = SnackBar(
         content: Text(
-          onError,
-          style: TextStyle(fontFamily: 'Poppins'),
-        ));
+      onError,
+      style: TextStyle(fontFamily: 'Poppins'),
+    ));
   }
 
   //Select Start Date
@@ -563,11 +585,11 @@ class _QuizDescState extends State<QuizDesc> {
         return Theme(
           data: ThemeData.dark().copyWith(
             colorScheme: ColorScheme.dark(
-              // primary: Colors.blue,
-              // onPrimary: white,
-              // surface: peach,
-              // onSurface: white,
-            ),
+                // primary: Colors.blue,
+                // onPrimary: white,
+                // surface: peach,
+                // onSurface: white,
+                ),
             // dialogBackgroundColor: darkerBlue,
           ),
           child: child,
@@ -588,11 +610,11 @@ class _QuizDescState extends State<QuizDesc> {
         return Theme(
           data: ThemeData.dark().copyWith(
             colorScheme: ColorScheme.dark(
-              // primary: darkerBlue,
-              // onPrimary: white,
-              // surface: peach,
-              // onSurface: darkerBlue,
-            ),
+                // primary: darkerBlue,
+                // onPrimary: white,
+                // surface: peach,
+                // onSurface: darkerBlue,
+                ),
           ),
           child: child,
         );
@@ -612,11 +634,11 @@ class _QuizDescState extends State<QuizDesc> {
         return Theme(
           data: ThemeData.dark().copyWith(
             colorScheme: ColorScheme.dark(
-              // primary: peach,
-              // onPrimary: white,
-              // surface: peach,
-              // onSurface: white,
-            ),
+                // primary: peach,
+                // onPrimary: white,
+                // surface: peach,
+                // onSurface: white,
+                ),
             // dialogBackgroundColor: darkerBlue,
           ),
           child: child,
@@ -631,9 +653,8 @@ class _QuizDescState extends State<QuizDesc> {
     // TODO: implement initState
     super.initState();
     userID = getCurrentUser();
-    accessCode=getRandomString(5);
+    accessCode = getRandomString(5);
   }
-
 
   @override
   void dispose() {
@@ -641,25 +662,5 @@ class _QuizDescState extends State<QuizDesc> {
     subjectNameController.dispose();
     descriptionController.dispose();
   }
-
-  //Add Guest Count
-  void add() {
-    setState(() {
-      questionCount++;
-      _formKey.currentState.save();
-      print("Question Added");
-
-    });
-  }
-
-//Subtract Guest Count
-  void minus() {
-    setState(() {
-      if (questionCount != 1) questionCount--;
-      _formKey.currentState.save();
-
-    });
-  }
-
 
 }
