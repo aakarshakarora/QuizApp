@@ -164,6 +164,7 @@ class _AddQuestionState extends State<AddQuestion> {
             key: _formKey,
             child: Column(
               children: [
+                Text(currentCount.toString()+"/"+widget.questionCount.toString()),
                 _buildQuestionField(),
                 _buildOption1Field(),
                 _buildOption2Field(),
