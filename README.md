@@ -4,7 +4,7 @@
 To improve this form of examination we are developing this app so that the students who put genuine effort in studies get a better result.
 
 # About Proctored Quiz App
-It is an Android Application for MUJ Students primarily which will be used to Evaluate CWS for each subject and prime objective of this app is students don’t perform malpractice which may lead to failure of Course Outcome which ultimately kills motive of subject and Quality education.
+It is an Android Application for MUJ Students primarily, Which will be used to Evaluate CWS for each subject and prime objective of this app is students don’t perform malpractice which may lead to failure of Course Outcome which ultimately kills motive of subject and Quality education.
  
 _Key Feature of this App will be:_
  -Tab Switching Monitoring
