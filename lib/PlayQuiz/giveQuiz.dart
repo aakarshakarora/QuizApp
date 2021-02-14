@@ -7,9 +7,7 @@ class EnterCode extends StatefulWidget {
 }
 
 class _EnterCodeState extends State<EnterCode> {
-
   final accessCodeController = TextEditingController();
-
 
   @override
   Widget build(BuildContext context) {
@@ -32,14 +30,14 @@ class _EnterCodeState extends State<EnterCode> {
                   )),
               keyboardType: TextInputType.text,
               controller: accessCodeController,
-
             ),
             FlatButton(
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => QuizCodeDesc(accessCodeController.text)),
+                      builder: (context) =>
+                          QuizCodeDesc(accessCodeController.text)),
                 );
               },
               child: Text("Submit"),
@@ -59,24 +57,35 @@ class QuizCodeDesc extends StatefulWidget {
 }
 
 class _QuizCodeDescState extends State<QuizCodeDesc> {
+  static String facultyName;
+
   @override
   Widget build(BuildContext context) {
+    var firebaseDB =
+        FirebaseFirestore.instance.collection('Quiz').doc(widget.accessCode);
     return Scaffold(
       appBar: AppBar(
         title: Text("Quiz Description"),
       ),
       body: Container(
         child: FutureBuilder<DocumentSnapshot>(
-            future: FirebaseFirestore.instance
-                .collection('Quiz')
-                .doc(widget.accessCode)
-                .get(),
+            future: firebaseDB.get(),
             builder: (BuildContext context,
                 AsyncSnapshot<DocumentSnapshot> snapshot) {
               if (!snapshot.hasData) {
                 return Center(child: CircularProgressIndicator());
               }
               Map<String, dynamic> data = snapshot.data.data();
+
+              String parameter = data['Creator'].toString().substring(18, 54);
+
+              FirebaseFirestore.instance.doc(parameter).get().then((value) {
+                facultyName = value.data()['F_Name'];
+
+                print(facultyName);
+
+              });
+
               return Column(
                 children: [
                   Text('Subject Name:' + data['SubjectName']),
@@ -86,7 +95,9 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                   Text('Question Count:' + data['QuestionCount'].toString()),
                   Text('Start Time: ' + data['startDate'].toString()),
                   Text('End Time: ' + data['endDate'].toString()),
-                  Text("Creator Name: "),
+
+                  Text("Creator Name: " + facultyName),
+
                   //How to display Creator Name Through Reference
 
                   FlatButton(onPressed: null, child: Text("Give Quiz"))
@@ -95,13 +106,5 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
             }),
       ),
     );
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-print("hello");
-    print(widget.accessCode);
-    super.initState();
   }
 }
