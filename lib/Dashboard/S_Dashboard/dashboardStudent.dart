@@ -5,6 +5,8 @@ import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:quiz_app/MyProfile/S_Profile/profileStudent.dart';
 import 'package:quiz_app/Pages/FuturePage.dart';
 import 'package:quiz_app/Pages/startPage.dart';
+import 'file:///D:/Minor%20Project/quiz_app/lib/GiveQuiz/giveQuiz.dart';
+
 
 import 'package:url_launcher/url_launcher.dart';
 
@@ -29,7 +31,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
 
   final titles = ['Give Quiz', 'Past Quiz Score'];
   final titleIcon = [
-    Icon(Icons.event_note_sharp),
+    Icon(Icons.event_note),
     Icon(Icons.update),
   ];
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -231,11 +233,11 @@ class _StudentDashboardState extends State<StudentDashboard> {
                         ),
                         onTap: () {
                           if (index == 0) {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //       builder: (context) => AddRequest()),
-                            // );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => EnterCode()),
+                            );
                           }
                           if (index == 1) {
                             // Navigator.push(
