@@ -3,8 +3,8 @@
 30% of the student’s total score now is based on how quickly they can Google and find the right answers within a specific duration of time instead of solving questions by themselves. (This being true for most of the subjects)
 To improve this form of examination we are developing this app so that the students who put genuine effort in studies get a better result.
 
-## About Proctored Quiz App
-It is an Android Application for MUJ Students primarily which will be used to Evaluate CWS for each subject and prime objective of this app is students don’t perform malpractice which may lead to failure of Course Outcome which ultimately kills motive of subject and Quality education.
+# About Proctored Quiz App
+It is an Android Application for MUJ Students primarily, Which will be used to Evaluate CWS for each subject and prime objective of this app is students don’t perform malpractice which may lead to failure of Course Outcome which ultimately kills motive of subject and Quality education.
  
 _Key Feature of this App will be:_
  -Tab Switching Monitoring
