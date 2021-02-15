@@ -5,8 +5,8 @@ import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:quiz_app/MyProfile/F_Profile/profileFaculty.dart';
 import 'package:quiz_app/Pages/FuturePage.dart';
 import 'package:quiz_app/Pages/startPage.dart';
-import 'package:quiz_app/PlayQuiz/viewQuizDesc.dart';
-import 'package:quiz_app/QuizCreation/quizDesc.dart';
+import 'package:quiz_app/PreviewQuiz/previewQuizDesc.dart';
+import 'package:quiz_app/CreateQuiz/quizDesc.dart';
 
 
 import 'package:url_launcher/url_launcher.dart';

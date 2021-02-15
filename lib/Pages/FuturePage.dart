@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_app/Dashboard/S_Dashboard/dashboardStudent.dart';
 
 class FuturePage extends StatefulWidget {
   @override
@@ -40,6 +41,11 @@ class _FuturePageState extends State<FuturePage> with WidgetsBindingObserver {
           print('inactive state');
           inactive++;
           print(inactive);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => StudentDashboard()),
+          );
           break;
         case AppLifecycleState.detached:
           print('suspending state');
@@ -50,9 +56,17 @@ class _FuturePageState extends State<FuturePage> with WidgetsBindingObserver {
     });
   }
 
+  void tabSwitch(int resume)
+  {
+
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,

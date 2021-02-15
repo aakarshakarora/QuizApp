@@ -11,7 +11,7 @@ class _ViewQuizDescState extends State<ViewQuizDesc> {
 
    final userId = FirebaseAuth.instance.currentUser.uid;
   var firestoreDB = FirebaseFirestore.instance
-      .collection('Quiz').snapshots();
+      .collection('Quiz').where("startDate",isLessThan: new DateTime.now())  .snapshots();
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:quiz_app/Pages/FuturePage.dart';
 
 class EnterCode extends StatefulWidget {
   @override
@@ -57,6 +58,8 @@ class QuizCodeDesc extends StatefulWidget {
 }
 
 class _QuizCodeDescState extends State<QuizCodeDesc> {
+
+
   static String facultyName;
 
   @override
@@ -83,7 +86,6 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                 facultyName = value.data()['F_Name'];
 
                 print(facultyName);
-
               });
 
               return Column(
@@ -98,9 +100,21 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
 
                   Text("Creator Name: " + facultyName),
 
-                  //How to display Creator Name Through Reference
 
-                  FlatButton(onPressed: null, child: Text("Give Quiz"))
+
+                  FlatButton(
+                      onPressed: () {
+                        FirebaseFirestore.instance
+                            .collection('Quiz')
+                            .doc(widget.accessCode)
+                            .collection('TA2Ri_Result').add({'null':null});
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => FuturePage()),
+                        );
+                      },
+                      child: Text("Give Quiz"))
                 ],
               );
             }),

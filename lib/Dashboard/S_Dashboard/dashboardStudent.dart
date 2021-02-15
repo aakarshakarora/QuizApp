@@ -5,7 +5,8 @@ import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:quiz_app/MyProfile/S_Profile/profileStudent.dart';
 import 'package:quiz_app/Pages/FuturePage.dart';
 import 'package:quiz_app/Pages/startPage.dart';
-import 'package:quiz_app/PlayQuiz/giveQuiz.dart';
+import 'file:///D:/Minor%20Project/quiz_app/lib/GiveQuiz/giveQuiz.dart';
+
 
 import 'package:url_launcher/url_launcher.dart';
 
