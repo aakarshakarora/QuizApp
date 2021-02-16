@@ -186,6 +186,11 @@ class _AddQuestionState extends State<AddQuestion> {
                           print(_option3Controller.text);
                           print(_option4Controller.text);
                           if (_formKey.currentState.validate()) {
+
+                            FirebaseFirestore.instance
+                                .collection('Quiz')
+                                .doc(widget.accessCode)
+                                .collection(widget.accessCode+"Result").add({'Hello':null});
                             FirebaseFirestore.instance
                                 .collection('Quiz')
                                 .doc(widget.accessCode)
