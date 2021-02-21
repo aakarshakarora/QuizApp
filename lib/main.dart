@@ -5,6 +5,7 @@ import 'package:quiz_app/Pages/startPage.dart';
 
 
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();

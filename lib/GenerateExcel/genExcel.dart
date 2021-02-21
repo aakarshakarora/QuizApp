@@ -16,31 +16,48 @@ class CreateExcel extends StatefulWidget {
 
 class _CreateExcelState extends State<CreateExcel> {
   int count = 2;
-   String accessCode = 'HMcAQResult';
+   String accessCode;
+  final accessCodeController = TextEditingController();
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("widget.title"),
+        title: Text("Generate Excel"),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            FlatButton(
-              child: const Text(
-                'Generate Excel',
-                style: TextStyle(color: Colors.white),
-              ),
-              color: Colors.blue,
-              onPressed: () async {
-                generateExcel(accessCode);
-              },
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          TextFormField(
+            style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 17,
+                fontWeight: FontWeight.bold),
+            decoration: InputDecoration(
+                labelText: 'Enter Access Code:',
+                labelStyle: TextStyle(
+                  fontSize: 17,
+                  fontFamily: 'Poppins',
+                )),
+            keyboardType: TextInputType.text,
+            controller: accessCodeController,
+          ),
+          FlatButton(
+            child: const Text(
+              'Download Responses',
+              style: TextStyle(color: Colors.white),
             ),
-          ],
-        ),
+            color: Colors.blue,
+            onPressed: () async {
+
+              setState(() {
+                accessCode=accessCodeController.text+'Result';
+              });
+              generateExcel(accessCode);
+            },
+          ),
+        ],
       ),
     );
   }
@@ -62,9 +79,11 @@ class _CreateExcelState extends State<CreateExcel> {
 
     sheet.getRangeByName('A1').setText('Name');
     sheet.getRangeByName('B1').setText('ID');
-    sheet.getRangeByName('C1').setText('Score');
-    sheet.getRangeByName('D1').setText('Tab Switch');
-    sheet.getRangeByName('E1').setText('Logged In');
+    sheet.getRangeByName('C1').setText('Email ID');
+    sheet.getRangeByName('D1').setText('Score');
+    sheet.getRangeByName('E1').setText('Tab Switch');
+    sheet.getRangeByName('F1').setText('Logged In');
+    sheet.getRangeByName('G1').setText('User ID');
     String subjectName;
     String code;
     code=accessCode.substring(0,5);
@@ -86,10 +105,13 @@ class _CreateExcelState extends State<CreateExcel> {
 
 
       sheet.getRangeByName('A'+count.toString()).setText(document.data()['S_Name'].toString());
-      sheet.getRangeByName('B'+count.toString()).setText(document.data()['S_ID'].toString());
-      sheet.getRangeByName('C'+count.toString()).setText(document.data()['Score'].toString());
-      sheet.getRangeByName('D'+count.toString()).setText(document.data()['tabSwitched'].toString());
-      sheet.getRangeByName('E'+count.toString()).setText(document.data()['read'].toString());
+      sheet.getRangeByName('B'+count.toString()).setText(document.data()['S_RegNo'].toString());
+      sheet.getRangeByName('C'+count.toString()).setText(document.data()['S_EmailID'].toString());
+      sheet.getRangeByName('D'+count.toString()).setText(document.data()['Score'].toString());
+      sheet.getRangeByName('E'+count.toString()).setText(document.data()['tabSwitch'].toString());
+      sheet.getRangeByName('F'+count.toString()).setText(document.data()['loggedIn'].toString());
+      sheet.getRangeByName('G'+count.toString()).setText(document.data()['S_UID'].toString());
+
       count++;
     }
 

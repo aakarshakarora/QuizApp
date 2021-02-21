@@ -5,6 +5,7 @@ import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:quiz_app/MyProfile/S_Profile/profileStudent.dart';
 import 'package:quiz_app/Pages/FuturePage.dart';
 import 'package:quiz_app/Pages/startPage.dart';
+import 'package:quiz_app/ViewResult/S_View/studentResult.dart';
 import 'file:///D:/Minor%20Project/quiz_app/lib/GiveQuiz/giveQuiz.dart';
 
 
@@ -240,11 +241,11 @@ class _StudentDashboardState extends State<StudentDashboard> {
                             );
                           }
                           if (index == 1) {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //       builder: (context) => AddRequest()),
-                            // );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ViewResult()),
+                            );
                           }
 
                         },
