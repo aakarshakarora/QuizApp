@@ -50,6 +50,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
 
   @override
   void initState() {
+
     super.initState();
     currentUser = getCurrentUser();
   }
