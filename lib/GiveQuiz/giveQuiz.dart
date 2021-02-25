@@ -135,42 +135,53 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
               if (!snapshot.hasData && (facultyName == null)) {
                 return Center(child: CircularProgressIndicator());
               }
-              Map<String, dynamic> data = snapshot.data.data();
+              else {
+                Map<String, dynamic> data = snapshot.data.data();
 
-              DocumentReference documentReference = data['Creator'];
-              _getFacultyName(documentReference);
+                DocumentReference documentReference = data['Creator'];
+                _getFacultyName(documentReference);
 
 
-              return Column(
-                children: [
-                  Text('Subject Name:' + data['SubjectName']),
-                  Text('Description: ' + data['Description']),
-                  Text('Question Count: ' + data['QuestionCount'].toString()),
-                  Text('Max  Score: ' + data['MaxScore'].toString()),
-                  Text('Question Count:' + data['QuestionCount'].toString()),
-                  Text('Start Time: ' + data['startDate'].toString()),
-                  Text('End Time: ' + data['endDate'].toString()),
-                  Text("Creator Name:$facultyName "),
-                  FlatButton(
-                      onPressed: () async {
-                        FirebaseFirestore.instance
-                            .collection('Quiz')
-                            .doc(code)
-                            .collection(code + 'Result')
-                            .doc(uId)
-                            .set({'S_Name':uName,'S_UID':uId,'S_RegNo':uRegNo,'S_EmailID':uEmailId,'Login':open,'Score':score,'tabSwitch':tabSwitch});
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AttemptQuiz(
-                                subjectName: data['SubjectName'],
-                                accessCode: code,
-                              )),
-                        );
-                      },
-                      child: Text("Give Quiz"))
-                ],
-              );
+                return Column(
+                  children: [
+                    Text('Subject Name:' + data['SubjectName']),
+                    Text('Description: ' + data['Description']),
+                    Text('Question Count: ' + data['QuestionCount'].toString()),
+                    Text('Max  Score: ' + data['MaxScore'].toString()),
+                    Text('Question Count:' + data['QuestionCount'].toString()),
+                    Text('Start Time: ' + data['startDate'].toString()),
+                    Text('End Time: ' + data['endDate'].toString()),
+                    Text("Creator Name:$facultyName "),
+                    FlatButton(
+                        onPressed: () async {
+                          FirebaseFirestore.instance
+                              .collection('Quiz')
+                              .doc(code)
+                              .collection(code + 'Result')
+                              .doc(uId)
+                              .set({
+                            'S_Name': uName,
+                            'S_UID': uId,
+                            'S_RegNo': uRegNo,
+                            'S_EmailID': uEmailId,
+                            'Login': open,
+                            'Score': score,
+                            'tabSwitch': tabSwitch
+                          });
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    AttemptQuiz(
+                                      subjectName: data['SubjectName'],
+                                      accessCode: code,
+                                    )),
+                          );
+                        },
+                        child: Text("Give Quiz"))
+                  ],
+                );
+              }
             }),
       ),
     );

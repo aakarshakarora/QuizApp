@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:quiz_app/Charts/pieChart.dart';
 
 class ViewResult extends StatefulWidget {
   @override
@@ -43,7 +44,7 @@ class _ViewResultState extends State<ViewResult> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => DisplayResult(accessCodeController.text)),
+                      builder: (context) => PieChartDisplay(accessCodeController.text)),
                 );
               },
               child: Text("See Score"))

@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
@@ -16,17 +18,59 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
 //To Implement Tab Switch Check add this line  " with WidgetsBindingObserver"
 
 //Then add code form line 13 to 51
-  Future<void> secureScreen() async {await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE); }
+  Future<void> secureScreen() async {
+    await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+  }
+
   int pause = 0, resume = 0, inactive = 0, dead = 0;
+  Timestamp sTime, eTime;
+  DateTime res1, res2;
+  Timer _timer;
+  String _timeUntil = "loading...";
+
+  void _startTimer() {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (this.mounted) {
+        setState(() {
+          _timeUntil = TimeLeft().timeLeft(res1, res2);
+        });
+      }
+    });
+  }
 
   @override
   void initState() {
+    FirebaseFirestore.instance
+        .collection('Quiz')
+        .doc(widget.accessCode)
+        .get()
+        .then((value) {
+      sTime = (value.data()['startDate']);
+      eTime = (value.data()['endDate']);
+      res1 = sTime.toDate();
+      res2 = eTime.toDate();
+      // countTime= res2.difference(res2).inSeconds;
+      print("start " + sTime.toString());
+      print("end " + eTime.toString());
+      print("result 1" + res2.difference(res1).inSeconds.toString());
+    });
+    _startTimer();
     super.initState();
     WidgetsBinding.instance.addObserver(this);
   }
 
+ @override
+  void didChangeDependencies() async{
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();_startTimer();
+  }
+
+
   @override
   void dispose() {
+    if (_timer != null) {
+      _timer.cancel();
+    }
     WidgetsBinding.instance.removeObserver(this);
     secureScreen();
     super.dispose();
@@ -78,6 +122,7 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
       ),
       body: Column(
         children: [
+          Text(_timeUntil ?? "loading..."),
           Expanded(
             child: Container(
               child: StreamBuilder(
@@ -188,10 +233,23 @@ class _QuestionTileState extends State<QuestionTile> {
                   ],
                 );
               }),
-
-
         ],
       ),
     );
+  }
+}
+
+class TimeLeft {
+  String timeLeft(DateTime start, DateTime end) {
+    String retVal;
+
+    Duration _timeUntilDue = end.difference(start);
+
+    int _minUntil = _timeUntilDue.inMinutes;
+    int _secUntil = _timeUntilDue.inSeconds - (_minUntil * 60);
+
+    retVal = _minUntil.toString() + " mins" + _secUntil.toString() + "sec";
+
+    return retVal;
   }
 }
