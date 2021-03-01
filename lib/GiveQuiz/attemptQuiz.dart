@@ -6,9 +6,11 @@ import 'package:quiz_app/CreateQuiz/addQuestion.dart';
 import 'package:quiz_app/Utilities/buttons.dart';
 
 import '../main.dart';
+
 class AttemptQuiz extends StatefulWidget {
   final String subjectName, accessCode;
   final int questionCount;
+
   AttemptQuiz(
       {@required this.accessCode,
       @required this.subjectName,
@@ -18,11 +20,14 @@ class AttemptQuiz extends StatefulWidget {
   _AttemptQuizState createState() => _AttemptQuizState();
 }
 
-class _AttemptQuizState extends State<AttemptQuiz>{
+class _AttemptQuizState extends State<AttemptQuiz> with AutomaticKeepAliveClientMixin{
   PageController pageController = PageController(initialPage: 0);
   int currentQuestion = 0;
   @override
+  bool get wantKeepAlive => true;
+  @override
   Widget build(BuildContext context) {
+    print(currentQuestion);
     var firestoreDB = FirebaseFirestore.instance
         .collection('Quiz')
         .doc(widget.accessCode)
@@ -38,22 +43,23 @@ class _AttemptQuizState extends State<AttemptQuiz>{
           Stack(
             children: [
               Container(
-                margin: EdgeInsets.only(left: 10,right: 10,top: 10),
+                margin: EdgeInsets.only(left: 10, right: 10, top: 10),
                 height: 35,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: (BorderRadius.circular(20)),
                 ),
               ),
-              Container(width: MediaQuery.of(context).size.width*(2/widget.questionCount),
-                margin: EdgeInsets.only(left: 10,right: 10,top: 10),
+              Container(
+                width: MediaQuery.of(context).size.width *
+                    (2 / widget.questionCount),
+                margin: EdgeInsets.only(left: 10, right: 10, top: 10),
                 height: 35,
                 decoration: BoxDecoration(
                   color: Colors.green,
                   borderRadius: (BorderRadius.circular(20)),
                 ),
               ),
-
             ],
           ),
           Expanded(
@@ -68,6 +74,10 @@ class _AttemptQuizState extends State<AttemptQuiz>{
                   final reqDocs = opSnapshot.data.documents..shuffle();
                   print('length ${reqDocs.length}');
                   return PageView.builder(
+                    onPageChanged: (index) {
+                      currentQuestion = index;
+                      //print(currentQuestion);
+                    },
                     controller: pageController,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: reqDocs.length,
@@ -87,53 +97,9 @@ class _AttemptQuizState extends State<AttemptQuiz>{
                               reqDoc: reqDocs[index],
                               totalQuestions: reqDocs.length,
                             ),
-                            SizedBox(
-                              height: 100,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                index == 0?Container():
-                                roundedButton(
-                                  color: Colors.blue,
-                                    context: context,
-                                    text: "Prev",
-                                    onPressed: () {
-                                      //currentQuestion--;
-                                      print("Prev Button is pressed!");
-                                      print(index);
-                                      print(widget.questionCount);
-                                      pageController.animateToPage(index-1, duration: Duration(milliseconds: 200), curve: Curves.easeInQuad);
-                                      //Provider.of<Data>(context,listen: false).changeIndex(currentQuestion);
-                                  }),
-                                index != widget.questionCount-1
-                                    ? roundedButton(
-                                  color: Colors.blue,
-                                        context: context,
-                                        text: "Next",
-                                        onPressed: () {
-                                          //currentQuestion++;
-                                          print("Next Button is pressed!");
-                                          //print(currentQuestion);
-                                          print(widget.questionCount);
-                                          pageController.animateToPage(index+1, duration: Duration(milliseconds: 200), curve: Curves.easeInQuad);
-                                          //Provider.of<Data>(context,listen: false).changeIndex(currentQuestion);
-                                  })
-                                    : Container(),
-
-                              ],
-                            ),
-                            SizedBox(height: 20),
-                            roundedButton(
-                              color: Colors.orange,
-                                context: context,
-                                text: "Submit",
-                                onPressed: () {
-                                  print("Submit Button is pressed!");
-                                  print(index);
-                                  print(widget.questionCount);
-
-                                })
+                            // SizedBox(
+                            //   height: 100,
+                            // ),
                           ],
                         ),
                       );
@@ -143,6 +109,55 @@ class _AttemptQuizState extends State<AttemptQuiz>{
               ),
             ),
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              currentQuestion == 1
+                  ? Container()
+                  : roundedButton(
+                      color: Colors.blue,
+                      context: context,
+                      text: "Prev",
+                      onPressed: () {
+
+                        print("Prev Button is pressed!");
+                        if (currentQuestion > 0) {
+                          pageController.animateToPage(--currentQuestion,
+                              duration: Duration(milliseconds: 200),
+                              curve: Curves.easeInQuad);
+                        }
+
+                        //Provider.of<Data>(context,listen: false).changeIndex(currentQuestion);
+                      }),
+              currentQuestion != widget.questionCount - 1
+                  ? roundedButton(
+                      color: Colors.blue,
+                      context: context,
+                      text: "Next",
+                      onPressed: () {
+
+                        print("Next Button is pressed!");
+                        if (currentQuestion < widget.questionCount -1) {
+                          pageController.animateToPage(++currentQuestion,
+                              duration: Duration(milliseconds: 200),
+                              curve: Curves.easeInQuad);
+                        }
+
+                        //Provider.of<Data>(context,listen: false).changeIndex(currentQuestion);
+                      })
+                  : Container(),
+            ],
+          ),
+          SizedBox(height: 20),
+          roundedButton(
+              color: Colors.orange,
+              context: context,
+              text: "Submit",
+              onPressed: () {
+                print("Submit Button is pressed!");
+                print(currentQuestion);
+                print(widget.questionCount);
+              })
         ],
       ),
     );
@@ -150,7 +165,8 @@ class _AttemptQuizState extends State<AttemptQuiz>{
 }
 
 class QuestionTile extends StatefulWidget {
-  final dynamic reqDoc, index,totalQuestions;
+  final dynamic reqDoc, index, totalQuestions;
+
   QuestionTile(
       {@required this.reqDoc,
       @required this.index,
@@ -160,16 +176,15 @@ class QuestionTile extends StatefulWidget {
   _QuestionTileState createState() => _QuestionTileState();
 }
 
-class _QuestionTileState extends State<QuestionTile> with AutomaticKeepAliveClientMixin{
+class _QuestionTileState extends State<QuestionTile>
+    with AutomaticKeepAliveClientMixin {
   String selectedValue, correctOption;
   List<String> options = [];
 
   @override
   bool get wantKeepAlive => true;
 
-  void calculateScore(){
-
-  }
+  void calculateScore() {}
 
   @override
   void initState() {
@@ -186,6 +201,7 @@ class _QuestionTileState extends State<QuestionTile> with AutomaticKeepAliveClie
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Container(
       padding: EdgeInsets.all(10),
       child: Column(
