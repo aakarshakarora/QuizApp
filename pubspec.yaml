@@ -21,6 +21,7 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  provider: ^4.3.3
   firebase_core: ^0.5.0
   firebase_auth: ^0.18.0+1
   google_sign_in: ^4.5.3
@@ -31,10 +32,11 @@ dependencies:
   intl: ^0.16.1
   excel: ^1.1.5
   syncfusion_flutter_xlsio: ^18.4.42-beta
-  path_provider: ^1.6.27
+  path_provider: any
   open_file: ^3.0.3
   flutter_windowmanager: ^0.0.1+1
   charts_flutter: ^0.9.0
+  flutter_countdown_timer: ^3.0.1
 
 
 

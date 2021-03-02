@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-Widget roundedButton({BuildContext context,String text,Function onPressed}){
+Widget roundedButton({BuildContext context,String text,Function onPressed,Color color}){
   return Container(
     padding: const EdgeInsets.only(left: 10,right: 10),
     alignment: Alignment.center,
@@ -7,7 +7,7 @@ Widget roundedButton({BuildContext context,String text,Function onPressed}){
       width: MediaQuery.of(context).size.width*0.4,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(30)),
-        color: Colors.deepPurpleAccent,
+        color: color
       ),
       child: FlatButton(
         textColor: Colors.white,

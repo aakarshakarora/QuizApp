@@ -175,6 +175,7 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                                     AttemptQuiz(
                                       subjectName: data['SubjectName'],
                                       accessCode: code,
+                                      questionCount:data['QuestionCount'] ,
                                     )),
                           );
                         },

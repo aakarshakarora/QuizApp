@@ -6,10 +6,11 @@ import 'package:quiz_app/MyProfile/S_Profile/profileStudent.dart';
 import 'package:quiz_app/Pages/FuturePage.dart';
 import 'package:quiz_app/Pages/startPage.dart';
 import 'package:quiz_app/ViewResult/S_View/studentResult.dart';
-import 'file:///D:/Minor%20Project/quiz_app/lib/GiveQuiz/giveQuiz.dart';
 
 
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../GiveQuiz/giveQuiz.dart';
 
 class StudentDashboard extends StatefulWidget {
   @override

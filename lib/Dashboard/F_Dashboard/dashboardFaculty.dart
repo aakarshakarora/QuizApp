@@ -35,7 +35,7 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
   final titleIcon = [
     Icon(Icons.event_note),
     Icon(Icons.update),
-    Icon(Icons.download_rounded)
+    Icon(Icons.file_download)
   ];
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String currentUser;
