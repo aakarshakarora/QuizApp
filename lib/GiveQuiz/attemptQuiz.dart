@@ -23,28 +23,13 @@ class AttemptQuiz extends StatefulWidget {
 
 class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
   int pause = 0, resume = 0, inactive = 0, dead = 0;
-  int endTime = DateTime.now().millisecondsSinceEpoch + 1000 * 30;
+  static int endTime ;
 
   Timestamp sTime, eTime;
   DateTime res1, res2;
 
   @override
   void initState() {
-    FirebaseFirestore.instance
-        .collection('Quiz')
-        .doc(widget.accessCode)
-        .get()
-        .then((value) {
-      sTime = (value.data()['startDate']);
-      eTime = (value.data()['endDate']);
-      res1 = sTime.toDate();
-      res2 = eTime.toDate();
-      // countTime= res2.difference(res2).inSeconds;
-      print("start " + sTime.toString());
-      print("end " + eTime.toString());
-      print("result 1" + res2.difference(res1).inSeconds.toString());
-    });
-
     super.initState();
     WidgetsBinding.instance.addObserver(this);
   }
@@ -108,6 +93,21 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseFirestore.instance
+        .collection('Quiz')
+        .doc(widget.accessCode)
+        .get()
+        .then((value) {
+      sTime = (value.data()['startDate']);
+      eTime = (value.data()['endDate']);
+      res1 = sTime.toDate();
+      res2 = eTime.toDate();
+      endTime=res2.millisecondsSinceEpoch + 1000 * 30;
+      // countTime= res2.difference(res2).inSeconds;
+      print("start " + sTime.toString());
+      print("end " + eTime.toString());
+      print("result 1" + res2.difference(res1).inSeconds.toString());
+    });
     print(currentQuestion);
     var firestoreDB = FirebaseFirestore.instance
         .collection('Quiz')
@@ -122,7 +122,7 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
       body: Column(
         children: [
           CountdownTimer(
-            endTime: res2.millisecondsSinceEpoch + 1000 * 30,
+            endTime: endTime,
             widgetBuilder: (_, CurrentRemainingTime time) {
               if (time == null) {
                 Navigator.push(
