@@ -174,6 +174,7 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                                       subjectName: data['SubjectName'],
                                       accessCode: code,
                                       questionCount:data['QuestionCount'] ,
+                                      maximumScore: data['MaxScore'],
                                     )),
                           );
                         },

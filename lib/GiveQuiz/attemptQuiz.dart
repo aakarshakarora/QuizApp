@@ -10,11 +10,13 @@ import 'globals.dart' as global;
 
 class AttemptQuiz extends StatefulWidget {
   final String subjectName, accessCode;
-  final int questionCount;
+  final int questionCount, maximumScore;
+
   AttemptQuiz(
       {@required this.accessCode,
       @required this.subjectName,
-      @required this.questionCount});
+      @required this.questionCount,
+      @required this.maximumScore});
 
   @override
   _AttemptQuizState createState() => _AttemptQuizState();
@@ -22,10 +24,12 @@ class AttemptQuiz extends StatefulWidget {
 
 class _AttemptQuizState extends State<AttemptQuiz> {
   PageController pageController = PageController(initialPage: 0);
+
   @override
   Widget build(BuildContext context) {
-    if(global.attempted.isEmpty) {
+    if (global.attempted.isEmpty && global.correct.isEmpty) {
       global.attempted = List.filled(widget.questionCount, 0);
+      global.correct = List.filled(widget.questionCount, 0);
     }
     var firestoreDB = FirebaseFirestore.instance
         .collection('Quiz')
@@ -43,11 +47,12 @@ class _AttemptQuizState extends State<AttemptQuiz> {
             padding: const EdgeInsets.all(8.0),
             child: LinearPercentIndicator(
               addAutomaticKeepAlive: true,
-               animation: true,
+              animation: true,
               // animateFromLastPercent: false,
               // animationDuration: 500,
               lineHeight: 14.0,
-              percent: Provider.of<Data>(context).questionCount/widget.questionCount,
+              percent: Provider.of<Data>(context).questionCount /
+                  widget.questionCount,
               backgroundColor: Colors.white,
               progressColor: Colors.orange,
             ),
@@ -81,7 +86,7 @@ class _AttemptQuizState extends State<AttemptQuiz> {
                             QuestionTile(
                               index: index,
                               reqDoc: reqDocs[index],
-                              totalDocs: reqDocs.length,
+                              correctAnswerMarks: (widget.maximumScore)/(reqDocs.length),
                             ),
                             SizedBox(
                               height: 100,
@@ -89,35 +94,43 @@ class _AttemptQuizState extends State<AttemptQuiz> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                index == 0?Container():
-                                roundedButton(
-                                  color: Colors.blue,
-                                    context: context,
-                                    text: "Prev",
-                                    onPressed: () {
-                                      print("Prev Button is pressed!");
-                                      print(index);
-                                      print(widget.questionCount);
-                                      pageController.animateToPage(index-1, duration: Duration(milliseconds: 200), curve: Curves.easeIn);
-                                    }),
-                                index != widget.questionCount-1
+                                index == 0
+                                    ? Container()
+                                    : roundedButton(
+                                        color: Colors.blue,
+                                        context: context,
+                                        text: "Prev",
+                                        onPressed: () {
+                                          print("Prev Button is pressed!");
+                                          print(index);
+                                          print(widget.questionCount);
+                                          pageController.animateToPage(
+                                              index - 1,
+                                              duration:
+                                                  Duration(milliseconds: 200),
+                                              curve: Curves.easeIn);
+                                        }),
+                                index != widget.questionCount - 1
                                     ? roundedButton(
-                                  color: Colors.blue,
+                                        color: Colors.blue,
                                         context: context,
                                         text: "Next",
                                         onPressed: () {
                                           print("Next Button is pressed!");
                                           print(index);
                                           print(widget.questionCount);
-                                          pageController.animateToPage(index+1, duration: Duration(milliseconds: 200), curve: Curves.bounceInOut);
+                                          pageController.animateToPage(
+                                              index + 1,
+                                              duration:
+                                                  Duration(milliseconds: 200),
+                                              curve: Curves.bounceInOut);
                                         })
                                     : Container(),
-
                               ],
                             ),
                             SizedBox(height: 20),
                             roundedButton(
-                              color: Colors.orange,
+                                color: Colors.orange,
                                 context: context,
                                 text: "Submit",
                                 onPressed: () {
@@ -143,23 +156,24 @@ class _AttemptQuizState extends State<AttemptQuiz> {
 
 class QuestionTile extends StatefulWidget {
   // TODO:defined totalDocs
-  final dynamic reqDoc, index,totalDocs;
+  final dynamic reqDoc, index, correctAnswerMarks;
+
   QuestionTile(
       {@required this.reqDoc,
       @required this.index,
-      @required this.totalDocs});
+      @required this.correctAnswerMarks});
 
   @override
   _QuestionTileState createState() => _QuestionTileState();
 }
 
-class _QuestionTileState extends State<QuestionTile> with AutomaticKeepAliveClientMixin{
+class _QuestionTileState extends State<QuestionTile>
+    with AutomaticKeepAliveClientMixin {
   String selectedValue, correctOption;
   List<String> options = [];
 
   @override
   bool get wantKeepAlive => true;
-
 
   @override
   void initState() {
@@ -199,16 +213,22 @@ class _QuestionTileState extends State<QuestionTile> with AutomaticKeepAliveClie
                             // TODO: added attempted functionality
                             selectedValue = value;
                             global.attempted[widget.index] = 1;
-                            Provider.of<Data>(context,listen: false).changeCount(global.attempted.reduce((a, b) => a + b));
+                            // Provider.of<Data>(context, listen: false)
+                            //     .changeCount(
+                            //         global.attempted.reduce((a, b) => a + b));
                           });
-                          //print("Option Selected: ${options[index]}");
-                          // if (options[index] == widget.reqDoc.get("01")) {
-                          //   print("Correct answer!");
-                          // } else {
-                          //   print("Wrong answer");
-                          // }
-                          print(global.attempted);
+                          print("Option Selected: ${options[index]}");
+                            if (options[index] == widget.reqDoc.get("01")) {
+                              print("Correct answer!");
+                              global.correct[widget.index]=1;
+                            } else {
+                              print("Wrong answer");
+                            }
+
+                          print("Questions attempted: ${global.attempted}");
                           print(global.attempted.reduce((a, b) => a + b));
+                          print("Questions correct: ${global.correct}");
+                          print("Total Score:${global.correct.reduce((a, b) => a + b)}}");
                         }),
                     Text(options[index])
                   ],
@@ -219,4 +239,3 @@ class _QuestionTileState extends State<QuestionTile> with AutomaticKeepAliveClie
     );
   }
 }
-
