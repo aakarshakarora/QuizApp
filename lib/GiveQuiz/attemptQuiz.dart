@@ -228,7 +228,7 @@ class _QuestionTileState extends State<QuestionTile>
                           print("Questions attempted: ${global.attempted}");
                           print(global.attempted.reduce((a, b) => a + b));
                           print("Questions correct: ${global.correct}");
-                          print("Total Score:${global.correct.reduce((a, b) => a + b)}}");
+                          print("Total Score:${(global.correct.reduce((a, b) => a + b))*widget.correctAnswerMarks}");
                         }),
                     Text(options[index])
                   ],
