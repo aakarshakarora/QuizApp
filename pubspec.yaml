@@ -21,7 +21,6 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
-  provider: any
   firebase_core: ^0.5.0
   firebase_auth: ^0.18.0+1
   google_sign_in: ^4.5.3
@@ -36,6 +35,9 @@ dependencies:
   open_file: ^3.0.3
   flutter_windowmanager: ^0.0.1+1
   charts_flutter: ^0.9.0
+  flutter_countdown_timer: ^3.0.1
+  provider: ^4.3.3
+  percent_indicator: ^2.1.9+1
 
 
 

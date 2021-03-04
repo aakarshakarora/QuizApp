@@ -1,4 +1,7 @@
-class CalculateScore{
-final int questionScore;
-CalculateScore(this.questionScore);
+class CalculateScore {
+  final List<int> questionScore;
+
+  CalculateScore(this.questionScore);
+
+  void calculateScore(questionScore) {}
 }

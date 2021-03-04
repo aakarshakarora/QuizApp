@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/GiveQuiz/attemptQuiz.dart';
 
-
 class EnterCode extends StatefulWidget {
   @override
   _EnterCodeState createState() => _EnterCodeState();
@@ -148,7 +147,6 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                     Text('Description: ' + data['Description']),
                     Text('Question Count: ' + data['QuestionCount'].toString()),
                     Text('Max  Score: ' + data['MaxScore'].toString()),
-                    Text('Question Count:' + data['QuestionCount'].toString()),
                     Text('Start Time: ' + data['startDate'].toString()),
                     Text('End Time: ' + data['endDate'].toString()),
                     Text("Creator Name:$facultyName "),

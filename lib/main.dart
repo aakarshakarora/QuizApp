@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quiz_app/Pages/startPage.dart';
-import 'package:provider/provider.dart';
 
 
 
@@ -33,9 +32,10 @@ class MyApp extends StatelessWidget {
 }
 
 class Data extends ChangeNotifier{
-  int index = 0;
-  void changeIndex(int newIndex){
-    index = newIndex;
+  int questionCount=0;
+
+  void changeCount(int newCount){
+    questionCount = newCount;
     notifyListeners();
   }
 }

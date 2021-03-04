@@ -2,15 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quiz_app/CreateQuiz/addQuestion.dart';
 import 'package:quiz_app/Utilities/buttons.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 import '../main.dart';
+import 'globals.dart' as global;
 
 class AttemptQuiz extends StatefulWidget {
   final String subjectName, accessCode;
   final int questionCount;
-
   AttemptQuiz(
       {@required this.accessCode,
       @required this.subjectName,
@@ -20,14 +20,13 @@ class AttemptQuiz extends StatefulWidget {
   _AttemptQuizState createState() => _AttemptQuizState();
 }
 
-class _AttemptQuizState extends State<AttemptQuiz> with AutomaticKeepAliveClientMixin{
+class _AttemptQuizState extends State<AttemptQuiz> {
   PageController pageController = PageController(initialPage: 0);
-  int currentQuestion = 0;
-  @override
-  bool get wantKeepAlive => true;
   @override
   Widget build(BuildContext context) {
-    print(currentQuestion);
+    if(global.attempted.isEmpty) {
+      global.attempted = List.filled(widget.questionCount, 0);
+    }
     var firestoreDB = FirebaseFirestore.instance
         .collection('Quiz')
         .doc(widget.accessCode)
@@ -40,27 +39,18 @@ class _AttemptQuizState extends State<AttemptQuiz> with AutomaticKeepAliveClient
       ),
       body: Column(
         children: [
-          Stack(
-            children: [
-              Container(
-                margin: EdgeInsets.only(left: 10, right: 10, top: 10),
-                height: 35,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: (BorderRadius.circular(20)),
-                ),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width *
-                    (2 / widget.questionCount),
-                margin: EdgeInsets.only(left: 10, right: 10, top: 10),
-                height: 35,
-                decoration: BoxDecoration(
-                  color: Colors.green,
-                  borderRadius: (BorderRadius.circular(20)),
-                ),
-              ),
-            ],
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: LinearPercentIndicator(
+              addAutomaticKeepAlive: true,
+               animation: true,
+              // animateFromLastPercent: false,
+              // animationDuration: 500,
+              lineHeight: 14.0,
+              percent: Provider.of<Data>(context).questionCount/widget.questionCount,
+              backgroundColor: Colors.white,
+              progressColor: Colors.orange,
+            ),
           ),
           Expanded(
             child: Container(
@@ -74,10 +64,6 @@ class _AttemptQuizState extends State<AttemptQuiz> with AutomaticKeepAliveClient
                   final reqDocs = opSnapshot.data.documents..shuffle();
                   print('length ${reqDocs.length}');
                   return PageView.builder(
-                    onPageChanged: (index) {
-                      currentQuestion = index;
-                      //print(currentQuestion);
-                    },
                     controller: pageController,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: reqDocs.length,
@@ -95,11 +81,51 @@ class _AttemptQuizState extends State<AttemptQuiz> with AutomaticKeepAliveClient
                             QuestionTile(
                               index: index,
                               reqDoc: reqDocs[index],
-                              totalQuestions: reqDocs.length,
+                              totalDocs: reqDocs.length,
                             ),
-                            // SizedBox(
-                            //   height: 100,
-                            // ),
+                            SizedBox(
+                              height: 100,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                index == 0?Container():
+                                roundedButton(
+                                  color: Colors.blue,
+                                    context: context,
+                                    text: "Prev",
+                                    onPressed: () {
+                                      print("Prev Button is pressed!");
+                                      print(index);
+                                      print(widget.questionCount);
+                                      pageController.animateToPage(index-1, duration: Duration(milliseconds: 200), curve: Curves.easeIn);
+                                    }),
+                                index != widget.questionCount-1
+                                    ? roundedButton(
+                                  color: Colors.blue,
+                                        context: context,
+                                        text: "Next",
+                                        onPressed: () {
+                                          print("Next Button is pressed!");
+                                          print(index);
+                                          print(widget.questionCount);
+                                          pageController.animateToPage(index+1, duration: Duration(milliseconds: 200), curve: Curves.bounceInOut);
+                                        })
+                                    : Container(),
+
+                              ],
+                            ),
+                            SizedBox(height: 20),
+                            roundedButton(
+                              color: Colors.orange,
+                                context: context,
+                                text: "Submit",
+                                onPressed: () {
+                                  print("Submit Button is pressed!");
+                                  print(index);
+                                  print(widget.questionCount);
+
+                                })
                           ],
                         ),
                       );
@@ -109,55 +135,6 @@ class _AttemptQuizState extends State<AttemptQuiz> with AutomaticKeepAliveClient
               ),
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              currentQuestion == 1
-                  ? Container()
-                  : roundedButton(
-                      color: Colors.blue,
-                      context: context,
-                      text: "Prev",
-                      onPressed: () {
-
-                        print("Prev Button is pressed!");
-                        if (currentQuestion > 0) {
-                          pageController.animateToPage(--currentQuestion,
-                              duration: Duration(milliseconds: 200),
-                              curve: Curves.easeInQuad);
-                        }
-
-                        //Provider.of<Data>(context,listen: false).changeIndex(currentQuestion);
-                      }),
-              currentQuestion != widget.questionCount - 1
-                  ? roundedButton(
-                      color: Colors.blue,
-                      context: context,
-                      text: "Next",
-                      onPressed: () {
-
-                        print("Next Button is pressed!");
-                        if (currentQuestion < widget.questionCount -1) {
-                          pageController.animateToPage(++currentQuestion,
-                              duration: Duration(milliseconds: 200),
-                              curve: Curves.easeInQuad);
-                        }
-
-                        //Provider.of<Data>(context,listen: false).changeIndex(currentQuestion);
-                      })
-                  : Container(),
-            ],
-          ),
-          SizedBox(height: 20),
-          roundedButton(
-              color: Colors.orange,
-              context: context,
-              text: "Submit",
-              onPressed: () {
-                print("Submit Button is pressed!");
-                print(currentQuestion);
-                print(widget.questionCount);
-              })
         ],
       ),
     );
@@ -165,26 +142,24 @@ class _AttemptQuizState extends State<AttemptQuiz> with AutomaticKeepAliveClient
 }
 
 class QuestionTile extends StatefulWidget {
-  final dynamic reqDoc, index, totalQuestions;
-
+  // TODO:defined totalDocs
+  final dynamic reqDoc, index,totalDocs;
   QuestionTile(
       {@required this.reqDoc,
       @required this.index,
-      @required this.totalQuestions});
+      @required this.totalDocs});
 
   @override
   _QuestionTileState createState() => _QuestionTileState();
 }
 
-class _QuestionTileState extends State<QuestionTile>
-    with AutomaticKeepAliveClientMixin {
+class _QuestionTileState extends State<QuestionTile> with AutomaticKeepAliveClientMixin{
   String selectedValue, correctOption;
   List<String> options = [];
 
   @override
   bool get wantKeepAlive => true;
 
-  void calculateScore() {}
 
   @override
   void initState() {
@@ -221,15 +196,19 @@ class _QuestionTileState extends State<QuestionTile>
                         groupValue: selectedValue,
                         onChanged: (value) {
                           setState(() {
+                            // TODO: added attempted functionality
                             selectedValue = value;
+                            global.attempted[widget.index] = 1;
+                            Provider.of<Data>(context,listen: false).changeCount(global.attempted.reduce((a, b) => a + b));
                           });
-                          print("Option Selected: ${options[index]}");
-
-                          if (selectedValue == widget.reqDoc.get("01")) {
-                            print("Correct answer!");
-                          } else {
-                            print("Wrong answer");
-                          }
+                          //print("Option Selected: ${options[index]}");
+                          // if (options[index] == widget.reqDoc.get("01")) {
+                          //   print("Correct answer!");
+                          // } else {
+                          //   print("Wrong answer");
+                          // }
+                          print(global.attempted);
+                          print(global.attempted.reduce((a, b) => a + b));
                         }),
                     Text(options[index])
                   ],
@@ -240,3 +219,4 @@ class _QuestionTileState extends State<QuestionTile>
     );
   }
 }
+
