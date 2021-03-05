@@ -16,30 +16,48 @@ class CreateExcel extends StatefulWidget {
 
 class _CreateExcelState extends State<CreateExcel> {
   int count = 2;
-  String accessCode = 'TA2Ri';
+   String accessCode;
+  final accessCodeController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("widget.title"),
+        title: Text("Generate Excel"),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            FlatButton(
-              child: const Text(
-                'Generate Excel',
-                style: TextStyle(color: Colors.white),
-              ),
-              color: Colors.blue,
-              onPressed: () async {
-                generateExcel(accessCode);
-              },
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          TextFormField(
+            style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 17,
+                fontWeight: FontWeight.bold),
+            decoration: InputDecoration(
+                labelText: 'Enter Access Code:',
+                labelStyle: TextStyle(
+                  fontSize: 17,
+                  fontFamily: 'Poppins',
+                )),
+            keyboardType: TextInputType.text,
+            controller: accessCodeController,
+          ),
+          FlatButton(
+            child: const Text(
+              'Download Responses',
+              style: TextStyle(color: Colors.white),
             ),
-          ],
-        ),
+            color: Colors.blue,
+            onPressed: () async {
+
+              setState(() {
+                accessCode=accessCodeController.text+'Result';
+              });
+              generateExcel(accessCode);
+            },
+          ),
+        ],
       ),
     );
   }
@@ -59,30 +77,47 @@ class _CreateExcelState extends State<CreateExcel> {
 
     //Set data in the worksheet.
 
-    sheet.getRangeByName('A1').setText('Ques');
-    sheet.getRangeByName('B1').setText('Option 1');
-    sheet.getRangeByName('C1').setText('Option 2');
-    sheet.getRangeByName('D1').setText('Option 3');
-    sheet.getRangeByName('E1').setText('Option 4');
+    sheet.getRangeByName('A1').setText('Name');
+    sheet.getRangeByName('B1').setText('ID');
+    sheet.getRangeByName('C1').setText('Email ID');
+    sheet.getRangeByName('D1').setText('Score');
+    sheet.getRangeByName('E1').setText('Tab Switch');
+    sheet.getRangeByName('F1').setText('Logged In');
+    sheet.getRangeByName('G1').setText('User ID');
+    String subjectName;
+    String code;
+    code=accessCode.substring(0,5);
+
     final cloud = await FirebaseFirestore.instance
         .collection('Quiz')
-        .doc(accessCode)
+        .doc(code)
         .collection(accessCode)
         .get();
+
+
+    print("Code is: $accessCode");
+
+
+
     for(var document in cloud.docs){
-      print("The field value is:"+document.data()['Ques']);
-      sheet.getRangeByName('A'+count.toString()).setText(document.data()['Ques']);
-      sheet.getRangeByName('B'+count.toString()).setText(document.data()['01']);
-      sheet.getRangeByName('C'+count.toString()).setText(document.data()['02']);
-      sheet.getRangeByName('D'+count.toString()).setText(document.data()['03']);
-      sheet.getRangeByName('E'+count.toString()).setText(document.data()['04']);
+
+
+
+
+      sheet.getRangeByName('A'+count.toString()).setText(document.data()['S_Name'].toString());
+      sheet.getRangeByName('B'+count.toString()).setText(document.data()['S_RegNo'].toString());
+      sheet.getRangeByName('C'+count.toString()).setText(document.data()['S_EmailID'].toString());
+      sheet.getRangeByName('D'+count.toString()).setText(document.data()['Score'].toString());
+      sheet.getRangeByName('E'+count.toString()).setText(document.data()['tabSwitch'].toString());
+      sheet.getRangeByName('F'+count.toString()).setText(document.data()['loggedIn'].toString());
+      sheet.getRangeByName('G'+count.toString()).setText(document.data()['S_UID'].toString());
+
       count++;
     }
 
-    String subjectName;
 
 
-      await FirebaseFirestore.instance.collection('Quiz').doc(accessCode).get().then((value) {
+      await FirebaseFirestore.instance.collection('Quiz').doc(code).get().then((value) {
         subjectName=value.data()['SubjectName'];
       });
 
@@ -253,13 +288,15 @@ class _CreateExcelState extends State<CreateExcel> {
     final Directory directory =
     await path_provider.getApplicationDocumentsDirectory();
     final String path = directory.path;
-    final File file = File('$path/$subjectName $accessCode.xlsx');
+    final File file = File('$path/$subjectName $code.xlsx');
     await file.writeAsBytes(bytes);
 
     //Launch the file (used open_file package)
 
-    await open_file.OpenFile.open('$path/$subjectName $accessCode.xlsx');
+    await open_file.OpenFile.open('$path/$subjectName $code.xlsx');
 
     print("File Saved at:" + path);
+    print("Code is: $accessCode");
+    print("Result is: $code");
   }
 }

@@ -11,7 +11,7 @@ class _FuturePageState extends State<FuturePage> with WidgetsBindingObserver {
 //To Implement Tab Switch Check add this line  " with WidgetsBindingObserver"
 
 //Then add code form line 13 to 51
-   static int pause=0,resume=0,inactive=0,dead=0;
+   int pause=0,resume=0,inactive=0,dead=0;
   @override
   void initState() {
     super.initState();
@@ -56,11 +56,6 @@ class _FuturePageState extends State<FuturePage> with WidgetsBindingObserver {
     });
   }
 
-  void tabSwitch(int resume)
-  {
-
-
-  }
 
 
   @override

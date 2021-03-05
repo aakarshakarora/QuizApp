@@ -5,10 +5,12 @@ import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:quiz_app/MyProfile/S_Profile/profileStudent.dart';
 import 'package:quiz_app/Pages/FuturePage.dart';
 import 'package:quiz_app/Pages/startPage.dart';
-import 'file:///D:/Minor%20Project/quiz_app/lib/GiveQuiz/giveQuiz.dart';
+import 'package:quiz_app/ViewResult/S_View/studentResult.dart';
 
 
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../GiveQuiz/giveQuiz.dart';
 
 class StudentDashboard extends StatefulWidget {
   @override
@@ -49,6 +51,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
 
   @override
   void initState() {
+
     super.initState();
     currentUser = getCurrentUser();
   }
@@ -240,11 +243,11 @@ class _StudentDashboardState extends State<StudentDashboard> {
                             );
                           }
                           if (index == 1) {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //       builder: (context) => AddRequest()),
-                            // );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ViewResult()),
+                            );
                           }
 
                         },

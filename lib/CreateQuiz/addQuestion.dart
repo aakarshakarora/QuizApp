@@ -13,6 +13,8 @@ class AddQuestion extends StatefulWidget {
 }
 
 class _AddQuestionState extends State<AddQuestion> {
+
+  bool answered=false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _buildQuestionController =
       TextEditingController();
@@ -177,6 +179,7 @@ class _AddQuestionState extends State<AddQuestion> {
                   children: [
                     currentCount == widget.questionCount?
                     roundedButton(
+                      color: Colors.purple,
                         context: context,
                         text: 'Submit',
                         onPressed: () async {
@@ -186,6 +189,8 @@ class _AddQuestionState extends State<AddQuestion> {
                           print(_option3Controller.text);
                           print(_option4Controller.text);
                           if (_formKey.currentState.validate()) {
+
+
                             FirebaseFirestore.instance
                                 .collection('Quiz')
                                 .doc(widget.accessCode)
@@ -196,6 +201,7 @@ class _AddQuestionState extends State<AddQuestion> {
                               "03": _option3Controller.text,
                               "04": _option4Controller.text,
                               "Ques": _buildQuestionController.text,
+                              "Answered":answered
                             }).then((_) {
                               //_displaySnackBar(context);
                               Navigator.push(
@@ -210,6 +216,7 @@ class _AddQuestionState extends State<AddQuestion> {
                         }):Container(),
                     currentCount < widget.questionCount?
                     roundedButton(
+                      color: Colors.purple,
                         context: context,
                         text: 'Add Question',
                         onPressed: () async {
@@ -229,6 +236,7 @@ class _AddQuestionState extends State<AddQuestion> {
                               "03": _option3Controller.text,
                               "04": _option4Controller.text,
                               "Ques": _buildQuestionController.text,
+                              "Answered":answered
                             }).then((_) {
                               //_displaySnackBar(context);
                               setState(() {
