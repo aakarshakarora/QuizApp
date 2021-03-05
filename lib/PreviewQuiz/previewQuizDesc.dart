@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_share_me/flutter_share_me.dart';
 
 class ViewQuizDesc extends StatefulWidget {
   @override
@@ -11,7 +12,9 @@ class _ViewQuizDescState extends State<ViewQuizDesc> {
 
    final userId = FirebaseAuth.instance.currentUser.uid;
   var firestoreDB = FirebaseFirestore.instance
-      .collection('Quiz').where("startDate",isLessThan: new DateTime.now())  .snapshots();
+      .collection('Quiz')
+      //.where("startDate",isLessThan: new DateTime.now())
+   .snapshots();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,13 +78,18 @@ class _ViewDetailsState extends State<ViewDetails> {
 
   @override
   Widget build(BuildContext context) {
+
+    String message;
     final questionCount = widget.reqDoc.get("QuestionCount");
     final accessCode = widget.reqDoc.get("AccessCode");
     final subjectName = widget.reqDoc.get("SubjectName");
     final maxScore = widget.reqDoc.get("MaxScore");
     final startDate =
     (widget.reqDoc.get("startDate") as Timestamp).toDate().toString();
+    final endDate =
+    (widget.reqDoc.get("endDate") as Timestamp).toDate().toString();
 
+      message="Subject Name: $subjectName \n Question Count: $questionCount \n Max Score: $maxScore  \n\n Start Time: $startDate \n End Date: $endDate \n\n Access Code: $accessCode";
 
 
     return Container(
@@ -159,17 +167,15 @@ class _ViewDetailsState extends State<ViewDetails> {
                 ),
 
 
-                    FlatButton(onPressed: null , child: Text("Click Here"),)
-
-                    //
-                    // onPressed: () {
-                    //   Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (context) => GeneratePage(
-                    //             requestId, sDate, eDate, dest, reason)),
-                    //   );
-                    // },
+                RaisedButton(
+                  child: Text('Click Here'),
+                  onPressed: () async {
+                    var response = await FlutterShareMe().shareToSystem(msg: message);
+                    if (response == 'success') {
+                      print('navigate success');
+                    }
+                  },
+                ),
           ],
                   ),
 

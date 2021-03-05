@@ -33,9 +33,10 @@ class MyApp extends StatelessWidget {
 }
 
 class Data extends ChangeNotifier{
-  int index = 0;
-  void changeIndex(int newIndex){
-    index = newIndex;
+  int questionCount=0;
+
+  void changeCount(int newCount){
+    questionCount = newCount;
     notifyListeners();
   }
 }
