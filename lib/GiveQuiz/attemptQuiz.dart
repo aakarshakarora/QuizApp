@@ -15,12 +15,14 @@ import 'globals.dart' as global;
 class AttemptQuiz extends StatefulWidget {
   final String subjectName, accessCode;
   final int questionCount, maximumScore;
+  final int timeCount;
 
   AttemptQuiz(
       {@required this.accessCode,
       @required this.subjectName,
       @required this.questionCount,
-      @required this.maximumScore});
+      @required this.maximumScore,
+      @required this.timeCount});
 
   @override
   _AttemptQuizState createState() => _AttemptQuizState();
@@ -43,9 +45,7 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
   }
 
   int pause = 0, resume = 0, inactive = 0, dead = 0;
-  static int endTime;
-  Timestamp sTime, eTime;
-  DateTime res1, res2;
+
   PageController pageController = PageController(initialPage: 0);
 
   @override
@@ -111,21 +111,7 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    FirebaseFirestore.instance
-        .collection('Quiz')
-        .doc(widget.accessCode)
-        .get()
-        .then((value) {
-      sTime = (value.data()['startDate']);
-      eTime = (value.data()['endDate']);
-      res1 = sTime.toDate();
-      res2 = eTime.toDate();
-      endTime = res2.millisecondsSinceEpoch + 1000 * 30;
-      // countTime= res2.difference(res2).inSeconds;
-      print("start " + sTime.toString());
-      print("end " + eTime.toString());
-      print("result 1" + res2.difference(res1).inSeconds.toString());
-    });
+
     if (global.attempted.isEmpty && global.correct.isEmpty) {
       global.attempted = List.filled(widget.questionCount, 0);
       global.correct = List.filled(widget.questionCount, 0);
@@ -143,7 +129,7 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
       body: Column(
         children: [
           CountdownTimer(
-            endTime: endTime,
+            endTime: widget.timeCount,
             widgetBuilder: (_, CurrentRemainingTime time) {
               if (time == null) {
                 FirebaseFirestore.instance
@@ -167,20 +153,7 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
               return Text(' ${time.hours} : ${time.min} :  ${time.sec}');
             },
           ),
-          // Padding(
-          //   padding: const EdgeInsets.all(8.0),
-          //   child: LinearPercentIndicator(
-          //     addAutomaticKeepAlive: true,
-          //     animation: true,
-          //     // animateFromLastPercent: false,
-          //     // animationDuration: 500,
-          //     lineHeight: 14.0,
-          //     percent: Provider.of<Data>(context).questionCount /
-          //         widget.questionCount,
-          //     backgroundColor: Colors.white,
-          //     progressColor: Colors.orange,
-          //   ),
-          // ),
+
           Expanded(
             child: Container(
               child: StreamBuilder(

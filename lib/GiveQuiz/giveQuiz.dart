@@ -74,6 +74,9 @@ class QuizCodeDesc extends StatefulWidget {
 
 class _QuizCodeDescState extends State<QuizCodeDesc> {
   static String code, facultyName;
+  static int endTime;
+  Timestamp sTime, eTime;
+  DateTime res1, res2;
   bool open = true;
   int score=0,tabSwitch=0;
   final userId = FirebaseAuth.instance.currentUser.uid;
@@ -140,6 +143,16 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                 DocumentReference documentReference = data['Creator'];
                 _getFacultyName(documentReference);
 
+                sTime = (data['startDate']);
+                eTime = (data['endDate']);
+                res1 = sTime.toDate();
+                res2 = eTime.toDate();
+                endTime = res2.millisecondsSinceEpoch + 1000 * 30;
+                // countTime= res2.difference(res2).inSeconds;
+                print("start " + sTime.toString());
+                print("end " + eTime.toString());
+                print("result 1" + res2.difference(res1).inSeconds.toString());
+
 
                 return Column(
                   children: [
@@ -175,6 +188,7 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                                       accessCode: code,
                                       questionCount:data['QuestionCount'] ,
                                       maximumScore: data['MaxScore'],
+                                      timeCount: endTime,
                                     )),
                           );
                         },
