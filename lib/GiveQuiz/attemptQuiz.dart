@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_countdown_timer/current_remaining_time.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
-import 'package:quiz_app/Dashboard/S_Dashboard/dashboardStudent.dart';
-import 'package:quiz_app/Pages/FuturePage.dart';
 import 'package:quiz_app/Utilities/buttons.dart';
 import 'package:quiz_app/ViewResult/S_View/postQuiz.dart';
 
@@ -19,10 +17,10 @@ class AttemptQuiz extends StatefulWidget {
 
   AttemptQuiz(
       {@required this.accessCode,
-      @required this.subjectName,
-      @required this.questionCount,
-      @required this.maximumScore,
-      @required this.timeCount});
+        @required this.subjectName,
+        @required this.questionCount,
+        @required this.maximumScore,
+        @required this.timeCount});
 
   @override
   _AttemptQuizState createState() => _AttemptQuizState();
@@ -184,7 +182,7 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
                               index: index,
                               reqDoc: reqDocs[index],
                               correctAnswerMarks:
-                                  (widget.maximumScore) / (reqDocs.length),
+                              (widget.maximumScore) / (reqDocs.length),
                             ),
                             SizedBox(
                               height: 100,
@@ -195,34 +193,34 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
                                 index == 0
                                     ? Container()
                                     : roundedButton(
-                                        color: Colors.blue,
-                                        context: context,
-                                        text: "Prev",
-                                        onPressed: () {
-                                          print("Prev Button is pressed!");
-                                          print(index);
-                                          print(widget.questionCount);
-                                          pageController.animateToPage(
-                                              index - 1,
-                                              duration:
-                                                  Duration(milliseconds: 200),
-                                              curve: Curves.easeIn);
-                                        }),
+                                    color: Colors.blue,
+                                    context: context,
+                                    text: "Prev",
+                                    onPressed: () {
+                                      print("Prev Button is pressed!");
+                                      print(index);
+                                      print(widget.questionCount);
+                                      pageController.animateToPage(
+                                          index - 1,
+                                          duration:
+                                          Duration(milliseconds: 200),
+                                          curve: Curves.easeIn);
+                                    }),
                                 index != widget.questionCount - 1
                                     ? roundedButton(
-                                        color: Colors.blue,
-                                        context: context,
-                                        text: "Next",
-                                        onPressed: () {
-                                          print("Next Button is pressed!");
-                                          print(index);
-                                          print(widget.questionCount);
-                                          pageController.animateToPage(
-                                              index + 1,
-                                              duration:
-                                                  Duration(milliseconds: 200),
-                                              curve: Curves.bounceInOut);
-                                        })
+                                    color: Colors.blue,
+                                    context: context,
+                                    text: "Next",
+                                    onPressed: () {
+                                      print("Next Button is pressed!");
+                                      print(index);
+                                      print(widget.questionCount);
+                                      pageController.animateToPage(
+                                          index + 1,
+                                          duration:
+                                          Duration(milliseconds: 200),
+                                          curve: Curves.bounceInOut);
+                                    })
                                     : Container(),
                               ],
                             ),
@@ -284,8 +282,8 @@ class QuestionTile extends StatefulWidget {
 
   QuestionTile(
       {@required this.reqDoc,
-      @required this.index,
-      @required this.correctAnswerMarks});
+        @required this.index,
+        @required this.correctAnswerMarks});
 
   @override
   _QuestionTileState createState() => _QuestionTileState();
