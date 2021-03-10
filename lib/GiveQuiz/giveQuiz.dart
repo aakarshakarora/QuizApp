@@ -75,12 +75,13 @@ class QuizCodeDesc extends StatefulWidget {
 
 class _QuizCodeDescState extends State<QuizCodeDesc> {
   static String code, facultyName;
-  bool check;
-  static int endTime,startTime;
+  int check=0;
+  static int endTime, startTime,currentTime;
   Timestamp sTime, eTime;
   DateTime res1, res2;
   bool open = true;
-  int score=0,tabSwitch=0,currentTime;
+
+  int score = 0, tabSwitch = 0;
   final userId = FirebaseAuth.instance.currentUser.uid;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -98,7 +99,7 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
     return uEmail.toString();
   }
 
-  String uId, uName, uEmailId,uRegNo;
+  String uId, uName, uEmailId, uRegNo;
 
   @override
   void initState() {
@@ -109,9 +110,13 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
       super.initState();
       uId = getUserID();
       uEmailId = getUserEmail();
-      FirebaseFirestore.instance.collection('Student').doc(uId).get().then((value) {
-        uName=value.data()['S_Name'];
-        uRegNo=value.data()['S_RegNo'];
+      FirebaseFirestore.instance
+          .collection('Student')
+          .doc(uId)
+          .get()
+          .then((value) {
+        uName = value.data()['S_Name'];
+        uRegNo = value.data()['S_RegNo'];
       });
     });
   }
@@ -133,25 +138,20 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
       body: Container(
         child: FutureBuilder<DocumentSnapshot>(
             future:
-            FirebaseFirestore.instance.collection('Quiz').doc(code).get(),
+                FirebaseFirestore.instance.collection('Quiz').doc(code).get(),
             builder: (BuildContext context,
                 AsyncSnapshot<DocumentSnapshot> snapshot) {
               if (!snapshot.hasData && (facultyName == null)) {
                 return Center(child: CircularProgressIndicator());
-              }
-              else {
+              } else if (snapshot.data.exists == false) {
+                return Center(
+                    child: Text(
+                        "No Information Found!! \nKindly Enter Correct Access Code "));
+              } else {
                 Map<String, dynamic> data = snapshot.data.data();
 
                 DocumentReference documentReference = data['Creator'];
                 _getFacultyName(documentReference);
-
-                sTime = (data['startDate']);
-                eTime = (data['endDate']);
-                res1 = sTime.toDate();
-                res2 = eTime.toDate();
-                endTime = res2.millisecondsSinceEpoch + 1000 * 30;
-                startTime=res1.microsecondsSinceEpoch+1000*30;
-                currentTime=DateTime.now().millisecondsSinceEpoch + 1000 * 30;
 
 
 
@@ -161,64 +161,74 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                     Text('Description: ' + data['Description']),
                     Text('Question Count: ' + data['QuestionCount'].toString()),
                     Text('Max  Score: ' + data['MaxScore'].toString()),
-                    Text('Start Time: ' + data['startDate'].toString()),
-                    Text('End Time: ' + data['endDate'].toString()),
+                    Text('Start Time: ' + (data['startDate']as Timestamp).toDate().toString()),
+                    Text('End Time: ' + (data['endDate']as Timestamp).toDate().toString()),
                     Text("Creator Name:$facultyName "),
                     FlatButton(
                         onPressed: () async {
+                          sTime = (data['startDate']);
+                          eTime = (data['endDate']);
+                          res1 = sTime.toDate();
+                          res2 = eTime.toDate();
+                          endTime = res2.millisecondsSinceEpoch + 1000 * 30;
+                          startTime = res1.microsecondsSinceEpoch + 1000 * 30;
+                          currentTime = DateTime.now().millisecondsSinceEpoch + 1000 * 30;
+
                           print("Current: $currentTime");
                           print("End: $endTime");
-
+                          print("Start: $startTime");
                           FirebaseFirestore.instance
                               .collection('Quiz')
                               .doc(code)
                               .collection(code + 'Result')
-                              .doc(uId).get().then((value) {
-
-                            check=value.data()['Login'];
-                            print("Login Status :$check");
-
+                              .doc(uId)
+                              .set({
+                            'S_Name': uName,
+                            'S_UID': uId,
+                            'S_RegNo': uRegNo,
+                            'S_EmailID': uEmailId,
+                            'Login': open,
+                            'Score': score,
+                            'tabSwitch': tabSwitch,
+                            'Login Count':check
 
                           });
+                          //
+                          // FirebaseFirestore.instance
+                          //     .collection('Quiz')
+                          //     .doc(code)
+                          //     .collection(code + 'Result')
+                          //     .doc(uId)
+                          //     .get()
+                          //     .then((value) {
+                          //   check = value.data()['Login'];
+                          //   print("Login Status :$check");
+                          // });
 
-
-
-                          if(check==true)
-                            {  Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                    StudentDashboard()),
-                            );}
-
-                          else if(check==false && currentTime==endTime)
-                            {  FirebaseFirestore.instance
-                                .collection('Quiz')
-                                .doc(code)
-                                .collection(code + 'Result')
-                                .doc(uId)
-                                .set({
-                              'S_Name': uName,
-                              'S_UID': uId,
-                              'S_RegNo': uRegNo,
-                              'S_EmailID': uEmailId,
-                              'Login': open,
-                              'Score': score,
-                              'tabSwitch': tabSwitch
-                            });
+                           if(currentTime>=startTime&&currentTime<=endTime) {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      AttemptQuiz(
-                                        subjectName: data['SubjectName'],
-                                        accessCode: code,
-                                        questionCount:data['QuestionCount'] ,
-                                        maximumScore: data['MaxScore'],
-                                        timeCount: endTime,
-                                      )),
-                            );}
+                                  builder: (context) => StudentDashboard()),
+                            );
+                          }
+                           else {
+                             Navigator.push(
+                               context,
+                               MaterialPageRoute(
+                                   builder: (context) => AttemptQuiz(
+                                     subjectName: data['SubjectName'],
+                                     accessCode: code,
+                                     questionCount: data['QuestionCount'],
+                                     maximumScore: data['MaxScore'],
+                                     timeCount: endTime,
+                                   )),
 
+                             );
+
+                             check++;
+                             print("Login $check");
+                           }
                         },
                         child: Text("Give Quiz"))
                   ],
