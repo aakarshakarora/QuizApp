@@ -5,28 +5,24 @@ import 'package:flutter/material.dart';
 
 import 'package:quiz_app/Utilities/buttons.dart';
 
-
-
 class PreviewQuiz extends StatefulWidget {
   final String subjectName, accessCode;
   final int questionCount, maximumScore;
 
-
-  PreviewQuiz(
-      {@required this.accessCode,
-        @required this.subjectName,
-        @required this.questionCount,
-        @required this.maximumScore,
-        });
+  PreviewQuiz({
+    @required this.accessCode,
+    @required this.subjectName,
+    @required this.questionCount,
+    @required this.maximumScore,
+  });
 
   @override
   _PreviewQuizState createState() => _PreviewQuizState();
 }
 
-class _PreviewQuizState extends State<PreviewQuiz>  {
+class _PreviewQuizState extends State<PreviewQuiz> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String uId, subjectName, creatorName, maxScore, quizDate;
-
 
   String getUserID() {
     final User user = _auth.currentUser;
@@ -35,26 +31,21 @@ class _PreviewQuizState extends State<PreviewQuiz>  {
     return uid.toString();
   }
 
-
   PageController pageController = PageController(initialPage: 0);
 
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-
-
   }
 
   @override
   Widget build(BuildContext context) {
-
     var firestoreDB = FirebaseFirestore.instance
         .collection('Quiz')
         .doc(widget.accessCode)
@@ -67,7 +58,6 @@ class _PreviewQuizState extends State<PreviewQuiz>  {
       ),
       body: Column(
         children: [
-
           Expanded(
             child: Container(
               child: StreamBuilder(
@@ -98,7 +88,8 @@ class _PreviewQuizState extends State<PreviewQuiz>  {
                               index: index,
                               reqDoc: reqDocs[index],
                               correctAnswerMarks:
-                              (widget.maximumScore) / (reqDocs.length),
+                                  (widget.maximumScore) / (reqDocs.length),
+                              code: widget.accessCode,
                             ),
                             SizedBox(
                               height: 100,
@@ -109,40 +100,39 @@ class _PreviewQuizState extends State<PreviewQuiz>  {
                                 index == 0
                                     ? Container()
                                     : roundedButton(
-                                    color: Colors.blue,
-                                    context: context,
-                                    text: "Prev",
-                                    onPressed: () {
-                                      print("Prev Button is pressed!");
-                                      print(index);
-                                      print(widget.questionCount);
-                                      pageController.animateToPage(
-                                          index - 1,
-                                          duration:
-                                          Duration(milliseconds: 200),
-                                          curve: Curves.easeIn);
-                                    }),
+                                        color: Colors.blue,
+                                        context: context,
+                                        text: "Prev",
+                                        onPressed: () {
+                                          print("Prev Button is pressed!");
+                                          print(index);
+                                          print(widget.questionCount);
+                                          pageController.animateToPage(
+                                              index - 1,
+                                              duration:
+                                                  Duration(milliseconds: 200),
+                                              curve: Curves.easeIn);
+                                        }),
                                 index != widget.questionCount - 1
                                     ? roundedButton(
-                                    color: Colors.blue,
-                                    context: context,
-                                    text: "Next",
-                                    onPressed: () {
-                                      print("Next Button is pressed!");
-                                      print(index);
-                                      print(widget.questionCount);
-                                      pageController.animateToPage(
-                                          index + 1,
-                                          duration:
-                                          Duration(milliseconds: 200),
-                                          curve: Curves.bounceInOut);
-                                    })
+                                        color: Colors.blue,
+                                        context: context,
+                                        text: "Next",
+                                        onPressed: () {
+                                          print("Next Button is pressed!");
+                                          print(index);
+                                          print(widget.questionCount);
+
+                                          pageController.animateToPage(
+                                              index + 1,
+                                              duration:
+                                                  Duration(milliseconds: 200),
+                                              curve: Curves.bounceInOut);
+                                        })
                                     : Container(),
                               ],
                             ),
                             SizedBox(height: 20),
-
-
                           ],
                         ),
                       );
@@ -160,12 +150,13 @@ class _PreviewQuizState extends State<PreviewQuiz>  {
 
 class PreviewQuestionTile extends StatefulWidget {
   // TODO:defined totalDocs
-  final dynamic reqDoc, index, correctAnswerMarks;
+  final dynamic reqDoc, index, correctAnswerMarks, code;
 
   PreviewQuestionTile(
       {@required this.reqDoc,
-        @required this.index,
-        @required this.correctAnswerMarks});
+      @required this.index,
+      @required this.correctAnswerMarks,
+      @required this.code});
 
   @override
   _PreviewQuestionTileState createState() => _PreviewQuestionTileState();
@@ -175,7 +166,7 @@ class _PreviewQuestionTileState extends State<PreviewQuestionTile>
     with AutomaticKeepAliveClientMixin {
   String selectedValue;
 
-  String option1,option2,option3,option4,ques;
+  String option1, option2, option3, option4, ques, docID, code;
 
   List<String> options = [];
 
@@ -192,11 +183,14 @@ class _PreviewQuestionTileState extends State<PreviewQuestionTile>
       widget.reqDoc.get("04"),
     ];
 
-    option1=widget.reqDoc.get("01");
-    option2=widget.reqDoc.get("02");
-    option3=widget.reqDoc.get("03");
-    option4=widget.reqDoc.get("04");
-    ques=widget.reqDoc.get("Ques");
+    option1 = widget.reqDoc.get("01");
+    option2 = widget.reqDoc.get("02");
+    option3 = widget.reqDoc.get("03");
+    option4 = widget.reqDoc.get("04");
+    ques = widget.reqDoc.get("Ques");
+    print(widget.reqDoc.documentID);
+    docID = widget.reqDoc.documentID;
+    code = widget.code;
     options.shuffle();
     super.initState();
   }
@@ -228,23 +222,23 @@ class _PreviewQuestionTileState extends State<PreviewQuestionTile>
                     Radio(
                         value: options[index],
                         groupValue: selectedValue,
-                        onChanged: (value) {
-
-                        }),
+                        onChanged: (value) {}),
                     Text(options[index]),
                   ],
                 );
               }),
 
           // ignore: deprecated_member_use
-          FlatButton(onPressed: (){
-
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>EditQuesAns(option1, option2, option3, option4, ques)),
-            );
-          }, child: Text("Edit "))
+          FlatButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => EditQuesAns(option1, option2,
+                          option3, option4, ques, docID, code)),
+                );
+              },
+              child: Text("Edit "))
         ],
       ),
     );
@@ -252,52 +246,75 @@ class _PreviewQuestionTileState extends State<PreviewQuestionTile>
 }
 
 class EditQuesAns extends StatefulWidget {
-  final String option1,option2,option3,option4,ques;
+  final String option1, option2, option3, option4, ques, docId, code;
 
-  EditQuesAns(
-      this.option1, this.option2, this.option3, this.option4, this.ques);
+  EditQuesAns(this.option1, this.option2, this.option3, this.option4, this.ques,
+      this.docId, this.code);
 
   @override
   _EditQuesAnsState createState() => _EditQuesAnsState();
 }
 
 class _EditQuesAnsState extends State<EditQuesAns> {
+  String option1, option2, option3, option4, ques;
 
-  
+  TextEditingController q,o1,o2,o3,o4 ;
+  @override
+  void initState() {
+    q=TextEditingController()..text = widget.ques;
+    o1=TextEditingController()..text = widget.option1;
+    o2=TextEditingController()..text = widget.option2;
+    o3=TextEditingController()..text = widget.option3;
+    o4=TextEditingController()..text = widget.option4;
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:
-          
-        Column(
-          children: [
-            TextField(
-              controller: TextEditingController()..text = widget.ques,
-              onChanged: (text) => {},
-            ),
-
-            TextField(
-              controller: TextEditingController()..text = widget.option1,
-              onChanged: (text) => {},
-            ),
-            TextField(
-              controller: TextEditingController()..text = widget.option2,
-              onChanged: (text) => {},
-            ),
-            TextField(
-              controller: TextEditingController()..text = widget.option3,
-              onChanged: (text) => {},
-            ),
-            TextField(
-              controller: TextEditingController()..text = widget.option4,
-              onChanged: (text) => {},
-            )
-          ],
-        )
-
-
-
-    );
+        body: Column(
+      children: [
+        TextField(
+          controller: q,
+          onChanged: (text) => {ques = text},
+        ),
+        TextField(
+          controller: o1,
+          onChanged: (text) => {option1 = text},
+        ),
+        TextField(
+          controller: o2,
+          onChanged: (text) => {option2 = text},
+        ),
+        TextField(
+          controller: o3,
+          onChanged: (text) => {option3 = text},
+        ),
+        TextField(
+          controller: o4,
+          onChanged: (text) => {option4 = text},
+        ),
+        FlatButton(
+            onPressed: () {
+              FirebaseFirestore.instance
+                  .collection('Quiz')
+                  .doc(widget.code)
+                  .collection(widget.code)
+                  .doc(widget.docId)
+                  .update({
+                "01": option1,
+                "02": option2,
+                "03": option3,
+                "04": option4,
+                "Ques": ques,
+              });
+              Navigator.pop(
+                context,
+              );
+            },
+            child: Text("Update"))
+      ],
+    ));
   }
 }
-
