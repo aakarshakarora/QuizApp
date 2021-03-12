@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
+import 'package:quiz_app/PreviewQuiz/previewQuiz.dart';
 
 class ViewQuizDesc extends StatefulWidget {
   @override
@@ -95,7 +96,7 @@ class _ViewDetailsState extends State<ViewDetails> {
     return Container(
       padding: const EdgeInsets.all(10),
       child: Container(
-        height: 155,
+        height: 200,
         width: double.infinity,
         child: Card(
           elevation: 5,
@@ -176,6 +177,17 @@ class _ViewDetailsState extends State<ViewDetails> {
                     }
                   },
                 ),
+
+                FlatButton(onPressed: (){
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>PreviewQuiz(accessCode: accessCode, subjectName: subjectName, questionCount: questionCount, maximumScore: maxScore)),
+                  );
+
+                }, child: Text("Review Quiz"))
+
           ],
                   ),
 
