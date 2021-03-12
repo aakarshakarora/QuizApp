@@ -3,10 +3,8 @@ import 'package:quiz_app/Dashboard/S_Dashboard/dashboardStudent.dart';
 
 
 class PostQuiz extends StatefulWidget {
-  final dynamic score;
-  final int inactive;
-
-  PostQuiz(this.score, this.inactive);
+  final int score,inactive,totalScore;
+  PostQuiz({@required this.score,@required this.inactive,@required this.totalScore});
 
   @override
   _PostQuizState createState() => _PostQuizState();
@@ -39,14 +37,14 @@ class _PostQuizState extends State<PostQuiz> {
           children: [
             Center(
                 child: Text(
-                  "Thank You for Giving Quiz !! \n Your Score is: "+widget.score.toString()+"\n Inactive State: "+widget.inactive.toString() ,
+                  "Thank You for Giving Quiz !! \n Your Score is: "+widget.score.toString()+"/${widget.totalScore}\n Inactive State: "+widget.inactive.toString() ,
                   style: TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 17,
                       fontWeight: FontWeight.w500,
                       color: Colors.black),
                 )),
-            FlatButton(onPressed: (){
+            TextButton(onPressed: (){
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => StudentDashboard()),

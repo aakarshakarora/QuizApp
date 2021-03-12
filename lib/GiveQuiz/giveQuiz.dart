@@ -45,10 +45,10 @@ class _EnterCodeState extends State<EnterCode> {
         body: Column(
           children: [
             _buildAccessCodeField(),
-            FlatButton(
+            TextButton(
               onPressed: () async {
                 setState(() {
-                  print("The access code is: " + _accessCodeController.text);
+                  //print("The access code is: " + _accessCodeController.text);
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -75,11 +75,10 @@ class QuizCodeDesc extends StatefulWidget {
 
 class _QuizCodeDescState extends State<QuizCodeDesc> {
   static String code, facultyName;
-  int check=0;
-  static int endTime, startTime,currentTime;
+  static int endTime, startTime, currentTime;
   Timestamp sTime, eTime;
   DateTime res1, res2;
-  bool open = true;
+  bool attempted;
 
   int score = 0, tabSwitch = 0;
   final userId = FirebaseAuth.instance.currentUser.uid;
@@ -88,14 +87,14 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
   String getUserID() {
     final User user = _auth.currentUser;
     final uid = user.uid;
-    print(uid);
+    //print(uid);
     return uid.toString();
   }
 
   String getUserEmail() {
     final User user = _auth.currentUser;
     final uEmail = user.email;
-    print(uEmail);
+    //print(uEmail);
     return uEmail.toString();
   }
 
@@ -117,6 +116,17 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
           .then((value) {
         uName = value.data()['S_Name'];
         uRegNo = value.data()['S_RegNo'];
+      });
+
+      FirebaseFirestore.instance
+          .collection('Quiz')
+          .doc(code)
+          .collection(code + 'Result')
+          .doc(uId)
+          .get()
+          .then((value) async {
+        attempted = await value.data()['attempted'];
+        print("Login Status :$attempted");
       });
     });
   }
@@ -152,19 +162,18 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
 
                 DocumentReference documentReference = data['Creator'];
                 _getFacultyName(documentReference);
-
-
-
                 return Column(
                   children: [
                     Text('Subject Name:' + data['SubjectName']),
                     Text('Description: ' + data['Description']),
                     Text('Question Count: ' + data['QuestionCount'].toString()),
                     Text('Max  Score: ' + data['MaxScore'].toString()),
-                    Text('Start Time: ' + (data['startDate']as Timestamp).toDate().toString()),
-                    Text('End Time: ' + (data['endDate']as Timestamp).toDate().toString()),
+                    Text('Start Time: ' +
+                        (data['startDate'] as Timestamp).toDate().toString()),
+                    Text('End Time: ' +
+                        (data['endDate'] as Timestamp).toDate().toString()),
                     Text("Creator Name:$facultyName "),
-                    FlatButton(
+                    TextButton(
                         onPressed: () async {
                           sTime = (data['startDate']);
                           eTime = (data['endDate']);
@@ -172,63 +181,50 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                           res2 = eTime.toDate();
                           endTime = res2.millisecondsSinceEpoch + 1000 * 30;
                           startTime = res1.microsecondsSinceEpoch + 1000 * 30;
-                          currentTime = DateTime.now().millisecondsSinceEpoch + 1000 * 30;
-
-                          print("Current: $currentTime");
-                          print("End: $endTime");
-                          print("Start: $startTime");
-                          FirebaseFirestore.instance
-                              .collection('Quiz')
-                              .doc(code)
-                              .collection(code + 'Result')
-                              .doc(uId)
-                              .set({
-                            'S_Name': uName,
-                            'S_UID': uId,
-                            'S_RegNo': uRegNo,
-                            'S_EmailID': uEmailId,
-                            'Login': open,
-                            'Score': score,
-                            'tabSwitch': tabSwitch,
-                            'Login Count':check
-
-                          });
+                          currentTime =
+                              DateTime.now().millisecondsSinceEpoch + 1000 * 30;
                           //
-                          // FirebaseFirestore.instance
-                          //     .collection('Quiz')
-                          //     .doc(code)
-                          //     .collection(code + 'Result')
-                          //     .doc(uId)
-                          //     .get()
-                          //     .then((value) {
-                          //   check = value.data()['Login'];
-                          //   print("Login Status :$check");
-                          // });
+                          // print("Current: $currentTime");
+                          // print("End: $endTime");
+                          // print("Start: $startTime");
 
-                           if(currentTime>=startTime&&currentTime<=endTime) {
+                          if (/*(currentTime >= startTime &&
+                                  currentTime <= endTime) &&*/
+                              (attempted == true)) {
+                            print("This is being called");
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => StudentDashboard()),
                             );
+                          } else {
+                            attempted = false;
+                            FirebaseFirestore.instance
+                                .collection('Quiz')
+                                .doc(code)
+                                .collection(code + 'Result')
+                                .doc(uId)
+                                .set({
+                              'S_Name': uName,
+                              'S_UID': uId,
+                              'S_RegNo': uRegNo,
+                              'S_EmailID': uEmailId,
+                              'attempted': attempted,
+                              'Score': score,
+                              'tabSwitch': tabSwitch,
+                            });
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AttemptQuiz(
+                                        subjectName: data['SubjectName'],
+                                        accessCode: code,
+                                        questionCount: data['QuestionCount'],
+                                        maximumScore: data['MaxScore'],
+                                        timeCount: endTime,
+                                      )),
+                            );
                           }
-                           else {
-                             Navigator.push(
-                               context,
-                               MaterialPageRoute(
-                                   builder: (context) => AttemptQuiz(
-                                     subjectName: data['SubjectName'],
-                                     accessCode: code,
-                                     questionCount: data['QuestionCount'],
-                                     maximumScore: data['MaxScore'],
-                                     timeCount: endTime,
-                                   )),
-
-                             );
-
-                             check++;
-                             print("Login $check");
-                           }
                         },
                         child: Text("Give Quiz"))
                   ],
