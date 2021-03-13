@@ -14,7 +14,6 @@ class AddQuestion extends StatefulWidget {
 
 class _AddQuestionState extends State<AddQuestion> {
 
-  bool answered=false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _buildQuestionController =
       TextEditingController();
@@ -201,7 +200,7 @@ class _AddQuestionState extends State<AddQuestion> {
                               "03": _option3Controller.text,
                               "04": _option4Controller.text,
                               "Ques": _buildQuestionController.text,
-                              "Answered":answered
+
                             }).then((_) {
                               //_displaySnackBar(context);
                               Navigator.push(
@@ -236,7 +235,6 @@ class _AddQuestionState extends State<AddQuestion> {
                               "03": _option3Controller.text,
                               "04": _option4Controller.text,
                               "Ques": _buildQuestionController.text,
-                              "Answered":answered
                             }).then((_) {
                               //_displaySnackBar(context);
                               setState(() {

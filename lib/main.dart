@@ -4,9 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:quiz_app/Pages/startPage.dart';
 import 'package:provider/provider.dart';
 
-
-
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -18,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<Data>(
-      create: (context)=>Data(),
+      create: (context) => Data(),
       child: MaterialApp(
         title: 'Proctored Quiz App',
         theme: ThemeData(
@@ -32,10 +29,10 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class Data extends ChangeNotifier{
-  int questionCount=0;
+class Data extends ChangeNotifier {
+  int questionCount = 0;
 
-  void changeCount(int newCount){
+  void changeCount(int newCount) {
     questionCount = newCount;
     notifyListeners();
   }

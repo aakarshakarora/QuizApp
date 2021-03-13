@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:quiz_app/Dashboard/S_Dashboard/dashboardStudent.dart';
 import 'package:quiz_app/GiveQuiz/attemptQuiz.dart';
 
 class EnterCode extends StatefulWidget {
@@ -44,10 +45,10 @@ class _EnterCodeState extends State<EnterCode> {
         body: Column(
           children: [
             _buildAccessCodeField(),
-            FlatButton(
+            TextButton(
               onPressed: () async {
                 setState(() {
-                  print("The access code is: " + _accessCodeController.text);
+                  //print("The access code is: " + _accessCodeController.text);
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -74,26 +75,30 @@ class QuizCodeDesc extends StatefulWidget {
 
 class _QuizCodeDescState extends State<QuizCodeDesc> {
   static String code, facultyName;
-  bool open = true;
-  int score=0,tabSwitch=0;
+  static int endTime, startTime, currentTime;
+  Timestamp sTime, eTime,cTime;
+  DateTime res1, res2;
+  bool attempted = false;
+
+  int score = 0, tabSwitch = 0;
   final userId = FirebaseAuth.instance.currentUser.uid;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   String getUserID() {
     final User user = _auth.currentUser;
     final uid = user.uid;
-    print(uid);
+    //print(uid);
     return uid.toString();
   }
 
   String getUserEmail() {
     final User user = _auth.currentUser;
     final uEmail = user.email;
-    print(uEmail);
+    //print(uEmail);
     return uEmail.toString();
   }
 
-  String uId, uName, uEmailId,uRegNo;
+  String uId, uName, uEmailId, uRegNo;
 
   @override
   void initState() {
@@ -104,9 +109,24 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
       super.initState();
       uId = getUserID();
       uEmailId = getUserEmail();
-      FirebaseFirestore.instance.collection('Student').doc(uId).get().then((value) {
-        uName=value.data()['S_Name'];
-        uRegNo=value.data()['S_RegNo'];
+      FirebaseFirestore.instance
+          .collection('Student')
+          .doc(uId)
+          .get()
+          .then((value) {
+        uName = value.data()['S_Name'];
+        uRegNo = value.data()['S_RegNo'];
+      });
+
+      FirebaseFirestore.instance
+          .collection('Quiz')
+          .doc(code)
+          .collection(code + 'Result')
+          .doc(uId)
+          .get()
+          .then((value) async {
+        attempted = await value.data()['attempted'];
+        print("Login Status :$attempted");
       });
     });
   }
@@ -128,55 +148,91 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
       body: Container(
         child: FutureBuilder<DocumentSnapshot>(
             future:
-            FirebaseFirestore.instance.collection('Quiz').doc(code).get(),
+                FirebaseFirestore.instance.collection('Quiz').doc(code).get(),
             builder: (BuildContext context,
                 AsyncSnapshot<DocumentSnapshot> snapshot) {
               if (!snapshot.hasData && (facultyName == null)) {
                 return Center(child: CircularProgressIndicator());
-              }
-              else {
+              } else if (snapshot.data.exists == false) {
+                return Center(
+                    child: Text(
+                        "No Information Found!! \nKindly Enter Correct Access Code "));
+              } else {
                 Map<String, dynamic> data = snapshot.data.data();
 
                 DocumentReference documentReference = data['Creator'];
                 _getFacultyName(documentReference);
-
-
                 return Column(
                   children: [
                     Text('Subject Name:' + data['SubjectName']),
                     Text('Description: ' + data['Description']),
                     Text('Question Count: ' + data['QuestionCount'].toString()),
                     Text('Max  Score: ' + data['MaxScore'].toString()),
-                    Text('Start Time: ' + data['startDate'].toString()),
-                    Text('End Time: ' + data['endDate'].toString()),
+                    Text('Start Time: ' +
+                        (data['startDate'] as Timestamp).toDate().toString()),
+                    Text('End Time: ' +
+                        (data['endDate'] as Timestamp).toDate().toString()),
                     Text("Creator Name:$facultyName "),
-                    FlatButton(
+                    TextButton(
                         onPressed: () async {
-                          FirebaseFirestore.instance
-                              .collection('Quiz')
-                              .doc(code)
-                              .collection(code + 'Result')
-                              .doc(uId)
-                              .set({
-                            'S_Name': uName,
-                            'S_UID': uId,
-                            'S_RegNo': uRegNo,
-                            'S_EmailID': uEmailId,
-                            'Login': open,
-                            'Score': score,
-                            'tabSwitch': tabSwitch
-                          });
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    AttemptQuiz(
-                                      subjectName: data['SubjectName'],
-                                      accessCode: code,
-                                      questionCount:data['QuestionCount'] ,
-                                      maximumScore: data['MaxScore'],
-                                    )),
-                          );
+                          sTime = (data['startDate']);
+                          startTime = sTime.millisecondsSinceEpoch + 1000 * 30;
+
+                          eTime = (data['endDate']);
+                          endTime = eTime.millisecondsSinceEpoch + 1000 * 30;
+
+                          currentTime=DateTime.now().millisecondsSinceEpoch + 1000 * 30;
+
+                          print("Start Date: $startTime");
+                          print("End Date: $endTime");
+                          print("Current Date: $currentTime");
+
+                          if (attempted == true) {
+                            print("This is being called");
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => StudentDashboard()),
+                            );
+                          } else {
+                            if (startTime <= currentTime &&
+                                endTime >= currentTime) {
+                              FirebaseFirestore.instance
+                                  .collection('Quiz')
+                                  .doc(code)
+                                  .collection(code + 'Result')
+                                  .doc(uId)
+                                  .set({
+                                'S_Name': uName,
+                                'S_UID': uId,
+                                'S_RegNo': uRegNo,
+                                'S_EmailID': uEmailId,
+                                'attempted': attempted,
+                                'Score': score,
+                                'tabSwitch': tabSwitch,
+                                'maxScore':data['MaxScore']
+                              });
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AttemptQuiz(
+                                          subjectName: data['SubjectName'],
+                                          accessCode: code,
+                                          questionCount: data['QuestionCount'],
+                                          maximumScore: data['MaxScore'],
+                                          timeCount: endTime,
+                                        )),
+                              );
+                            }
+
+                            else{
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => StudentDashboard()),
+                              );
+                            }
+                          }
                         },
                         child: Text("Give Quiz"))
                   ],

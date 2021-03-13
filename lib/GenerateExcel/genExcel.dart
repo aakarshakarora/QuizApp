@@ -84,6 +84,7 @@ class _CreateExcelState extends State<CreateExcel> {
     sheet.getRangeByName('E1').setText('Tab Switch');
     sheet.getRangeByName('F1').setText('Logged In');
     sheet.getRangeByName('G1').setText('User ID');
+    sheet.getRangeByName('H1').setText('Max Score');
     String subjectName;
     String code;
     code=accessCode.substring(0,5);
@@ -109,8 +110,9 @@ class _CreateExcelState extends State<CreateExcel> {
       sheet.getRangeByName('C'+count.toString()).setText(document.data()['S_EmailID'].toString());
       sheet.getRangeByName('D'+count.toString()).setText(document.data()['Score'].toString());
       sheet.getRangeByName('E'+count.toString()).setText(document.data()['tabSwitch'].toString());
-      sheet.getRangeByName('F'+count.toString()).setText(document.data()['loggedIn'].toString());
+      sheet.getRangeByName('F'+count.toString()).setText(document.data()['attempted'].toString());
       sheet.getRangeByName('G'+count.toString()).setText(document.data()['S_UID'].toString());
+      sheet.getRangeByName('H'+count.toString()).setText(document.data()['maxScore'].toString());
 
       count++;
     }

@@ -12,7 +12,7 @@ class ResultModel {
       this.score, this.tabSwitch,this.maxScore);
 
   ResultModel.fromMap(Map<String, dynamic> map)
-      : assert(map['Login'] != null),
+      : assert(map['attempted'] != null),
         assert(map['S_EmailID'] != null),
         assert(map['S_Name'] != null),
         assert(map['S_RegNo'] != null),
