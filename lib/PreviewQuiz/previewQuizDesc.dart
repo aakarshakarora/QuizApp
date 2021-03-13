@@ -33,7 +33,7 @@ class _ViewQuizDescState extends State<ViewQuizDesc> {
                       return Center(
                         child: CircularProgressIndicator(),
                       );
-                    final reqDocs = opSnapshot.data.documents;
+                    final reqDocs = opSnapshot.data.docs;
                     print('length ${reqDocs.length}');
                     return ListView.builder(
                       itemCount: reqDocs.length,

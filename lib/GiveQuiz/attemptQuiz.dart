@@ -163,6 +163,7 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
           ),
           Expanded(
             child: Container(
+
               child: StreamBuilder(
                 stream: firestoreDB,
                 builder: (ctx, opSnapshot) {

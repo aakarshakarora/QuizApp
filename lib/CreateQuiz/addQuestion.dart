@@ -16,6 +16,16 @@ class AddQuestion extends StatefulWidget {
 }
 
 class _AddQuestionState extends State<AddQuestion> {
+  bool imagePresent;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    imagePresent=false;
+  }
+
+
+  final TextEditingController _imageLink = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _buildQuestionController =
       TextEditingController();
@@ -49,6 +59,30 @@ class _AddQuestionState extends State<AddQuestion> {
     );
   }
 
+  _buildImageCheck() {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 5),
+      child: TextFormField(
+        style: TextStyle(
+            fontFamily: 'Poppins', fontSize: 17, fontWeight: FontWeight.bold),
+        controller: _imageLink,
+        decoration: InputDecoration(
+          labelText: 'Enter Image URL:',
+          labelStyle: TextStyle(
+            fontFamily: 'Poppins',
+            fontSize: 17,
+          ),
+        ),
+        autofocus: false,
+        validator: (String value) {
+          if (value.isEmpty) {
+            return 'Field Required';
+          }
+          return null;
+        },
+      ),
+    );
+  }
   _buildOption1Field() {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 5),
@@ -149,12 +183,6 @@ class _AddQuestionState extends State<AddQuestion> {
     );
   }
 
-  @override
-  void initState() {
-    // TODO: implement initState
-
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -169,6 +197,34 @@ class _AddQuestionState extends State<AddQuestion> {
                 Text(currentCount.toString() +
                     "/" +
                     widget.questionCount.toString()),
+
+                Container(
+                  padding: EdgeInsets.all(15.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text("Yes"),
+                      Radio<bool>(
+                          groupValue: imagePresent,
+                          value: true,
+                          onChanged: (v) {
+                            setState(() {
+                              imagePresent=v;
+                            });
+                          }),
+                      Text("No"),
+                      Radio<bool>(
+                          groupValue: imagePresent,
+                          value: false,
+                          onChanged: (v) {
+                            setState(() {
+                              imagePresent=v;
+                            });
+                          }),
+                    ],
+                  ),
+                ),
+                imagePresent==true?_buildImageCheck():Container(height: 0,),
                 _buildQuestionField(),
                 _buildOption1Field(),
                 _buildOption2Field(),
@@ -201,6 +257,8 @@ class _AddQuestionState extends State<AddQuestion> {
                                   "03": _option3Controller.text,
                                   "04": _option4Controller.text,
                                   "Ques": _buildQuestionController.text,
+                                  "imgPresent": imagePresent,
+                                  "imgURL": _imageLink.text
                                 }).then((_) {
                                   //_displaySnackBar(context);
                                   Navigator.push(
@@ -237,6 +295,8 @@ class _AddQuestionState extends State<AddQuestion> {
                                   "03": _option3Controller.text,
                                   "04": _option4Controller.text,
                                   "Ques": _buildQuestionController.text,
+                                  "imgPresent": imagePresent,
+                                  "imgURL": _imageLink.text
                                 }).then((_) {
                                   //_displaySnackBar(context);
                                   setState(() {
