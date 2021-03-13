@@ -12,9 +12,7 @@ import 'globals.dart' as global;
 
 class AttemptQuiz extends StatefulWidget {
   final String subjectName, accessCode;
-  final int questionCount, maximumScore;
-  final int timeCount;
-
+  final int questionCount, maximumScore,timeCount;
   AttemptQuiz(
       {@required this.accessCode,
         @required this.subjectName,
@@ -29,8 +27,8 @@ class AttemptQuiz extends StatefulWidget {
 class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String uId, subjectName, creatorName, maxScore, quizDate;
-  dynamic finalScore;
-
+  bool attempted=true;
+  int finalScore=0;
   String getUserID() {
     final User user = _auth.currentUser;
     final uid = user.uid;
@@ -87,14 +85,15 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
               .doc(uId)
               .update({
             "S_UID": uId,
-            "Score": finalScore.toString(),
-            'tabSwitch': inactive
+            "Score": finalScore,
+            'tabSwitch': inactive,
+            'attempted': attempted,
           }).then((_) {
             //_displaySnackBar(context);
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => PostQuiz(finalScore, inactive)),
+                  builder: (context) => PostQuiz(score: finalScore, inactive:inactive,totalScore: widget.maximumScore,)),
             );
           });
           break;
@@ -137,14 +136,15 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
                     .doc(uId)
                     .update({
                   "S_UID": uId,
-                  "Score": finalScore.toString(),
-                  'tabSwitch': inactive
+                  "Score": finalScore,
+                  'tabSwitch': inactive,
+                  'attempted': attempted,
                 }).then((_) {
                   //_displaySnackBar(context);
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => PostQuiz(finalScore, inactive)),
+                        builder: (context) => PostQuiz(score: finalScore, inactive:inactive,totalScore: widget.maximumScore,)),
                   );
                 });
               }
@@ -168,100 +168,107 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: reqDocs.length,
                     itemBuilder: (ctx, index) {
-                      return Container(
-                        margin: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: (BorderRadius.circular(20)),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            QuestionTile(
-                              index: index,
-                              reqDoc: reqDocs[index],
-                              correctAnswerMarks:
-                              (widget.maximumScore) / (reqDocs.length),
-                            ),
-                            SizedBox(
-                              height: 100,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                index == 0
-                                    ? Container()
-                                    : roundedButton(
-                                    color: Colors.blue,
-                                    context: context,
-                                    text: "Prev",
-                                    onPressed: () {
-                                      print("Prev Button is pressed!");
-                                      print(index);
-                                      print(widget.questionCount);
-                                      pageController.animateToPage(
-                                          index - 1,
-                                          duration:
-                                          Duration(milliseconds: 200),
-                                          curve: Curves.easeIn);
-                                    }),
-                                index != widget.questionCount - 1
-                                    ? roundedButton(
-                                    color: Colors.blue,
-                                    context: context,
-                                    text: "Next",
-                                    onPressed: () {
-                                      print("Next Button is pressed!");
-                                      print(index);
-                                      print(widget.questionCount);
-                                      pageController.animateToPage(
-                                          index + 1,
-                                          duration:
-                                          Duration(milliseconds: 200),
-                                          curve: Curves.bounceInOut);
-                                    })
-                                    : Container(),
-                              ],
-                            ),
-                            SizedBox(height: 20),
-                            roundedButton(
-                                color: Colors.orange,
-                                context: context,
-                                text: "Submit",
-                                onPressed: () {
-                                  print("Submit Button is pressed!");
+                      return SingleChildScrollView(
+                        child: Container(
+                          margin: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: (BorderRadius.circular(20)),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              reqDocs[index].get("imgURL")==null?Container():
+                              Container(
+                                width:MediaQuery.of(context).size.width,
+                                child: Image.network(reqDocs[index].get("imgURL")),
+                              ),
+                              QuestionTile(
+                                index: index,
+                                reqDoc: reqDocs[index],
+                                correctAnswerMarks:
+                                (widget.maximumScore) / (reqDocs.length),
+                              ),
+                              SizedBox(
+                                height: 100,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  index == 0
+                                      ? Container()
+                                      : roundedButton(
+                                      color: Colors.blue,
+                                      context: context,
+                                      text: "Prev",
+                                      onPressed: () {
+                                        print("Prev Button is pressed!");
+                                        print(index);
+                                        print(widget.questionCount);
+                                        pageController.animateToPage(
+                                            index - 1,
+                                            duration:
+                                            Duration(milliseconds: 200),
+                                            curve: Curves.easeIn);
+                                      }),
+                                  index != widget.questionCount - 1
+                                      ? roundedButton(
+                                      color: Colors.blue,
+                                      context: context,
+                                      text: "Next",
+                                      onPressed: () {
+                                        print("Next Button is pressed!");
+                                        print(index);
+                                        print(widget.questionCount);
+                                        pageController.animateToPage(
+                                            index + 1,
+                                            duration:
+                                            Duration(milliseconds: 200),
+                                            curve: Curves.bounceInOut);
+                                      })
+                                      : Container(),
+                                ],
+                              ),
+                              SizedBox(height: 20),
+                              roundedButton(
+                                  color: Colors.orange,
+                                  context: context,
+                                  text: "Submit",
+                                  onPressed: () {
+                                    print("Submit Button is pressed!");
+                                    print(
+                                        "Total Score:${(global.correct.reduce((a, b) => a + b)) * (widget.maximumScore) / (reqDocs.length)}");
 
-                                  print(
-                                      "Total Score:${(global.correct.reduce((a, b) => a + b)) * (widget.maximumScore) / (reqDocs.length)}");
-
-                                  setState(() {
-                                    finalScore = ({
-                                      (global.correct.reduce((a, b) => a + b)) *
-                                          (widget.maximumScore) /
-                                          (reqDocs.length)
+                                    setState(() {
+                                      finalScore = (global.correct.reduce((a, b) => a + b)) *
+                                            (widget.maximumScore) ~/
+                                            (reqDocs.length);
                                     });
-                                  });
-                                  FirebaseFirestore.instance
-                                      .collection('Quiz')
-                                      .doc(widget.accessCode)
-                                      .collection(widget.accessCode + 'Result')
-                                      .doc(uId)
-                                      .update({
-                                    "S_UID": uId,
-                                    "Score": finalScore.toString(),
-                                    'tabSwitch': inactive
-                                  }).then((_) {
-                                    //_displaySnackBar(context);
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              PostQuiz(finalScore, inactive)),
-                                    );
-                                  });
-                                }),
-                          ],
+                                    FirebaseFirestore.instance
+                                        .collection('Quiz')
+                                        .doc(widget.accessCode)
+                                        .collection(widget.accessCode + 'Result')
+                                        .doc(uId)
+                                        .update({
+                                      "S_UID": uId,
+                                      "Score": finalScore,
+                                      'tabSwitch': inactive,
+                                      'attempted': attempted,
+                                    }).then((_) {
+                                      //_displaySnackBar(context);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                PostQuiz(score: finalScore, inactive:inactive,totalScore: widget.maximumScore,)),
+                                      );
+                                      global.attempted = [];
+                                      global.correct = [];
+                                    });
+                                  }),
+                            ],
+                          ),
                         ),
                       );
                     },
@@ -347,6 +354,7 @@ class _QuestionTileState extends State<QuestionTile>
                         onChanged: (value) {
                           setState(() {
                             // TODO: added attempted functionality
+                            print(widget.reqDoc.documentID);
                             selectedValue = value;
                             global.attempted[widget.index] = 1;
                             // Provider.of<Data>(context, listen: false)

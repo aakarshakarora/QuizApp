@@ -229,16 +229,20 @@ class _PreviewQuestionTileState extends State<PreviewQuestionTile>
               }),
 
           // ignore: deprecated_member_use
-          FlatButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => EditQuesAns(option1, option2,
-                          option3, option4, ques, docID, code)),
-                );
-              },
-              child: Text("Edit "))
+          Container(
+            alignment: Alignment.center,
+            child: IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => EditQuesAns(option1, option2,
+                            option3, option4, ques, docID, code)),
+                  );
+                },
+                //child: Text("Edit ")),
+                icon: Icon(Icons.edit)),
+          )
         ],
       ),
     );
@@ -258,14 +262,15 @@ class EditQuesAns extends StatefulWidget {
 class _EditQuesAnsState extends State<EditQuesAns> {
   String option1, option2, option3, option4, ques;
 
-  TextEditingController q,o1,o2,o3,o4 ;
+  TextEditingController q, o1, o2, o3, o4;
+
   @override
   void initState() {
-    q=TextEditingController()..text = widget.ques;
-    o1=TextEditingController()..text = widget.option1;
-    o2=TextEditingController()..text = widget.option2;
-    o3=TextEditingController()..text = widget.option3;
-    o4=TextEditingController()..text = widget.option4;
+    q = TextEditingController()..text = widget.ques;
+    o1 = TextEditingController()..text = widget.option1;
+    o2 = TextEditingController()..text = widget.option2;
+    o3 = TextEditingController()..text = widget.option3;
+    o4 = TextEditingController()..text = widget.option4;
 
     super.initState();
   }
@@ -273,48 +278,74 @@ class _EditQuesAnsState extends State<EditQuesAns> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
-      children: [
-        TextField(
-          controller: q,
-          onChanged: (text) => {ques = text},
+        appBar: AppBar(
+          title: Text("Edit question"),
         ),
-        TextField(
-          controller: o1,
-          onChanged: (text) => {option1 = text},
-        ),
-        TextField(
-          controller: o2,
-          onChanged: (text) => {option2 = text},
-        ),
-        TextField(
-          controller: o3,
-          onChanged: (text) => {option3 = text},
-        ),
-        TextField(
-          controller: o4,
-          onChanged: (text) => {option4 = text},
-        ),
-        FlatButton(
-            onPressed: () {
-              FirebaseFirestore.instance
-                  .collection('Quiz')
-                  .doc(widget.code)
-                  .collection(widget.code)
-                  .doc(widget.docId)
-                  .update({
-                "01": option1,
-                "02": option2,
-                "03": option3,
-                "04": option4,
-                "Ques": ques,
-              });
-              Navigator.pop(
-                context,
-              );
-            },
-            child: Text("Update"))
-      ],
-    ));
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              TextField(
+                controller: q,
+                decoration: InputDecoration(
+                    prefixText: 'Question: ',
+                    prefixStyle:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
+              ),
+              TextField(
+                decoration: InputDecoration(
+                    prefixText: 'Option1(Correct Answer): ',
+                    prefixStyle:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
+                controller: o1,
+              ),
+              TextField(
+                decoration: InputDecoration(
+                    prefixText: 'Option2: ',
+                    prefixStyle:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
+                controller: o2,
+              ),
+              TextField(
+                decoration: InputDecoration(
+                    prefixText: 'Option3: ',
+                    prefixStyle:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
+                controller: o3,
+              ),
+              TextField(
+                decoration: InputDecoration(
+                    prefixText: 'Option4: ',
+                    prefixStyle:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
+                controller: o4,
+              ),
+              SizedBox(
+                height: 50,
+              ),
+              roundedButton(
+                  color: Colors.blue,
+                  context: context,
+                  text: "Update",
+                  onPressed: () {
+                    FirebaseFirestore.instance
+                        .collection('Quiz')
+                        .doc(widget.code)
+                        .collection(widget.code)
+                        .doc(widget.docId)
+                        .update({
+                      "01": o1.text,
+                      "02": o2.text,
+                      "03": o3.text,
+                      "04": o4.text,
+                      "Ques": q.text,
+                    });
+                    Navigator.pop(
+                      context,
+                    );
+                  }),
+            ],
+          ),
+        ));
   }
 }
