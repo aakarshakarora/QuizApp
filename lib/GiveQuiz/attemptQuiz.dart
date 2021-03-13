@@ -12,13 +12,14 @@ import 'globals.dart' as global;
 
 class AttemptQuiz extends StatefulWidget {
   final String subjectName, accessCode;
-  final int questionCount, maximumScore,timeCount;
+  final int questionCount, maximumScore, timeCount;
+
   AttemptQuiz(
       {@required this.accessCode,
-        @required this.subjectName,
-        @required this.questionCount,
-        @required this.maximumScore,
-        @required this.timeCount});
+      @required this.subjectName,
+      @required this.questionCount,
+      @required this.maximumScore,
+      @required this.timeCount});
 
   @override
   _AttemptQuizState createState() => _AttemptQuizState();
@@ -27,8 +28,9 @@ class AttemptQuiz extends StatefulWidget {
 class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String uId, subjectName, creatorName, maxScore, quizDate;
-  bool attempted=true;
-  int finalScore=0;
+  bool attempted = true;
+  int finalScore = 0;
+
   String getUserID() {
     final User user = _auth.currentUser;
     final uid = user.uid;
@@ -48,6 +50,7 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    secureScreen();
     uId = getUserID();
   }
 
@@ -93,7 +96,11 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => PostQuiz(score: finalScore, inactive:inactive,totalScore: widget.maximumScore,)),
+                  builder: (context) => PostQuiz(
+                        score: finalScore,
+                        inactive: inactive,
+                        totalScore: widget.maximumScore,
+                      )),
             );
           });
           break;
@@ -108,7 +115,6 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-
     if (global.attempted.isEmpty && global.correct.isEmpty) {
       global.attempted = List.filled(widget.questionCount, 0);
       global.correct = List.filled(widget.questionCount, 0);
@@ -144,14 +150,17 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => PostQuiz(score: finalScore, inactive:inactive,totalScore: widget.maximumScore,)),
+                        builder: (context) => PostQuiz(
+                              score: finalScore,
+                              inactive: inactive,
+                              totalScore: widget.maximumScore,
+                            )),
                   );
                 });
               }
               return Text(' ${time.hours} : ${time.min} :  ${time.sec}');
             },
           ),
-
           Expanded(
             child: Container(
               child: StreamBuilder(
@@ -179,16 +188,18 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              reqDocs[index].get("imgURL")==null?Container():
-                              Container(
-                                width:MediaQuery.of(context).size.width,
-                                child: Image.network(reqDocs[index].get("imgURL")),
-                              ),
+                              reqDocs[index].get("imgURL") == null
+                                  ? Container()
+                                  : Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Image.network(
+                                          reqDocs[index].get("imgURL")),
+                                    ),
                               QuestionTile(
                                 index: index,
                                 reqDoc: reqDocs[index],
                                 correctAnswerMarks:
-                                (widget.maximumScore) / (reqDocs.length),
+                                    (widget.maximumScore) / (reqDocs.length),
                               ),
                               SizedBox(
                                 height: 100,
@@ -199,34 +210,34 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
                                   index == 0
                                       ? Container()
                                       : roundedButton(
-                                      color: Colors.blue,
-                                      context: context,
-                                      text: "Prev",
-                                      onPressed: () {
-                                        print("Prev Button is pressed!");
-                                        print(index);
-                                        print(widget.questionCount);
-                                        pageController.animateToPage(
-                                            index - 1,
-                                            duration:
-                                            Duration(milliseconds: 200),
-                                            curve: Curves.easeIn);
-                                      }),
+                                          color: Colors.blue,
+                                          context: context,
+                                          text: "Prev",
+                                          onPressed: () {
+                                            print("Prev Button is pressed!");
+                                            print(index);
+                                            print(widget.questionCount);
+                                            pageController.animateToPage(
+                                                index - 1,
+                                                duration:
+                                                    Duration(milliseconds: 200),
+                                                curve: Curves.easeIn);
+                                          }),
                                   index != widget.questionCount - 1
                                       ? roundedButton(
-                                      color: Colors.blue,
-                                      context: context,
-                                      text: "Next",
-                                      onPressed: () {
-                                        print("Next Button is pressed!");
-                                        print(index);
-                                        print(widget.questionCount);
-                                        pageController.animateToPage(
-                                            index + 1,
-                                            duration:
-                                            Duration(milliseconds: 200),
-                                            curve: Curves.bounceInOut);
-                                      })
+                                          color: Colors.blue,
+                                          context: context,
+                                          text: "Next",
+                                          onPressed: () {
+                                            print("Next Button is pressed!");
+                                            print(index);
+                                            print(widget.questionCount);
+                                            pageController.animateToPage(
+                                                index + 1,
+                                                duration:
+                                                    Duration(milliseconds: 200),
+                                                curve: Curves.bounceInOut);
+                                          })
                                       : Container(),
                                 ],
                               ),
@@ -241,14 +252,16 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
                                         "Total Score:${(global.correct.reduce((a, b) => a + b)) * (widget.maximumScore) / (reqDocs.length)}");
 
                                     setState(() {
-                                      finalScore = (global.correct.reduce((a, b) => a + b)) *
-                                            (widget.maximumScore) ~/
-                                            (reqDocs.length);
+                                      finalScore = (global.correct
+                                              .reduce((a, b) => a + b)) *
+                                          (widget.maximumScore) ~/
+                                          (reqDocs.length);
                                     });
                                     FirebaseFirestore.instance
                                         .collection('Quiz')
                                         .doc(widget.accessCode)
-                                        .collection(widget.accessCode + 'Result')
+                                        .collection(
+                                            widget.accessCode + 'Result')
                                         .doc(uId)
                                         .update({
                                       "S_UID": uId,
@@ -260,8 +273,12 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) =>
-                                                PostQuiz(score: finalScore, inactive:inactive,totalScore: widget.maximumScore,)),
+                                            builder: (context) => PostQuiz(
+                                                  score: finalScore,
+                                                  inactive: inactive,
+                                                  totalScore:
+                                                      widget.maximumScore,
+                                                )),
                                       );
                                       global.attempted = [];
                                       global.correct = [];
@@ -284,13 +301,12 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
 }
 
 class QuestionTile extends StatefulWidget {
-  // TODO:defined totalDocs
   final dynamic reqDoc, index, correctAnswerMarks;
 
   QuestionTile(
       {@required this.reqDoc,
-        @required this.index,
-        @required this.correctAnswerMarks});
+      @required this.index,
+      @required this.correctAnswerMarks});
 
   @override
   _QuestionTileState createState() => _QuestionTileState();
@@ -305,6 +321,10 @@ class _QuestionTileState extends State<QuestionTile>
   @override
   bool get wantKeepAlive => true;
 
+  Future<void> secureScreen() async {
+    await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -314,6 +334,7 @@ class _QuestionTileState extends State<QuestionTile>
       widget.reqDoc.get("03"),
       widget.reqDoc.get("04"),
     ];
+    secureScreen();
     options.shuffle();
     super.initState();
   }
@@ -324,10 +345,6 @@ class _QuestionTileState extends State<QuestionTile>
     super.dispose();
 
     secureScreen();
-  }
-
-  Future<void> secureScreen() async {
-    await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
   }
 
   @override
@@ -357,9 +374,6 @@ class _QuestionTileState extends State<QuestionTile>
                             print(widget.reqDoc.documentID);
                             selectedValue = value;
                             global.attempted[widget.index] = 1;
-                            // Provider.of<Data>(context, listen: false)
-                            //     .changeCount(
-                            //         global.attempted.reduce((a, b) => a + b));
                           });
                           print("Option Selected: ${options[index]}");
                           if (options[index] == widget.reqDoc.get("01")) {
@@ -377,9 +391,6 @@ class _QuestionTileState extends State<QuestionTile>
                           print("Questions attempted: ${global.attempted}");
                           print(global.attempted.reduce((a, b) => a + b));
                           print("Questions correct: ${global.correct}");
-                          // print(
-                          //     "Total Score:${(global.correct.reduce((a,
-                          //         b) => a + b)) * widget.correctAnswerMarks}");
                         }),
                     Text(options[index]),
                   ],

@@ -4,10 +4,6 @@ import 'package:quiz_app/Dashboard/F_Dashboard/dashboardFaculty.dart';
 import 'package:quiz_app/Pages/startPage.dart';
 import 'package:quiz_app/Register/F_Register/registerFaculty.dart';
 
-
-
-
-
 class FacultyLogin extends StatefulWidget {
   @override
   _FacultyLoginState createState() => _FacultyLoginState();
@@ -29,7 +25,9 @@ class _FacultyLoginState extends State<FacultyLogin> {
           title: Text(
             "Login Registered Faculty",
             style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 20,fontFamily: 'Poppins'),
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                fontFamily: 'Poppins'),
           ),
           //centerTitle: true,
           leading: Builder(
@@ -71,8 +69,7 @@ class _FacultyLoginState extends State<FacultyLogin> {
                     style: TextStyle(
                         fontFamily: 'Poppins',
                         fontSize: 17,
-                        fontWeight: FontWeight.bold
-                    ),
+                        fontWeight: FontWeight.bold),
                     controller: _emailController,
                     decoration: InputDecoration(
                         labelText: 'Enter Email ID:',
@@ -85,7 +82,7 @@ class _FacultyLoginState extends State<FacultyLogin> {
                         return 'Field Required';
                       }
                       if (!RegExp(
-                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                           .hasMatch(value)) {
                         return 'Please enter a valid email address';
                       }
@@ -97,8 +94,7 @@ class _FacultyLoginState extends State<FacultyLogin> {
                     style: TextStyle(
                         fontFamily: 'Poppins',
                         fontSize: 17,
-                        fontWeight: FontWeight.bold
-                    ),
+                        fontWeight: FontWeight.bold),
                     controller: _passwordController,
                     decoration: InputDecoration(
                       labelText: 'Enter Password:',
@@ -137,6 +133,7 @@ class _FacultyLoginState extends State<FacultyLogin> {
                         borderRadius: BorderRadius.all(Radius.circular(30)),
                         color: Colors.deepPurpleAccent,
                       ),
+                      // ignore: deprecated_member_use
                       child: FlatButton(
                         textColor: Colors.white,
                         padding: EdgeInsets.all(8.0),
@@ -152,23 +149,24 @@ class _FacultyLoginState extends State<FacultyLogin> {
                               fontFamily: 'Poppins',
                               color: Colors.white,
                               fontSize: 20,
-                              fontWeight: FontWeight.bold
-                          ),
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
                   ),
                   Text(
                     "Don't have an account?",
-                    style: TextStyle(fontWeight: FontWeight.bold,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
                         fontSize: 17,
-                        fontFamily: 'Poppins'
-                    ),
+                        fontFamily: 'Poppins'),
                   ),
+                  // ignore: deprecated_member_use
                   FlatButton(
                     child: Text(
                       "Sign Up here!",
-                      style: TextStyle(fontWeight: FontWeight.normal,
+                      style: TextStyle(
+                          fontWeight: FontWeight.normal,
                           fontSize: 17,
                           fontFamily: 'Poppins'),
                     ),
@@ -186,8 +184,8 @@ class _FacultyLoginState extends State<FacultyLogin> {
                       _success == null
                           ? ''
                           : (_success
-                          ? 'Successfully signed in ' + _userEmail
-                          : 'Sign in failed'),
+                              ? 'Successfully signed in ' + _userEmail
+                              : 'Sign in failed'),
                       style: TextStyle(color: Colors.red),
                     ),
                   )
@@ -230,5 +228,4 @@ class _FacultyLoginState extends State<FacultyLogin> {
       });
     }
   }
-
 }

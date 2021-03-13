@@ -5,7 +5,6 @@ import 'package:quiz_app/Dashboard/S_Dashboard/dashboardStudent.dart';
 import 'package:quiz_app/Pages/startPage.dart';
 import 'package:quiz_app/Register/S_Register/registerStudent.dart';
 
-
 class StudentLogin extends StatefulWidget {
   @override
   _StudentLoginState createState() => _StudentLoginState();
@@ -27,7 +26,9 @@ class _StudentLoginState extends State<StudentLogin> {
           title: Text(
             "Login Registered Student",
             style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 20,fontFamily: 'Poppins'),
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                fontFamily: 'Poppins'),
           ),
           //centerTitle: true,
           leading: Builder(
@@ -69,8 +70,7 @@ class _StudentLoginState extends State<StudentLogin> {
                     style: TextStyle(
                         fontFamily: 'Poppins',
                         fontSize: 17,
-                        fontWeight: FontWeight.bold
-                    ),
+                        fontWeight: FontWeight.bold),
                     controller: _emailController,
                     decoration: InputDecoration(
                         labelText: 'Enter Email ID:',
@@ -83,7 +83,7 @@ class _StudentLoginState extends State<StudentLogin> {
                         return 'Field Required';
                       }
                       if (!RegExp(
-                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                           .hasMatch(value)) {
                         return 'Please enter a valid email address';
                       }
@@ -95,8 +95,7 @@ class _StudentLoginState extends State<StudentLogin> {
                     style: TextStyle(
                         fontFamily: 'Poppins',
                         fontSize: 17,
-                        fontWeight: FontWeight.bold
-                    ),
+                        fontWeight: FontWeight.bold),
                     controller: _passwordController,
                     decoration: InputDecoration(
                       labelText: 'Enter Password:',
@@ -135,6 +134,7 @@ class _StudentLoginState extends State<StudentLogin> {
                         borderRadius: BorderRadius.all(Radius.circular(30)),
                         color: Colors.deepPurpleAccent,
                       ),
+                      // ignore: deprecated_member_use
                       child: FlatButton(
                         textColor: Colors.white,
                         padding: EdgeInsets.all(10.0),
@@ -150,23 +150,24 @@ class _StudentLoginState extends State<StudentLogin> {
                               fontFamily: 'Poppins',
                               color: Colors.white,
                               fontSize: 20,
-                              fontWeight: FontWeight.bold
-                          ),
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
                   ),
                   Text(
                     "Don't have an account?",
-                    style: TextStyle(fontWeight: FontWeight.bold,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
                         fontSize: 17,
-                        fontFamily: 'Poppins'
-                    ),
+                        fontFamily: 'Poppins'),
                   ),
+                  // ignore: deprecated_member_use
                   FlatButton(
                     child: Text(
                       "Sign Up here!",
-                      style: TextStyle(fontWeight: FontWeight.normal,
+                      style: TextStyle(
+                          fontWeight: FontWeight.normal,
                           fontSize: 17,
                           fontFamily: 'Poppins'),
                     ),
@@ -184,8 +185,8 @@ class _StudentLoginState extends State<StudentLogin> {
                       _success == null
                           ? ''
                           : (_success
-                          ? 'Successfully signed in ' + _userEmail
-                          : 'Sign in failed'),
+                              ? 'Successfully signed in ' + _userEmail
+                              : 'Sign in failed'),
                       style: TextStyle(color: Colors.red),
                     ),
                   )
@@ -228,5 +229,4 @@ class _StudentLoginState extends State<StudentLogin> {
       });
     }
   }
-
 }

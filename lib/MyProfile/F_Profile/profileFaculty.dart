@@ -4,10 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/Dashboard/F_Dashboard/dashboardFaculty.dart';
 
-
-
-
-
 class FacultyProfile extends StatefulWidget {
   @override
   _FacultyProfileState createState() => _FacultyProfileState();
@@ -75,9 +71,9 @@ class _FacultyProfileState extends State<FacultyProfile> {
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                               colors: [
-                                Colors.deepPurple,
-                                Colors.deepPurpleAccent
-                              ])),
+                            Colors.deepPurple,
+                            Colors.deepPurpleAccent
+                          ])),
                       child: Container(
                         width: double.infinity,
                         height: 270,
@@ -98,7 +94,7 @@ class _FacultyProfileState extends State<FacultyProfile> {
                                             "https://randomuser.me/api/portraits/men/46.jpg")),
                                     Padding(
                                       padding:
-                                      const EdgeInsets.only(left: 30.0),
+                                          const EdgeInsets.only(left: 30.0),
                                       child: Text(
                                         data['F_Name'],
                                         style: TextStyle(
@@ -116,7 +112,7 @@ class _FacultyProfileState extends State<FacultyProfile> {
                                     horizontal: 15.0, vertical: 22.0),
                                 child: Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceAround,
+                                      MainAxisAlignment.spaceAround,
                                   children: <Widget>[
                                     Column(
                                       children: <Widget>[
@@ -207,7 +203,9 @@ class _FacultyProfileState extends State<FacultyProfile> {
                                 Text(data['F_ContactNumber']),
                               ],
                             ),
-                            SizedBox(height: 10,),
+                            SizedBox(
+                              height: 10,
+                            ),
                             Row(
                               children: [
                                 Text(
@@ -219,7 +217,9 @@ class _FacultyProfileState extends State<FacultyProfile> {
                                 Text(data['F_EmailId']),
                               ],
                             ),
-                            SizedBox(height: 10,),
+                            SizedBox(
+                              height: 10,
+                            ),
                             Row(
                               children: [
                                 Text(
@@ -231,8 +231,9 @@ class _FacultyProfileState extends State<FacultyProfile> {
                                 Text(data['UserID']),
                               ],
                             ),
-                            SizedBox(height: 10,),
-
+                            SizedBox(
+                              height: 10,
+                            ),
                           ],
                         ),
                       ),

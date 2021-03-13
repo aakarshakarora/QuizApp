@@ -10,65 +10,56 @@ class ViewQuizDesc extends StatefulWidget {
 }
 
 class _ViewQuizDescState extends State<ViewQuizDesc> {
-
-   final userId = FirebaseAuth.instance.currentUser.uid;
+  final userId = FirebaseAuth.instance.currentUser.uid;
   var firestoreDB = FirebaseFirestore.instance
       .collection('Quiz')
       //.where("startDate",isLessThan: new DateTime.now())
-   .snapshots();
+      .snapshots();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Preview Quiz"),
-      ),
-
-      body: Column(
-        children: [
-
-
-          Expanded(
-            child: Container(
-              child: StreamBuilder(
-                stream: firestoreDB,
-                builder: (ctx, opSnapshot) {
-                  if (opSnapshot.connectionState == ConnectionState.waiting)
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  final reqDocs = opSnapshot.data.documents;
-                  print('length ${reqDocs.length}');
-                  return ListView.builder(
-                    itemCount: reqDocs.length,
-                    itemBuilder: (ctx, index) {
-                      if (reqDocs[index]
-                          .get('Creator')
-                          .toString()
-                          .contains(userId))
-                        return ViewDetails(reqDocs[index]);
-                      return Container(
-                        height: 0,
+        appBar: AppBar(
+          title: Text("Preview Quiz"),
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              child: Container(
+                child: StreamBuilder(
+                  stream: firestoreDB,
+                  builder: (ctx, opSnapshot) {
+                    if (opSnapshot.connectionState == ConnectionState.waiting)
+                      return Center(
+                        child: CircularProgressIndicator(),
                       );
-                    },
-                  );
-                },
+                    final reqDocs = opSnapshot.data.documents;
+                    print('length ${reqDocs.length}');
+                    return ListView.builder(
+                      itemCount: reqDocs.length,
+                      itemBuilder: (ctx, index) {
+                        if (reqDocs[index]
+                            .get('Creator')
+                            .toString()
+                            .contains(userId))
+                          return ViewDetails(reqDocs[index]);
+                        return Container(
+                          height: 0,
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
             ),
-          ),
-        ],
-
-
-
-      )
-
-
-    );
+          ],
+        ));
   }
 }
 
-
 class ViewDetails extends StatefulWidget {
   final dynamic reqDoc;
+
   ViewDetails(this.reqDoc);
 
   @override
@@ -76,27 +67,25 @@ class ViewDetails extends StatefulWidget {
 }
 
 class _ViewDetailsState extends State<ViewDetails> {
-
   @override
   Widget build(BuildContext context) {
-
     String message;
     final questionCount = widget.reqDoc.get("QuestionCount");
     final accessCode = widget.reqDoc.get("AccessCode");
     final subjectName = widget.reqDoc.get("SubjectName");
     final maxScore = widget.reqDoc.get("MaxScore");
     final startDate =
-    (widget.reqDoc.get("startDate") as Timestamp).toDate().toString();
+        (widget.reqDoc.get("startDate") as Timestamp).toDate().toString();
     final endDate =
-    (widget.reqDoc.get("endDate") as Timestamp).toDate().toString();
+        (widget.reqDoc.get("endDate") as Timestamp).toDate().toString();
 
-      message="Subject Name: $subjectName \n Question Count: $questionCount \n Max Score: $maxScore  \n\n Start Time: $startDate \n End Date: $endDate \n\n Access Code: $accessCode";
-
+    message =
+        "Subject Name: $subjectName \n Question Count: $questionCount \n Max Score: $maxScore  \n\n Start Time: $startDate \n End Date: $endDate \n\n Access Code: $accessCode";
 
     return Container(
       padding: const EdgeInsets.all(10),
       child: Container(
-        height: 200,
+        height: 250,
         width: double.infinity,
         child: Card(
           elevation: 5,
@@ -114,7 +103,6 @@ class _ViewDetailsState extends State<ViewDetails> {
                     ),
                     Text(
                       '$questionCount',
-
                     ),
                   ],
                 ),
@@ -126,7 +114,6 @@ class _ViewDetailsState extends State<ViewDetails> {
                     ),
                     Text(
                       '$accessCode',
-
                     ),
                   ],
                 ),
@@ -138,7 +125,6 @@ class _ViewDetailsState extends State<ViewDetails> {
                     ),
                     Text(
                       '$subjectName',
-
                     ),
                   ],
                 ),
@@ -150,7 +136,6 @@ class _ViewDetailsState extends State<ViewDetails> {
                     ),
                     Text(
                       '$maxScore',
-
                     ),
                   ],
                 ),
@@ -162,40 +147,39 @@ class _ViewDetailsState extends State<ViewDetails> {
                     ),
                     Text(
                       '$startDate',
-
                     ),
                   ],
                 ),
-
-
+                // ignore: deprecated_member_use
                 RaisedButton(
                   child: Text('Click Here'),
                   onPressed: () async {
-                    var response = await FlutterShareMe().shareToSystem(msg: message);
+                    var response =
+                        await FlutterShareMe().shareToSystem(msg: message);
                     if (response == 'success') {
                       print('navigate success');
                     }
                   },
                 ),
-
-                FlatButton(onPressed: (){
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>PreviewQuiz(accessCode: accessCode, subjectName: subjectName, questionCount: questionCount, maximumScore: maxScore)),
-                  );
-
-                }, child: Text("Review Quiz"))
-
-          ],
-                  ),
-
+                // ignore: deprecated_member_use
+                FlatButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PreviewQuiz(
+                                accessCode: accessCode,
+                                subjectName: subjectName,
+                                questionCount: questionCount,
+                                maximumScore: maxScore)),
+                      );
+                    },
+                    child: Text("Review Quiz"))
+              ],
             ),
           ),
         ),
-      );
-
+      ),
+    );
   }
 }
-

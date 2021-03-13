@@ -1,4 +1,5 @@
-class CalculateScore{
-final int questionScore;
-CalculateScore(this.questionScore);
+class CalculateScore {
+  final int questionScore;
+
+  CalculateScore(this.questionScore);
 }

@@ -3,9 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'dart:math';
-
 import 'package:quiz_app/CreateQuiz/addQuestion.dart';
 
 class QuizDesc extends StatefulWidget {
@@ -268,6 +266,7 @@ class _QuizDescState extends State<QuizDesc> {
 //                                border: Border.all(
 //                                    color: Color.fromRGBO(248, 248, 255, 1)),
                               ),
+                              // ignore: deprecated_member_use
                               child: FlatButton(
                                 onPressed: () async {
                                   await _startDate(context).then((value) {
@@ -346,6 +345,7 @@ class _QuizDescState extends State<QuizDesc> {
                         border:
                             Border.all(color: Color.fromRGBO(248, 248, 255, 1)),
                       ),
+                      // ignore: deprecated_member_use
                       child: FlatButton(
                         onPressed: () async {
                           await _endDate(context).then((value) {
@@ -410,6 +410,7 @@ class _QuizDescState extends State<QuizDesc> {
 //                            border: Border.all(
 //                                color: Color.fromRGBO(248, 248, 255, 1)),
                           ),
+                          // ignore: deprecated_member_use
                           child: FlatButton(
                             onPressed: () async {
                               await _endDate(context).then((value) {
@@ -496,7 +497,9 @@ class _QuizDescState extends State<QuizDesc> {
                           if ((startDate == null || endDate == null) &&
                               (_formKey.currentState.validate())) {
                             setState(() {
+                              // ignore: unnecessary_statements
                               startDate == null ? startDateError = true : null;
+                              // ignore: unnecessary_statements
                               endDate == null ? endDateError = true : null;
                             });
                           } else {
@@ -527,11 +530,11 @@ class _QuizDescState extends State<QuizDesc> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          AddQuestion(accessCode,questionCount)),
+                                      builder: (context) => AddQuestion(
+                                          accessCode, questionCount)),
                                 );
                               }).catchError((onError) {
-                                _displayError(context, onError);
+                                displayError(context, onError);
                               });
                             }
                           }
@@ -563,10 +566,11 @@ class _QuizDescState extends State<QuizDesc> {
       'Desciption Added Successfully',
       style: TextStyle(fontFamily: 'Poppins'),
     ));
+    // ignore: deprecated_member_use
     Scaffold.of(context).showSnackBar(snackBar);
   }
 
-  _displayError(BuildContext context, onError) {
+  displayError(BuildContext context, onError) {
     final snackBar = SnackBar(
         content: Text(
       onError,
@@ -662,5 +666,4 @@ class _QuizDescState extends State<QuizDesc> {
     subjectNameController.dispose();
     descriptionController.dispose();
   }
-
 }

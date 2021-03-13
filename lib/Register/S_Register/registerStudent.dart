@@ -225,6 +225,7 @@ class _StudentRegisterState extends State<StudentRegister> {
                 SizedBox(
                   height: 10,
                 ),
+                // ignore: deprecated_member_use
                 RaisedButton(
                   padding: EdgeInsets.all(10),
                   shape: RoundedRectangleBorder(
@@ -276,7 +277,9 @@ class _StudentRegisterState extends State<StudentRegister> {
                                       courseNameController.clear(),
                                       registrationNoController.clear()
                                     })
+                                // ignore: return_of_invalid_type_from_catch_error
                                 .catchError((err) => print(err)))
+                            // ignore: return_of_invalid_type_from_catch_error
                             .catchError((err) => print(err));
                       } else {
                         showDialog(
@@ -286,6 +289,7 @@ class _StudentRegisterState extends State<StudentRegister> {
                                 title: Text("Error"),
                                 content: Text("The passwords do not match"),
                                 actions: <Widget>[
+                                  // ignore: deprecated_member_use
                                   FlatButton(
                                     child: Text("Close"),
                                     onPressed: () {
@@ -309,6 +313,7 @@ class _StudentRegisterState extends State<StudentRegister> {
                       fontFamily: 'Poppins',
                       fontSize: 17),
                 ),
+                // ignore: deprecated_member_use
                 FlatButton(
                   child: Text(
                     "Login here!",

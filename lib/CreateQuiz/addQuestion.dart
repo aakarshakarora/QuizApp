@@ -2,18 +2,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/Dashboard/F_Dashboard/dashboardFaculty.dart';
 import 'package:quiz_app/Utilities/buttons.dart';
-int currentCount=1;
+
+int currentCount = 1;
+
 class AddQuestion extends StatefulWidget {
   @override
-  AddQuestion(this.accessCode,this.questionCount);
+  AddQuestion(this.accessCode, this.questionCount);
 
   final String accessCode;
   final int questionCount;
+
   _AddQuestionState createState() => _AddQuestionState();
 }
 
 class _AddQuestionState extends State<AddQuestion> {
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _buildQuestionController =
       TextEditingController();
@@ -156,7 +158,6 @@ class _AddQuestionState extends State<AddQuestion> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -165,7 +166,9 @@ class _AddQuestionState extends State<AddQuestion> {
             key: _formKey,
             child: Column(
               children: [
-                Text(currentCount.toString()+"/"+widget.questionCount.toString()),
+                Text(currentCount.toString() +
+                    "/" +
+                    widget.questionCount.toString()),
                 _buildQuestionField(),
                 _buildOption1Field(),
                 _buildOption2Field(),
@@ -176,83 +179,84 @@ class _AddQuestionState extends State<AddQuestion> {
                 ),
                 Row(
                   children: [
-                    currentCount == widget.questionCount?
-                    roundedButton(
-                      color: Colors.purple,
-                        context: context,
-                        text: 'Submit',
-                        onPressed: () async {
-                          print(_buildQuestionController.text);
-                          print(_option1Controller.text);
-                          print(_option2Controller.text);
-                          print(_option3Controller.text);
-                          print(_option4Controller.text);
-                          if (_formKey.currentState.validate()) {
-
-
-                            FirebaseFirestore.instance
-                                .collection('Quiz')
-                                .doc(widget.accessCode)
-                                .collection(widget.accessCode)
-                                .add({
-                              "01": _option1Controller.text,
-                              "02": _option2Controller.text,
-                              "03": _option3Controller.text,
-                              "04": _option4Controller.text,
-                              "Ques": _buildQuestionController.text,
-
-                            }).then((_) {
-                              //_displaySnackBar(context);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => FacultyDashboard()),
-                              );
-                            }).catchError((error) {
-                              print(error);
-                            });
-                          }
-                        }):Container(),
-                    currentCount < widget.questionCount?
-                    roundedButton(
-                      color: Colors.purple,
-                        context: context,
-                        text: 'Add Question',
-                        onPressed: () async {
-                          print(_buildQuestionController.value);
-                          print(_option1Controller.value);
-                          print(_option2Controller.value);
-                          print(_option3Controller.value);
-                          print(_option4Controller.value);
-                          if (_formKey.currentState.validate()) {
-                            FirebaseFirestore.instance
-                                .collection('Quiz')
-                                .doc(widget.accessCode)
-                                .collection(widget.accessCode)
-                                .add({
-                              "01": _option1Controller.text,
-                              "02": _option2Controller.text,
-                              "03": _option3Controller.text,
-                              "04": _option4Controller.text,
-                              "Ques": _buildQuestionController.text,
-                            }).then((_) {
-                              //_displaySnackBar(context);
-                              setState(() {
-                                currentCount++;
-                                print(currentCount);
-                                print(widget.questionCount);
-                              });
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        (AddQuestion(widget.accessCode,widget.questionCount))),
-                              );
-                            }).catchError((error) {
-                              print(error);
-                            });
-                          }
-                        }):Container(),
+                    currentCount == widget.questionCount
+                        ? roundedButton(
+                            color: Colors.purple,
+                            context: context,
+                            text: 'Submit',
+                            onPressed: () async {
+                              print(_buildQuestionController.text);
+                              print(_option1Controller.text);
+                              print(_option2Controller.text);
+                              print(_option3Controller.text);
+                              print(_option4Controller.text);
+                              if (_formKey.currentState.validate()) {
+                                FirebaseFirestore.instance
+                                    .collection('Quiz')
+                                    .doc(widget.accessCode)
+                                    .collection(widget.accessCode)
+                                    .add({
+                                  "01": _option1Controller.text,
+                                  "02": _option2Controller.text,
+                                  "03": _option3Controller.text,
+                                  "04": _option4Controller.text,
+                                  "Ques": _buildQuestionController.text,
+                                }).then((_) {
+                                  //_displaySnackBar(context);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            FacultyDashboard()),
+                                  );
+                                }).catchError((error) {
+                                  print(error);
+                                });
+                              }
+                            })
+                        : Container(),
+                    currentCount < widget.questionCount
+                        ? roundedButton(
+                            color: Colors.purple,
+                            context: context,
+                            text: 'Add Question',
+                            onPressed: () async {
+                              print(_buildQuestionController.value);
+                              print(_option1Controller.value);
+                              print(_option2Controller.value);
+                              print(_option3Controller.value);
+                              print(_option4Controller.value);
+                              if (_formKey.currentState.validate()) {
+                                FirebaseFirestore.instance
+                                    .collection('Quiz')
+                                    .doc(widget.accessCode)
+                                    .collection(widget.accessCode)
+                                    .add({
+                                  "01": _option1Controller.text,
+                                  "02": _option2Controller.text,
+                                  "03": _option3Controller.text,
+                                  "04": _option4Controller.text,
+                                  "Ques": _buildQuestionController.text,
+                                }).then((_) {
+                                  //_displaySnackBar(context);
+                                  setState(() {
+                                    currentCount++;
+                                    print(currentCount);
+                                    print(widget.questionCount);
+                                  });
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => (AddQuestion(
+                                            widget.accessCode,
+                                            widget.questionCount))),
+                                  );
+                                }).catchError((error) {
+                                  print(error);
+                                });
+                              }
+                            })
+                        : Container(),
                   ],
                 )
               ],
@@ -263,12 +267,13 @@ class _AddQuestionState extends State<AddQuestion> {
     );
   }
 
-  _displaySnackBar(BuildContext context) {
-    final snackBar = SnackBar(
-        content: Text(
-      'Question Added Successfully',
-      style: TextStyle(fontFamily: 'Poppins'),
-    ));
-    Scaffold.of(context).showSnackBar(snackBar);
-  }
+// _displaySnackBar(BuildContext context) {
+//   final snackBar = SnackBar(
+//       content: Text(
+//     'Question Added Successfully',
+//     style: TextStyle(fontFamily: 'Poppins'),
+//   ));
+//   // ignore: deprecated_member_use
+//   Scaffold.of(context).showSnackBar(snackBar);
+// }
 }

@@ -9,18 +9,14 @@ class ViewResult extends StatefulWidget {
 }
 
 class _ViewResultState extends State<ViewResult> {
-
   final accessCodeController = TextEditingController();
-
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: Text("View Result"),
       ),
-
       body: Column(
         children: [
           TextFormField(
@@ -33,24 +29,21 @@ class _ViewResultState extends State<ViewResult> {
                 labelStyle: TextStyle(
                   fontSize: 17,
                   fontFamily: 'Poppins',
-
                 )),
             keyboardType: TextInputType.text,
             controller: accessCodeController,
           ),
+          // ignore: deprecated_member_use
           FlatButton(
               onPressed: () {
-
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => PieChartDisplay(accessCodeController.text)),
+                      builder: (context) =>
+                          PieChartDisplay(accessCodeController.text)),
                 );
               },
               child: Text("See Score"))
-
-
-
         ],
       ),
     );
@@ -69,7 +62,8 @@ class DisplayResult extends StatefulWidget {
 
 class _DisplayResultState extends State<DisplayResult> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  String uId,subjectName,creatorName,maxScore,quizDate;
+  String uId, subjectName, creatorName, maxScore, quizDate;
+
   String getUserID() {
     final User user = _auth.currentUser;
     final uid = user.uid;
@@ -91,63 +85,62 @@ class _DisplayResultState extends State<DisplayResult> {
         });
       });
     }
-
   }
+
   @override
   Widget build(BuildContext context) {
-    var firebaseDB = FirebaseFirestore.instance.collection('Quiz').doc(widget.accessCode)
-        .collection(widget.accessCode+'Result').doc(uId).get();
-    return
-      Scaffold(
-        body: FutureBuilder<DocumentSnapshot>(
-            future: firebaseDB,
-            builder: (BuildContext context,
-                AsyncSnapshot<DocumentSnapshot> snapshot) {
-              if (!snapshot.hasData) {
-                return Center(child: CircularProgressIndicator());
-              }
-              Map<String, dynamic> data = snapshot.data.data();
+    var firebaseDB = FirebaseFirestore.instance
+        .collection('Quiz')
+        .doc(widget.accessCode)
+        .collection(widget.accessCode + 'Result')
+        .doc(uId)
+        .get();
+    return Scaffold(
+      body: FutureBuilder<DocumentSnapshot>(
+          future: firebaseDB,
+          builder:
+              (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+            if (!snapshot.hasData) {
+              return Center(child: CircularProgressIndicator());
+            }
+            Map<String, dynamic> data = snapshot.data.data();
 
-              FirebaseFirestore.instance.collection('Quiz').doc(widget.accessCode).get().then((value) {
-                DocumentReference documentReference = value.data()['Creator'];
+            FirebaseFirestore.instance
+                .collection('Quiz')
+                .doc(widget.accessCode)
+                .get()
+                .then((value) {
+              DocumentReference documentReference = value.data()['Creator'];
 
-                subjectName=value.data()['SubjectName'];
-                maxScore=value.data()['MaxScore'].toString();
-                quizDate=value.data()['startDate'].toString();
-                print("Subject Name:"+subjectName);
-                print("maxScore: "+maxScore);
-                print("quizDate: "+quizDate);
-                print("Code: "+widget.accessCode);
+              subjectName = value.data()['SubjectName'];
+              maxScore = value.data()['MaxScore'].toString();
+              quizDate = value.data()['startDate'].toString();
+              print("Subject Name:" + subjectName);
+              print("maxScore: " + maxScore);
+              print("quizDate: " + quizDate);
+              print("Code: " + widget.accessCode);
+            });
 
-              });
+            print(data['S_Name']);
+            print(data['S_RegNo']);
+            print(data['Score']);
 
-              print(data['S_Name']);
-              print(data['S_RegNo']);
-              print(data['Score']);
-
-
-              return Column(mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Student Name:' + data['S_Name']),
-
-                  Text('Registration Number: ' + data['S_RegNo']),
-                  Text('Score : ' + data['Score'].toString()+'/ '+maxScore),
-                  Text('Tab Switched: ' + data['tabSwitch'].toString()),
-                  SizedBox(height: 10,),
-                  Text('Subject Name:' + subjectName),
-                  Text('Quiz Date: ' + quizDate),
-                  Text("Creator Name: "  ),
-
-
-
-
-                ],
-              );
-            }),
-      );
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Student Name:' + data['S_Name']),
+                Text('Registration Number: ' + data['S_RegNo']),
+                Text('Score : ' + data['Score'].toString() + '/ ' + maxScore),
+                Text('Tab Switched: ' + data['tabSwitch'].toString()),
+                SizedBox(
+                  height: 10,
+                ),
+                Text('Subject Name:' + subjectName),
+                Text('Quiz Date: ' + quizDate),
+                Text("Creator Name: "),
+              ],
+            );
+          }),
+    );
   }
 }
-
-
-
-

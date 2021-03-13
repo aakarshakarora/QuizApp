@@ -76,7 +76,7 @@ class QuizCodeDesc extends StatefulWidget {
 class _QuizCodeDescState extends State<QuizCodeDesc> {
   static String code, facultyName;
   static int endTime, startTime, currentTime;
-  Timestamp sTime, eTime,cTime;
+  Timestamp sTime, eTime, cTime;
   DateTime res1, res2;
   bool attempted = false;
 
@@ -181,7 +181,8 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                           eTime = (data['endDate']);
                           endTime = eTime.millisecondsSinceEpoch + 1000 * 30;
 
-                          currentTime=DateTime.now().millisecondsSinceEpoch + 1000 * 30;
+                          currentTime =
+                              DateTime.now().millisecondsSinceEpoch + 1000 * 30;
 
                           print("Start Date: $startTime");
                           print("End Date: $endTime");
@@ -210,7 +211,7 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                                 'attempted': attempted,
                                 'Score': score,
                                 'tabSwitch': tabSwitch,
-                                'maxScore':data['MaxScore']
+                                'maxScore': data['MaxScore']
                               });
                               Navigator.push(
                                 context,
@@ -223,9 +224,7 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                                           timeCount: endTime,
                                         )),
                               );
-                            }
-
-                            else{
+                            } else {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

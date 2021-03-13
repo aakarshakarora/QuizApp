@@ -9,7 +9,7 @@ class ResultModel {
   final int maxScore;
 
   ResultModel(this.login, this.emailID, this.s_name, this.s_regno, this.s_uid,
-      this.score, this.tabSwitch,this.maxScore);
+      this.score, this.tabSwitch, this.maxScore);
 
   ResultModel.fromMap(Map<String, dynamic> map)
       : assert(map['attempted'] != null),
