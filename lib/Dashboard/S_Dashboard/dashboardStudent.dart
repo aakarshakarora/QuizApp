@@ -5,8 +5,11 @@ import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:quiz_app/MyProfile/S_Profile/profileStudent.dart';
 import 'package:quiz_app/Pages/FuturePage.dart';
 import 'package:quiz_app/Pages/startPage.dart';
+import 'package:quiz_app/ViewResult/S_View/studentResult.dart';
 
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../GiveQuiz/giveQuiz.dart';
 
 class StudentDashboard extends StatefulWidget {
   @override
@@ -14,7 +17,6 @@ class StudentDashboard extends StatefulWidget {
 }
 
 class _StudentDashboardState extends State<StudentDashboard> {
-
   String contactNumber = '8837682823';
 
   Future<void> _makePhoneCall(String url) async {
@@ -25,11 +27,9 @@ class _StudentDashboardState extends State<StudentDashboard> {
     }
   }
 
-
-
   final titles = ['Give Quiz', 'Past Quiz Score'];
   final titleIcon = [
-    Icon(Icons.event_note_sharp),
+    Icon(Icons.event_note),
     Icon(Icons.update),
   ];
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -53,7 +53,6 @@ class _StudentDashboardState extends State<StudentDashboard> {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       child: FutureBuilder<DocumentSnapshot>(
           future: FirebaseFirestore.instance
@@ -67,32 +66,34 @@ class _StudentDashboardState extends State<StudentDashboard> {
             }
             Map<String, dynamic> data = snapshot.data.data();
             return Scaffold(
-              appBar: AppBar(title: Text('Welcome ${data['S_Name']}',
-                  style:TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Poppins',
-                      fontSize: 23
-                  )),
-                backgroundColor: Colors.deepPurpleAccent,),
+              appBar: AppBar(
+                title: Text('Welcome ${data['S_Name']}',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Poppins',
+                        fontSize: 23)),
+                backgroundColor: Colors.deepPurpleAccent,
+              ),
               drawer: new Drawer(
                 child: new ListView(
                   children: <Widget>[
                     new UserAccountsDrawerHeader(
-                      accountName: new Text('Welcome ${data['S_Name']}',
+                      accountName: new Text(
+                        'Welcome ${data['S_Name']}',
                         style: TextStyle(
                             fontFamily: 'Poppins',
                             fontWeight: FontWeight.bold,
-                            fontSize: 20
-                        ),),
+                            fontSize: 20),
+                      ),
                       accountEmail: new Text('${data['S_EmailId']}',
                           style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
-                              fontFamily: 'Poppins'
-                          )),
+                              fontFamily: 'Poppins')),
                       decoration: new BoxDecoration(
                         image: new DecorationImage(
-                          image: new NetworkImage('https://mdbootstrap.com/img/new/slides/041.jpg'),
+                          image: new NetworkImage(
+                              'https://mdbootstrap.com/img/new/slides/041.jpg'),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -102,12 +103,13 @@ class _StudentDashboardState extends State<StudentDashboard> {
                     ),
                     new ListTile(
                       leading: Icon(Icons.account_circle),
-                      title: new Text("My Profile",
+                      title: new Text(
+                        "My Profile",
                         style: TextStyle(
                             fontFamily: 'Poppins',
                             fontWeight: FontWeight.bold,
-                            fontSize: 17
-                        ),),
+                            fontSize: 17),
+                      ),
                       onTap: () {
                         Navigator.push(
                           context,
@@ -118,53 +120,58 @@ class _StudentDashboardState extends State<StudentDashboard> {
                     ),
                     new ListTile(
                       leading: Icon(Icons.notifications_active),
-                      title: new Text("Notifications",
+                      title: new Text(
+                        "Notifications",
                         style: TextStyle(
                             fontFamily: 'Poppins',
                             fontWeight: FontWeight.bold,
-                            fontSize: 17
-                        ),),
+                            fontSize: 17),
+                      ),
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) => FuturePage()),
+                          MaterialPageRoute(builder: (context) => FuturePage()),
                         );
                       },
                     ),
-
                     new ListTile(
                         leading: Icon(Icons.contact_phone),
-                        title: new Text("Contact Us",
+                        title: new Text(
+                          "Contact Us",
                           style: TextStyle(
                               fontFamily: 'Poppins',
                               fontWeight: FontWeight.bold,
-                              fontSize: 17
-                          ),),
+                              fontSize: 17),
+                        ),
                         onTap: () {
-                          createAlertDialog(context,data['F_Name']);
+                          createAlertDialog(context, data['F_Name']);
                           //Navigator.pop(context);
                         }),
                     new ListTile(
                       leading: Icon(Icons.report_problem),
-                      title: new Text("Register Complaint",
+                      title: new Text(
+                        "Register Complaint",
                         style: TextStyle(
                             fontFamily: 'Poppins',
                             fontWeight: FontWeight.bold,
-                            fontSize: 17
-                        ),),
+                            fontSize: 17),
+                      ),
                       onTap: () {
-                        sendComplaintMail(data['S_Name'], currentUser,);
+                        sendComplaintMail(
+                          data['S_Name'],
+                          currentUser,
+                        );
                       },
                     ),
                     new ListTile(
                       leading: Icon(Icons.settings),
-                      title: new Text("Settings",
+                      title: new Text(
+                        "Settings",
                         style: TextStyle(
                             fontFamily: 'Poppins',
                             fontWeight: FontWeight.bold,
-                            fontSize: 17
-                        ),),
+                            fontSize: 17),
+                      ),
                       onTap: () {
                         Navigator.push(
                           context,
@@ -175,17 +182,18 @@ class _StudentDashboardState extends State<StudentDashboard> {
                     new Divider(),
                     new ListTile(
                         leading: Icon(Icons.power_settings_new),
-                        title: new Text("Logout",
+                        title: new Text(
+                          "Logout",
                           style: TextStyle(
                               fontFamily: 'Poppins',
                               fontWeight: FontWeight.bold,
-                              fontSize: 17
-                          ),),
+                              fontSize: 17),
+                        ),
                         onTap: () {
                           signOut();
                           Navigator.of(context, rootNavigator: true)
                               .pushReplacement(MaterialPageRoute(
-                              builder: (context) => StartPage()));
+                                  builder: (context) => StartPage()));
                         }),
                   ],
                 ),
@@ -195,7 +203,6 @@ class _StudentDashboardState extends State<StudentDashboard> {
                   SizedBox(
                     height: 20,
                   ),
-
                   ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
@@ -221,8 +228,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18,
-                                        fontFamily: 'Poppins'
-                                    ),
+                                        fontFamily: 'Poppins'),
                                   ),
                                 ],
                               ),
@@ -231,20 +237,19 @@ class _StudentDashboardState extends State<StudentDashboard> {
                         ),
                         onTap: () {
                           if (index == 0) {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //       builder: (context) => AddRequest()),
-                            // );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => EnterCode()),
+                            );
                           }
                           if (index == 1) {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //       builder: (context) => AddRequest()),
-                            // );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ViewResult()),
+                            );
                           }
-
                         },
                       );
                     },
@@ -256,7 +261,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
     );
   }
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  // final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final _recipientController = TextEditingController(
     text: 'info@quizApp.com',
   );
@@ -268,7 +273,6 @@ class _StudentDashboardState extends State<StudentDashboard> {
           userName +
           " User ID:" +
           userId +
-
           "\n would like to register my complain " +
           " \n Thanks,\n" +
           userName,
@@ -288,89 +292,115 @@ class _StudentDashboardState extends State<StudentDashboard> {
 
     if (!mounted) return;
 
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text(platformResponse),
-    ));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(platformResponse),
+      ),
+    );
   }
 
-  createAlertDialog(BuildContext context, String userName){
-    return showDialog(context: context,builder: (context){
-      return Column(
-        children: [
-          AlertDialog(
-            title: Center(
-              child: Text("Contact Us",
-                style: TextStyle(
-                    fontSize: 20,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.bold
-                ),),
-            ),
-            content: Container(
-              height: 210,
-              child: Column(mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text("Call us between 9 AM to 7PM \n\t\t Friday Closed",
+  createAlertDialog(BuildContext context, String userName) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return Column(
+            children: [
+              AlertDialog(
+                title: Center(
+                  child: Text(
+                    "Contact Us",
                     style: TextStyle(
+                        fontSize: 20,
                         fontFamily: 'Poppins',
-                        fontSize: 17
-                    ),),
-                  SizedBox(height: 20,),
-                  Container(
-                    width: MediaQuery.of(context).size.width*0.5,
-                    decoration: BoxDecoration(
-                        color: Colors.red, borderRadius: BorderRadius.all(Radius.circular(30))),
-                    child: FlatButton(
-                      onPressed: (){
-                        _makePhoneCall('tel:$contactNumber');
-                        Navigator.of(context).pop();
-                      },
-                      child: Row(mainAxisAlignment: MainAxisAlignment.center,
-                        children: [Icon(Icons.call,
-                          color: Colors.white,),
-                          SizedBox(width: 20,),
-                          Text(contactNumber,
-                            style: TextStyle(
-                                fontSize: 17,
-                                fontFamily: 'Poppins',
-                                color: Colors.white
-                            ),),
-                        ],
-                      ),
-                    ),
+                        fontWeight: FontWeight.bold),
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width*0.5,
-                    margin: EdgeInsets.symmetric(vertical: 20, horizontal: 7),
-                    decoration: BoxDecoration(
-                        color: Colors.red, borderRadius: BorderRadius.all(Radius.circular(30))),
-                    child: FlatButton(
-                      onPressed: (){
-                        emailContact(userName,currentUser);
-                        Navigator.of(context).pop();
-                      },
-                      child: Row(mainAxisAlignment: MainAxisAlignment.center,
-                        children: [Icon(Icons.email,color: Colors.white,),SizedBox(width: 18,),
-                          Text("E-Mail",
-                            style: TextStyle(
-                                fontSize: 17,
-                                fontFamily: 'Poppins',
-                                color: Colors.white
-                            ),),
-
-
-                        ],
+                ),
+                content: Container(
+                  height: 210,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Call us between 9 AM to 7PM \n\t\t Friday Closed",
+                        style: TextStyle(fontFamily: 'Poppins', fontSize: 17),
                       ),
-                    ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.5,
+                        decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(30))),
+                        child: MaterialButton(
+                          onPressed: () {
+                            _makePhoneCall('tel:$contactNumber');
+                            Navigator.of(context).pop();
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.call,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text(
+                                contactNumber,
+                                style: TextStyle(
+                                    fontSize: 17,
+                                    fontFamily: 'Poppins',
+                                    color: Colors.white),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.5,
+                        margin:
+                            EdgeInsets.symmetric(vertical: 20, horizontal: 7),
+                        decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(30))),
+                        child: MaterialButton(
+                          onPressed: () {
+                            emailContact(userName, currentUser);
+                            Navigator.of(context).pop();
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.email,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 18,
+                              ),
+                              Text(
+                                "E-Mail",
+                                style: TextStyle(
+                                    fontSize: 17,
+                                    fontFamily: 'Poppins',
+                                    color: Colors.white),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
-        ],
-      );
-    });
+            ],
+          );
+        });
   }
 
   Future<void> emailContact(String userName, String userId) async {
@@ -380,7 +410,6 @@ class _StudentDashboardState extends State<StudentDashboard> {
           userName +
           " User ID:" +
           userId +
-
           "\n would like to bring your attention to\n------ Insert text here--------- " +
           " \n Thanks,\n" +
           userName,
@@ -400,11 +429,12 @@ class _StudentDashboardState extends State<StudentDashboard> {
 
     if (!mounted) return;
 
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text(platformResponse),
-    ));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(platformResponse),
+      ),
+    );
   }
-
 }
 
 signOut() {
