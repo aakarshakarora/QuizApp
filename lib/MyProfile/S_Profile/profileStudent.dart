@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/Dashboard/S_Dashboard/dashboardStudent.dart';
 
+
+
 class StudentProfile extends StatefulWidget {
   @override
   _StudentProfileState createState() => _StudentProfileState();
@@ -71,9 +73,9 @@ class _StudentProfileState extends State<StudentProfile> {
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                               colors: [
-                            Colors.deepPurple,
-                            Colors.deepPurpleAccent
-                          ])),
+                                Colors.deepPurple,
+                                Colors.deepPurpleAccent
+                              ])),
                       child: Container(
                         width: double.infinity,
                         height: 270,
@@ -94,7 +96,7 @@ class _StudentProfileState extends State<StudentProfile> {
                                             "https://randomuser.me/api/portraits/men/46.jpg")),
                                     Padding(
                                       padding:
-                                          const EdgeInsets.only(left: 30.0),
+                                      const EdgeInsets.only(left: 30.0),
                                       child: Text(
                                         data['S_Name'],
                                         style: TextStyle(
@@ -112,7 +114,7 @@ class _StudentProfileState extends State<StudentProfile> {
                                     horizontal: 15.0, vertical: 22.0),
                                 child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
+                                  MainAxisAlignment.spaceAround,
                                   children: <Widget>[
                                     Column(
                                       children: <Widget>[
@@ -203,9 +205,7 @@ class _StudentProfileState extends State<StudentProfile> {
                                 Text(data['S_ContactNumber']),
                               ],
                             ),
-                            SizedBox(
-                              height: 10,
-                            ),
+                            SizedBox(height: 10,),
                             Row(
                               children: [
                                 Text(
@@ -217,9 +217,7 @@ class _StudentProfileState extends State<StudentProfile> {
                                 Text(data['S_EmailId']),
                               ],
                             ),
-                            SizedBox(
-                              height: 10,
-                            ),
+                            SizedBox(height: 10,),
                             Row(
                               children: [
                                 Text(
@@ -231,9 +229,8 @@ class _StudentProfileState extends State<StudentProfile> {
                                 Text(data['UserID']),
                               ],
                             ),
-                            SizedBox(
-                              height: 10,
-                            ),
+                            SizedBox(height: 10,),
+
                           ],
                         ),
                       ),

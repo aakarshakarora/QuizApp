@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:quiz_app/Login/F_Login/loginFaculty.dart';
 import 'package:quiz_app/Login/S_Login/loginStudent.dart';
 
+
 class StartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Column(mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // ignore: deprecated_member_use
             FlatButton(
               color: Colors.blue,
               textColor: Colors.white,
@@ -27,7 +27,6 @@ class StartPage extends StatelessWidget {
                 style: TextStyle(fontSize: 20.0),
               ),
             ),
-            // ignore: deprecated_member_use
             FlatButton(
               color: Colors.blue,
               textColor: Colors.white,
@@ -44,6 +43,7 @@ class StartPage extends StatelessWidget {
                 style: TextStyle(fontSize: 20.0),
               ),
             ),
+
           ],
         ),
       ),

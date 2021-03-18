@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:quiz_app/Model/resultModel.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
-//This class generate Pie Chart of student responses
-
 class PieChartDisplay extends StatefulWidget {
   final String accessCode;
 
@@ -19,7 +17,6 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
   List<ResultModel> mydata;
 
   _generateData(mydata) {
-    // ignore: deprecated_member_use
     _seriesPieData = List<charts.Series<ResultModel, String>>();
     _seriesPieData.add(
       charts.Series(
@@ -55,7 +52,6 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
     );
   }
 
-  // ignore: non_constant_identifier_names
   Widget _buildChart(BuildContext context, List<ResultModel> Resultdata) {
     mydata = Resultdata;
     _generateData(mydata);

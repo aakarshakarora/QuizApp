@@ -261,7 +261,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
     );
   }
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  // final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final _recipientController = TextEditingController(
     text: 'info@quizApp.com',
   );
@@ -292,10 +292,11 @@ class _StudentDashboardState extends State<StudentDashboard> {
 
     if (!mounted) return;
 
-    // ignore: deprecated_member_use
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text(platformResponse),
-    ));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(platformResponse),
+      ),
+    );
   }
 
   createAlertDialog(BuildContext context, String userName) {
@@ -333,8 +334,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                             color: Colors.red,
                             borderRadius:
                                 BorderRadius.all(Radius.circular(30))),
-                        // ignore: deprecated_member_use
-                        child: FlatButton(
+                        child: MaterialButton(
                           onPressed: () {
                             _makePhoneCall('tel:$contactNumber');
                             Navigator.of(context).pop();
@@ -368,8 +368,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                             color: Colors.red,
                             borderRadius:
                                 BorderRadius.all(Radius.circular(30))),
-                        // ignore: deprecated_member_use
-                        child: FlatButton(
+                        child: MaterialButton(
                           onPressed: () {
                             emailContact(userName, currentUser);
                             Navigator.of(context).pop();
@@ -430,10 +429,11 @@ class _StudentDashboardState extends State<StudentDashboard> {
 
     if (!mounted) return;
 
-    // ignore: deprecated_member_use
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text(platformResponse),
-    ));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(platformResponse),
+      ),
+    );
   }
 }
 

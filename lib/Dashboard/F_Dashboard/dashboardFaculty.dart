@@ -9,6 +9,7 @@ import 'package:quiz_app/Pages/startPage.dart';
 import 'package:quiz_app/PreviewQuiz/previewQuizDesc.dart';
 import 'package:quiz_app/CreateQuiz/quizDesc.dart';
 
+
 import 'package:url_launcher/url_launcher.dart';
 
 class FacultyDashboard extends StatefulWidget {
@@ -17,6 +18,7 @@ class FacultyDashboard extends StatefulWidget {
 }
 
 class _FacultyDashboardState extends State<FacultyDashboard> {
+
   String contactNumber = '8837682823';
 
   Future<void> _makePhoneCall(String url) async {
@@ -27,7 +29,9 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
     }
   }
 
-  final titles = ['Create Quiz', 'Preview Quiz', 'Download Response'];
+
+
+  final titles = ['Create Quiz', 'Preview Quiz','Download Response'];
   final titleIcon = [
     Icon(Icons.event_note),
     Icon(Icons.update),
@@ -54,6 +58,7 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
       child: FutureBuilder<DocumentSnapshot>(
           future: FirebaseFirestore.instance
@@ -67,34 +72,32 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
             }
             Map<String, dynamic> data = snapshot.data.data();
             return Scaffold(
-              appBar: AppBar(
-                title: Text('Welcome ${data['F_Name']}',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Poppins',
-                        fontSize: 23)),
-                backgroundColor: Colors.deepPurpleAccent,
-              ),
+              appBar: AppBar(title: Text('Welcome ${data['F_Name']}',
+                  style:TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Poppins',
+                      fontSize: 23
+                  )),
+                backgroundColor: Colors.deepPurpleAccent,),
               drawer: new Drawer(
                 child: new ListView(
                   children: <Widget>[
                     new UserAccountsDrawerHeader(
-                      accountName: new Text(
-                        'Welcome ${data['F_Name']}',
+                      accountName: new Text('Welcome ${data['F_Name']}',
                         style: TextStyle(
                             fontFamily: 'Poppins',
                             fontWeight: FontWeight.bold,
-                            fontSize: 20),
-                      ),
+                            fontSize: 20
+                        ),),
                       accountEmail: new Text('${data['F_EmailId']}',
                           style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
-                              fontFamily: 'Poppins')),
+                              fontFamily: 'Poppins'
+                          )),
                       decoration: new BoxDecoration(
                         image: new DecorationImage(
-                          image: new NetworkImage(
-                              'https://mdbootstrap.com/img/new/slides/041.jpg'),
+                          image: new NetworkImage('https://mdbootstrap.com/img/new/slides/041.jpg'),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -104,13 +107,12 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
                     ),
                     new ListTile(
                       leading: Icon(Icons.account_circle),
-                      title: new Text(
-                        "My Profile",
+                      title: new Text("My Profile",
                         style: TextStyle(
                             fontFamily: 'Poppins',
                             fontWeight: FontWeight.bold,
-                            fontSize: 17),
-                      ),
+                            fontSize: 17
+                        ),),
                       onTap: () {
                         Navigator.push(
                           context,
@@ -121,55 +123,53 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
                     ),
                     new ListTile(
                       leading: Icon(Icons.notifications_active),
-                      title: new Text(
-                        "Notifications",
+                      title: new Text("Notifications",
                         style: TextStyle(
                             fontFamily: 'Poppins',
                             fontWeight: FontWeight.bold,
-                            fontSize: 17),
-                      ),
+                            fontSize: 17
+                        ),),
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => FuturePage()),
+                          MaterialPageRoute(
+                              builder: (context) => FuturePage()),
                         );
                       },
                     ),
+
                     new ListTile(
                         leading: Icon(Icons.contact_phone),
-                        title: new Text(
-                          "Contact Us",
+                        title: new Text("Contact Us",
                           style: TextStyle(
                               fontFamily: 'Poppins',
                               fontWeight: FontWeight.bold,
-                              fontSize: 17),
-                        ),
+                              fontSize: 17
+                          ),),
                         onTap: () {
-                          createAlertDialog(context, data['F_Name']);
+                          createAlertDialog(context,data['F_Name']);
                           //Navigator.pop(context);
                         }),
                     new ListTile(
                       leading: Icon(Icons.report_problem),
-                      title: new Text(
-                        "Register Complaint",
+                      title: new Text("Register Complaint",
                         style: TextStyle(
                             fontFamily: 'Poppins',
                             fontWeight: FontWeight.bold,
-                            fontSize: 17),
-                      ),
+                            fontSize: 17
+                        ),),
                       onTap: () {
                         sendComplaintMail(data['F_Name'], currentUser);
                       },
                     ),
                     new ListTile(
                       leading: Icon(Icons.settings),
-                      title: new Text(
-                        "Settings",
+                      title: new Text("Settings",
                         style: TextStyle(
                             fontFamily: 'Poppins',
                             fontWeight: FontWeight.bold,
-                            fontSize: 17),
-                      ),
+                            fontSize: 17
+                        ),),
                       onTap: () {
                         Navigator.push(
                           context,
@@ -180,18 +180,17 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
                     new Divider(),
                     new ListTile(
                         leading: Icon(Icons.power_settings_new),
-                        title: new Text(
-                          "Logout",
+                        title: new Text("Logout",
                           style: TextStyle(
                               fontFamily: 'Poppins',
                               fontWeight: FontWeight.bold,
-                              fontSize: 17),
-                        ),
+                              fontSize: 17
+                          ),),
                         onTap: () {
                           signOut();
                           Navigator.of(context, rootNavigator: true)
                               .pushReplacement(MaterialPageRoute(
-                                  builder: (context) => StartPage()));
+                              builder: (context) => StartPage()));
                         }),
                   ],
                 ),
@@ -201,6 +200,7 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
                   SizedBox(
                     height: 20,
                   ),
+
                   ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
@@ -226,7 +226,8 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18,
-                                        fontFamily: 'Poppins'),
+                                        fontFamily: 'Poppins'
+                                    ),
                                   ),
                                 ],
                               ),
@@ -256,6 +257,7 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
                                   builder: (context) => CreateExcel()),
                             );
                           }
+
                         },
                       );
                     },
@@ -279,6 +281,7 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
           userName +
           " User ID:" +
           userId +
+
           "\n would like to register my complain " +
           " \n Thanks,\n" +
           userName,
@@ -298,116 +301,89 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
 
     if (!mounted) return;
 
-    // ignore: deprecated_member_use
     _scaffoldKey.currentState.showSnackBar(SnackBar(
       content: Text(platformResponse),
     ));
   }
 
-  createAlertDialog(BuildContext context, String userName) {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return Column(
-            children: [
-              AlertDialog(
-                title: Center(
-                  child: Text(
-                    "Contact Us",
+  createAlertDialog(BuildContext context, String userName){
+    return showDialog(context: context,builder: (context){
+      return Column(
+        children: [
+          AlertDialog(
+            title: Center(
+              child: Text("Contact Us",
+                style: TextStyle(
+                    fontSize: 20,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.bold
+                ),),
+            ),
+            content: Container(
+              height: 210,
+              child: Column(mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text("Call us between 9 AM to 7PM \n\t\t Friday Closed",
                     style: TextStyle(
-                        fontSize: 20,
                         fontFamily: 'Poppins',
-                        fontWeight: FontWeight.bold),
+                        fontSize: 17
+                    ),),
+                  SizedBox(height: 20,),
+                  Container(
+                    width: MediaQuery.of(context).size.width*0.5,
+                    decoration: BoxDecoration(
+                        color: Colors.red, borderRadius: BorderRadius.all(Radius.circular(30))),
+                    child: FlatButton(
+                      onPressed: (){
+                        _makePhoneCall('tel:$contactNumber');
+                        Navigator.of(context).pop();
+                      },
+                      child: Row(mainAxisAlignment: MainAxisAlignment.center,
+                        children: [Icon(Icons.call,
+                          color: Colors.white,),
+                          SizedBox(width: 20,),
+                          Text(contactNumber,
+                            style: TextStyle(
+                                fontSize: 17,
+                                fontFamily: 'Poppins',
+                                color: Colors.white
+                            ),),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-                content: Container(
-                  height: 210,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Call us between 9 AM to 7PM \n\t\t Friday Closed",
-                        style: TextStyle(fontFamily: 'Poppins', fontSize: 17),
+                  Container(
+                    width: MediaQuery.of(context).size.width*0.5,
+                    margin: EdgeInsets.symmetric(vertical: 20, horizontal: 7),
+                    decoration: BoxDecoration(
+                        color: Colors.red, borderRadius: BorderRadius.all(Radius.circular(30))),
+                    child: FlatButton(
+                      onPressed: (){
+                        emailContact(userName,currentUser);
+                        Navigator.of(context).pop();
+                      },
+                      child: Row(mainAxisAlignment: MainAxisAlignment.center,
+                        children: [Icon(Icons.email,color: Colors.white,),SizedBox(width: 18,),
+                          Text("E-Mail",
+                            style: TextStyle(
+                                fontSize: 17,
+                                fontFamily: 'Poppins',
+                                color: Colors.white
+                            ),),
+
+
+                        ],
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(30))),
-                        // ignore: deprecated_member_use
-                        child: FlatButton(
-                          onPressed: () {
-                            _makePhoneCall('tel:$contactNumber');
-                            Navigator.of(context).pop();
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.call,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text(
-                                contactNumber,
-                                style: TextStyle(
-                                    fontSize: 17,
-                                    fontFamily: 'Poppins',
-                                    color: Colors.white),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        margin:
-                            EdgeInsets.symmetric(vertical: 20, horizontal: 7),
-                        decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(30))),
-                        // ignore: deprecated_member_use
-                        child: FlatButton(
-                          onPressed: () {
-                            emailContact(userName, currentUser);
-                            Navigator.of(context).pop();
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.email,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 18,
-                              ),
-                              Text(
-                                "E-Mail",
-                                style: TextStyle(
-                                    fontSize: 17,
-                                    fontFamily: 'Poppins',
-                                    color: Colors.white),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
-          );
-        });
+            ),
+          ),
+        ],
+      );
+    });
   }
 
   Future<void> emailContact(String userName, String userId) async {
@@ -417,6 +393,7 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
           userName +
           " User ID:" +
           userId +
+
           "\n would like to bring your attention to\n------ Insert text here--------- " +
           " \n Thanks,\n" +
           userName,
@@ -436,11 +413,11 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
 
     if (!mounted) return;
 
-    // ignore: deprecated_member_use
     _scaffoldKey.currentState.showSnackBar(SnackBar(
       content: Text(platformResponse),
     ));
   }
+
 }
 
 signOut() {

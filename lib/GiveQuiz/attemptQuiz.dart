@@ -12,12 +12,13 @@ import 'globals.dart' as global;
 
 class AttemptQuiz extends StatefulWidget {
   final String subjectName, accessCode;
-  final int questionCount, maximumScore, timeCount;
+  final int questionCount, maximumScore, timeCount, marksPerQuestion;
 
   AttemptQuiz(
       {@required this.accessCode,
       @required this.subjectName,
       @required this.questionCount,
+      @required this.marksPerQuestion,
       @required this.maximumScore,
       @required this.timeCount});
 
@@ -50,7 +51,6 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    secureScreen();
     uId = getUserID();
   }
 
@@ -131,39 +131,47 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
       ),
       body: Column(
         children: [
-          CountdownTimer(
-            endTime: widget.timeCount,
-            widgetBuilder: (_, CurrentRemainingTime time) {
-              if (time == null) {
-                FirebaseFirestore.instance
-                    .collection('Quiz')
-                    .doc(widget.accessCode)
-                    .collection(widget.accessCode + 'Result')
-                    .doc(uId)
-                    .update({
-                  "S_UID": uId,
-                  "Score": finalScore,
-                  'tabSwitch': inactive,
-                  'attempted': attempted,
-                }).then((_) {
-                  //_displaySnackBar(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => PostQuiz(
-                              score: finalScore,
-                              inactive: inactive,
-                              totalScore: widget.maximumScore,
-                            )),
-                  );
-                });
-              }
-              return Text(' ${time.hours} : ${time.min} :  ${time.sec}');
-            },
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: CountdownTimer(
+              endTime: widget.timeCount,
+              widgetBuilder: (_, CurrentRemainingTime time) {
+                if (time == null) {
+                  FirebaseFirestore.instance
+                      .collection('Quiz')
+                      .doc(widget.accessCode)
+                      .collection(widget.accessCode + 'Result')
+                      .doc(uId)
+                      .update({
+                    "S_UID": uId,
+                    "Score": finalScore,
+                    'tabSwitch': inactive,
+                    'attempted': attempted,
+                  }).then((_) {
+                    //_displaySnackBar(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PostQuiz(
+                                score: finalScore,
+                                inactive: inactive,
+                                totalScore: widget.maximumScore,
+                              )),
+                    );
+                  });
+                }
+                return Text(
+                  ' ${time.hours == null ? "" : (time.hours.toString()) + ":"} ${time.min == null ? "" : (time.min).toString() + ":"} ${time.sec == null ? "" : (time.sec).toString()}',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                );
+              },
+            ),
           ),
           Expanded(
             child: Container(
-
               child: StreamBuilder(
                 stream: firestoreDB,
                 builder: (ctx, opSnapshot) {
@@ -190,7 +198,7 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               reqDocs[index].get("imgURL") == null
-                                  ? Container()
+                                  ? CircularProgressIndicator()
                                   : Container(
                                       width: MediaQuery.of(context).size.width,
                                       child: Image.network(
@@ -199,8 +207,7 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
                               QuestionTile(
                                 index: index,
                                 reqDoc: reqDocs[index],
-                                correctAnswerMarks:
-                                    (widget.maximumScore) / (reqDocs.length),
+                                correctAnswerMarks: widget.marksPerQuestion,
                               ),
                               SizedBox(
                                 height: 100,
@@ -250,13 +257,12 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
                                   onPressed: () {
                                     print("Submit Button is pressed!");
                                     print(
-                                        "Total Score:${(global.correct.reduce((a, b) => a + b)) * (widget.maximumScore) / (reqDocs.length)}");
+                                        "Total Score:${(global.correct.reduce((a, b) => a + b)) * widget.marksPerQuestion}");
 
                                     setState(() {
                                       finalScore = (global.correct
                                               .reduce((a, b) => a + b)) *
-                                          (widget.maximumScore) ~/
-                                          (reqDocs.length);
+                                          widget.marksPerQuestion;
                                     });
                                     FirebaseFirestore.instance
                                         .collection('Quiz')
@@ -285,6 +291,7 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
                                       global.correct = [];
                                     });
                                   }),
+                              SizedBox(height: 20),
                             ],
                           ),
                         ),
@@ -302,6 +309,7 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
 }
 
 class QuestionTile extends StatefulWidget {
+  // TODO:defined totalDocs
   final dynamic reqDoc, index, correctAnswerMarks;
 
   QuestionTile(
@@ -322,10 +330,6 @@ class _QuestionTileState extends State<QuestionTile>
   @override
   bool get wantKeepAlive => true;
 
-  Future<void> secureScreen() async {
-    await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
-  }
-
   @override
   void initState() {
     // TODO: implement initState
@@ -335,7 +339,6 @@ class _QuestionTileState extends State<QuestionTile>
       widget.reqDoc.get("03"),
       widget.reqDoc.get("04"),
     ];
-    secureScreen();
     options.shuffle();
     super.initState();
   }
@@ -348,6 +351,10 @@ class _QuestionTileState extends State<QuestionTile>
     secureScreen();
   }
 
+  Future<void> secureScreen() async {
+    await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -358,7 +365,10 @@ class _QuestionTileState extends State<QuestionTile>
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Q${widget.index + 1} ${widget.reqDoc.get("Ques")}"),
+          Text("Q${widget.index + 1} ${widget.reqDoc.get("Ques")}",style: TextStyle(
+            fontWeight: FontWeight.w400,
+            fontSize: 20
+          ),),
           ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
@@ -375,6 +385,9 @@ class _QuestionTileState extends State<QuestionTile>
                             print(widget.reqDoc.documentID);
                             selectedValue = value;
                             global.attempted[widget.index] = 1;
+                            // Provider.of<Data>(context, listen: false)
+                            //     .changeCount(
+                            //         global.attempted.reduce((a, b) => a + b));
                           });
                           print("Option Selected: ${options[index]}");
                           if (options[index] == widget.reqDoc.get("01")) {
@@ -392,8 +405,14 @@ class _QuestionTileState extends State<QuestionTile>
                           print("Questions attempted: ${global.attempted}");
                           print(global.attempted.reduce((a, b) => a + b));
                           print("Questions correct: ${global.correct}");
+                          // print(
+                          //     "Total Score:${(global.correct.reduce((a,
+                          //         b) => a + b)) * widget.correctAnswerMarks}");
                         }),
-                    Text(options[index]),
+                    Flexible(child: Text(options[index],
+                    style: TextStyle(
+                      fontSize: 17
+                    ),)),
                   ],
                 );
               }),

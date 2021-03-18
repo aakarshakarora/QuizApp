@@ -33,7 +33,7 @@ class _ViewQuizDescState extends State<ViewQuizDesc> {
                       return Center(
                         child: CircularProgressIndicator(),
                       );
-                    final reqDocs = opSnapshot.data.docs;
+                    final reqDocs = opSnapshot.data.documents;
                     print('length ${reqDocs.length}');
                     return ListView.builder(
                       itemCount: reqDocs.length,
@@ -85,7 +85,6 @@ class _ViewDetailsState extends State<ViewDetails> {
     return Container(
       padding: const EdgeInsets.all(10),
       child: Container(
-        height: 250,
         width: double.infinity,
         child: Card(
           elevation: 5,
@@ -150,9 +149,8 @@ class _ViewDetailsState extends State<ViewDetails> {
                     ),
                   ],
                 ),
-                // ignore: deprecated_member_use
-                RaisedButton(
-                  child: Text('Click Here'),
+                ElevatedButton(
+                  child: Text('Share Quiz'),
                   onPressed: () async {
                     var response =
                         await FlutterShareMe().shareToSystem(msg: message);
@@ -161,8 +159,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                     }
                   },
                 ),
-                // ignore: deprecated_member_use
-                FlatButton(
+                ElevatedButton(
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -174,7 +171,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                 maximumScore: maxScore)),
                       );
                     },
-                    child: Text("Review Quiz"))
+                    child: Text("Edit Quiz"))
               ],
             ),
           ),

@@ -17,13 +17,13 @@ class AddQuestion extends StatefulWidget {
 
 class _AddQuestionState extends State<AddQuestion> {
   bool imagePresent;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    imagePresent=false;
+    imagePresent = false;
   }
-
 
   final TextEditingController _imageLink = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -83,6 +83,7 @@ class _AddQuestionState extends State<AddQuestion> {
       ),
     );
   }
+
   _buildOption1Field() {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 5),
@@ -183,7 +184,6 @@ class _AddQuestionState extends State<AddQuestion> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -197,7 +197,6 @@ class _AddQuestionState extends State<AddQuestion> {
                 Text(currentCount.toString() +
                     "/" +
                     widget.questionCount.toString()),
-
                 Container(
                   padding: EdgeInsets.all(15.0),
                   child: Row(
@@ -209,7 +208,7 @@ class _AddQuestionState extends State<AddQuestion> {
                           value: true,
                           onChanged: (v) {
                             setState(() {
-                              imagePresent=v;
+                              imagePresent = v;
                             });
                           }),
                       Text("No"),
@@ -218,13 +217,17 @@ class _AddQuestionState extends State<AddQuestion> {
                           value: false,
                           onChanged: (v) {
                             setState(() {
-                              imagePresent=v;
+                              imagePresent = v;
                             });
                           }),
                     ],
                   ),
                 ),
-                imagePresent==true?_buildImageCheck():Container(height: 0,),
+                imagePresent == true
+                    ? _buildImageCheck()
+                    : Container(
+                        height: 0,
+                      ),
                 _buildQuestionField(),
                 _buildOption1Field(),
                 _buildOption2Field(),
@@ -298,7 +301,7 @@ class _AddQuestionState extends State<AddQuestion> {
                                   "imgPresent": imagePresent,
                                   "imgURL": _imageLink.text
                                 }).then((_) {
-                                  //_displaySnackBar(context);
+                                  _displaySnackBar(context);
                                   setState(() {
                                     currentCount++;
                                     print(currentCount);
@@ -327,13 +330,12 @@ class _AddQuestionState extends State<AddQuestion> {
     );
   }
 
-// _displaySnackBar(BuildContext context) {
-//   final snackBar = SnackBar(
-//       content: Text(
-//     'Question Added Successfully',
-//     style: TextStyle(fontFamily: 'Poppins'),
-//   ));
-//   // ignore: deprecated_member_use
-//   Scaffold.of(context).showSnackBar(snackBar);
-// }
+  _displaySnackBar(BuildContext context) {
+    final snackBar = SnackBar(
+        content: Text(
+      'Question Added Successfully',
+      style: TextStyle(fontFamily: 'Poppins'),
+    ));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
 }
