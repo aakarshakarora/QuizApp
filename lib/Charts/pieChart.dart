@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/Model/resultModel.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
@@ -13,6 +14,39 @@ class PieChartDisplay extends StatefulWidget {
 }
 
 class _PieChartDisplayState extends State<PieChartDisplay> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  String currentUser;
+  int score, inactiveState;
+
+//Get Current User
+  String getCurrentUser() {
+    final User user = _auth.currentUser;
+    final uid = user.uid;
+    final uemail = user.email;
+    print(uid);
+    print(uemail);
+    return uid.toString();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    currentUser = getCurrentUser();
+
+    FirebaseFirestore.instance
+        .collection('Quiz')
+        .doc(widget.accessCode)
+        .collection(widget.accessCode + 'Result')
+        .doc(currentUser)
+        .get()
+        .then((value) {
+      score = value.data()['Score'];
+      inactiveState = value.data()['tabSwitch'];
+      print("Score: $score");
+      print("Inactive: $inactiveState");
+    });
+  }
+
   List<charts.Series<ResultModel, String>> _seriesPieData;
   List<ResultModel> mydata;
 
@@ -65,6 +99,8 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
                 'Pie Chart',
                 style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
               ),
+              Text("Your Score is: "+score.toString()),
+              Text("Inactive State Count: " +inactiveState.toString()),
               SizedBox(
                 height: 10.0,
               ),
