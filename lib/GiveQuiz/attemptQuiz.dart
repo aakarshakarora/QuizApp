@@ -12,13 +12,15 @@ import 'globals.dart' as global;
 
 class AttemptQuiz extends StatefulWidget {
   final String subjectName, accessCode;
-  final int questionCount, maximumScore,timeCount;
+  final int questionCount, maximumScore, timeCount, marksPerQuestion;
+
   AttemptQuiz(
       {@required this.accessCode,
-        @required this.subjectName,
-        @required this.questionCount,
-        @required this.maximumScore,
-        @required this.timeCount});
+      @required this.subjectName,
+      @required this.questionCount,
+      @required this.marksPerQuestion,
+      @required this.maximumScore,
+      @required this.timeCount});
 
   @override
   _AttemptQuizState createState() => _AttemptQuizState();
@@ -27,8 +29,9 @@ class AttemptQuiz extends StatefulWidget {
 class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String uId, subjectName, creatorName, maxScore, quizDate;
-  bool attempted=true;
-  int finalScore=0;
+  bool attempted = true;
+  int finalScore = 0;
+
   String getUserID() {
     final User user = _auth.currentUser;
     final uid = user.uid;
@@ -93,7 +96,11 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => PostQuiz(score: finalScore, inactive:inactive,totalScore: widget.maximumScore,)),
+                  builder: (context) => PostQuiz(
+                        score: finalScore,
+                        inactive: inactive,
+                        totalScore: widget.maximumScore,
+                      )),
             );
           });
           break;
@@ -108,7 +115,6 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-
     if (global.attempted.isEmpty && global.correct.isEmpty) {
       global.attempted = List.filled(widget.questionCount, 0);
       global.correct = List.filled(widget.questionCount, 0);
@@ -125,33 +131,45 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
       ),
       body: Column(
         children: [
-          CountdownTimer(
-            endTime: widget.timeCount,
-            widgetBuilder: (_, CurrentRemainingTime time) {
-              if (time == null) {
-                FirebaseFirestore.instance
-                    .collection('Quiz')
-                    .doc(widget.accessCode)
-                    .collection(widget.accessCode + 'Result')
-                    .doc(uId)
-                    .update({
-                  "S_UID": uId,
-                  "Score": finalScore,
-                  'tabSwitch': inactive,
-                  'attempted': attempted,
-                }).then((_) {
-                  //_displaySnackBar(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => PostQuiz(score: finalScore, inactive:inactive,totalScore: widget.maximumScore,)),
-                  );
-                });
-              }
-              return Text(' ${time.hours} : ${time.min} :  ${time.sec}');
-            },
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: CountdownTimer(
+              endTime: widget.timeCount,
+              widgetBuilder: (_, CurrentRemainingTime time) {
+                if (time == null) {
+                  FirebaseFirestore.instance
+                      .collection('Quiz')
+                      .doc(widget.accessCode)
+                      .collection(widget.accessCode + 'Result')
+                      .doc(uId)
+                      .update({
+                    "S_UID": uId,
+                    "Score": finalScore,
+                    'tabSwitch': inactive,
+                    'attempted': attempted,
+                  }).then((_) {
+                    //_displaySnackBar(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PostQuiz(
+                                score: finalScore,
+                                inactive: inactive,
+                                totalScore: widget.maximumScore,
+                              )),
+                    );
+                  });
+                }
+                return Text(
+                  ' ${time.hours == null ? "" : (time.hours.toString()) + ":"} ${time.min == null ? "" : (time.min).toString() + ":"} ${time.sec == null ? "" : (time.sec).toString()}',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                );
+              },
+            ),
           ),
-
           Expanded(
             child: Container(
               child: StreamBuilder(
@@ -179,16 +197,17 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              reqDocs[index].get("imgURL")==null?Container():
-                              Container(
-                                width:MediaQuery.of(context).size.width,
-                                child: Image.network(reqDocs[index].get("imgURL")),
-                              ),
+                              reqDocs[index].get("imgURL") == null
+                                  ? CircularProgressIndicator()
+                                  : Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Image.network(
+                                          reqDocs[index].get("imgURL")),
+                                    ),
                               QuestionTile(
                                 index: index,
                                 reqDoc: reqDocs[index],
-                                correctAnswerMarks:
-                                (widget.maximumScore) / (reqDocs.length),
+                                correctAnswerMarks: widget.marksPerQuestion,
                               ),
                               SizedBox(
                                 height: 100,
@@ -199,34 +218,34 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
                                   index == 0
                                       ? Container()
                                       : roundedButton(
-                                      color: Colors.blue,
-                                      context: context,
-                                      text: "Prev",
-                                      onPressed: () {
-                                        print("Prev Button is pressed!");
-                                        print(index);
-                                        print(widget.questionCount);
-                                        pageController.animateToPage(
-                                            index - 1,
-                                            duration:
-                                            Duration(milliseconds: 200),
-                                            curve: Curves.easeIn);
-                                      }),
+                                          color: Colors.blue,
+                                          context: context,
+                                          text: "Prev",
+                                          onPressed: () {
+                                            print("Prev Button is pressed!");
+                                            print(index);
+                                            print(widget.questionCount);
+                                            pageController.animateToPage(
+                                                index - 1,
+                                                duration:
+                                                    Duration(milliseconds: 200),
+                                                curve: Curves.easeIn);
+                                          }),
                                   index != widget.questionCount - 1
                                       ? roundedButton(
-                                      color: Colors.blue,
-                                      context: context,
-                                      text: "Next",
-                                      onPressed: () {
-                                        print("Next Button is pressed!");
-                                        print(index);
-                                        print(widget.questionCount);
-                                        pageController.animateToPage(
-                                            index + 1,
-                                            duration:
-                                            Duration(milliseconds: 200),
-                                            curve: Curves.bounceInOut);
-                                      })
+                                          color: Colors.blue,
+                                          context: context,
+                                          text: "Next",
+                                          onPressed: () {
+                                            print("Next Button is pressed!");
+                                            print(index);
+                                            print(widget.questionCount);
+                                            pageController.animateToPage(
+                                                index + 1,
+                                                duration:
+                                                    Duration(milliseconds: 200),
+                                                curve: Curves.bounceInOut);
+                                          })
                                       : Container(),
                                 ],
                               ),
@@ -238,17 +257,18 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
                                   onPressed: () {
                                     print("Submit Button is pressed!");
                                     print(
-                                        "Total Score:${(global.correct.reduce((a, b) => a + b)) * (widget.maximumScore) / (reqDocs.length)}");
+                                        "Total Score:${(global.correct.reduce((a, b) => a + b)) * widget.marksPerQuestion}");
 
                                     setState(() {
-                                      finalScore = (global.correct.reduce((a, b) => a + b)) *
-                                            (widget.maximumScore) ~/
-                                            (reqDocs.length);
+                                      finalScore = (global.correct
+                                              .reduce((a, b) => a + b)) *
+                                          widget.marksPerQuestion;
                                     });
                                     FirebaseFirestore.instance
                                         .collection('Quiz')
                                         .doc(widget.accessCode)
-                                        .collection(widget.accessCode + 'Result')
+                                        .collection(
+                                            widget.accessCode + 'Result')
                                         .doc(uId)
                                         .update({
                                       "S_UID": uId,
@@ -260,13 +280,18 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) =>
-                                                PostQuiz(score: finalScore, inactive:inactive,totalScore: widget.maximumScore,)),
+                                            builder: (context) => PostQuiz(
+                                                  score: finalScore,
+                                                  inactive: inactive,
+                                                  totalScore:
+                                                      widget.maximumScore,
+                                                )),
                                       );
                                       global.attempted = [];
                                       global.correct = [];
                                     });
                                   }),
+                              SizedBox(height: 20),
                             ],
                           ),
                         ),
@@ -289,8 +314,8 @@ class QuestionTile extends StatefulWidget {
 
   QuestionTile(
       {@required this.reqDoc,
-        @required this.index,
-        @required this.correctAnswerMarks});
+      @required this.index,
+      @required this.correctAnswerMarks});
 
   @override
   _QuestionTileState createState() => _QuestionTileState();
@@ -340,7 +365,10 @@ class _QuestionTileState extends State<QuestionTile>
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Q${widget.index + 1} ${widget.reqDoc.get("Ques")}"),
+          Text("Q${widget.index + 1} ${widget.reqDoc.get("Ques")}",style: TextStyle(
+            fontWeight: FontWeight.w400,
+            fontSize: 20
+          ),),
           ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
@@ -381,7 +409,10 @@ class _QuestionTileState extends State<QuestionTile>
                           //     "Total Score:${(global.correct.reduce((a,
                           //         b) => a + b)) * widget.correctAnswerMarks}");
                         }),
-                    Text(options[index]),
+                    Flexible(child: Text(options[index],
+                    style: TextStyle(
+                      fontSize: 17
+                    ),)),
                   ],
                 );
               }),

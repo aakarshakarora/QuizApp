@@ -38,7 +38,7 @@ class _ViewResultState extends State<ViewResult> {
             keyboardType: TextInputType.text,
             controller: accessCodeController,
           ),
-          FlatButton(
+          MaterialButton(
               onPressed: () {
 
                 Navigator.push(
