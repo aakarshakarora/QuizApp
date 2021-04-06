@@ -49,6 +49,7 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
 
   @override
   void initState() {
+    secureScreen();
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     uId = getUserID();
@@ -332,6 +333,7 @@ class _QuestionTileState extends State<QuestionTile>
 
   @override
   void initState() {
+    secureScreen();
     // TODO: implement initState
     options = [
       widget.reqDoc.get("01"),
