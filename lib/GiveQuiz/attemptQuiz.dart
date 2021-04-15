@@ -83,6 +83,13 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
           inactive++;
           print(inactive);
           FirebaseFirestore.instance
+              .collection('Student')
+              .doc(uId)
+              .update({
+            "QuizGiven": FieldValue.arrayUnion([widget.accessCode+" "+widget.subjectName])
+          });
+
+          FirebaseFirestore.instance
               .collection('Quiz')
               .doc(widget.accessCode)
               .collection(widget.accessCode + 'Result')
@@ -98,10 +105,10 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
               context,
               MaterialPageRoute(
                   builder: (context) => PostQuiz(
-                        score: finalScore,
-                        inactive: inactive,
-                        totalScore: widget.maximumScore,
-                      )),
+                    score: finalScore,
+                    inactive: inactive,
+                    totalScore: widget.maximumScore,
+                  )),
             );
           });
           break;
@@ -113,7 +120,6 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
       }
     });
   }
-
   @override
   Widget build(BuildContext context) {
     if (global.attempted.isEmpty && global.correct.isEmpty) {
@@ -138,6 +144,13 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
               endTime: widget.timeCount,
               widgetBuilder: (_, CurrentRemainingTime time) {
                 if (time == null) {
+                  FirebaseFirestore.instance
+                      .collection('Student')
+                      .doc(uId)
+                      .update({
+                    "QuizGiven": FieldValue.arrayUnion([widget.accessCode+" "+widget.subjectName])
+                  });
+
                   FirebaseFirestore.instance
                       .collection('Quiz')
                       .doc(widget.accessCode)
@@ -265,6 +278,13 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
                                               .reduce((a, b) => a + b)) *
                                           widget.marksPerQuestion;
                                     });
+
+                                    FirebaseFirestore.instance
+                                        .collection('Student')
+                                        .doc(uId)
+                                        .update({
+                                      "QuizGiven": FieldValue.arrayUnion([widget.accessCode+" "+widget.subjectName])
+                                    });
                                     FirebaseFirestore.instance
                                         .collection('Quiz')
                                         .doc(widget.accessCode)
@@ -333,7 +353,6 @@ class _QuestionTileState extends State<QuestionTile>
 
   @override
   void initState() {
-    secureScreen();
     // TODO: implement initState
     options = [
       widget.reqDoc.get("01"),
@@ -367,10 +386,10 @@ class _QuestionTileState extends State<QuestionTile>
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Q${widget.index + 1} ${widget.reqDoc.get("Ques")}",style: TextStyle(
-            fontWeight: FontWeight.w400,
-            fontSize: 20
-          ),),
+          Text(
+            "Q${widget.index + 1} ${widget.reqDoc.get("Ques")}",
+            style: TextStyle(fontWeight: FontWeight.w400, fontSize: 20),
+          ),
           ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
@@ -411,10 +430,11 @@ class _QuestionTileState extends State<QuestionTile>
                           //     "Total Score:${(global.correct.reduce((a,
                           //         b) => a + b)) * widget.correctAnswerMarks}");
                         }),
-                    Flexible(child: Text(options[index],
-                    style: TextStyle(
-                      fontSize: 17
-                    ),)),
+                    Flexible(
+                        child: Text(
+                      options[index],
+                      style: TextStyle(fontSize: 17),
+                    )),
                   ],
                 );
               }),
