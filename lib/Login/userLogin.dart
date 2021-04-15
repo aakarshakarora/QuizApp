@@ -108,7 +108,7 @@ class _UserLoginState extends State<UserLogin> {
                       children: <Widget>[
                         Container(
                           child: Text(
-                            'Registered and Verified Student can Login',
+                            'Registered and Verified Users can Login',
                             style: TextStyle(
                                 fontFamily: 'Poppins',
                                 fontSize: 20,
