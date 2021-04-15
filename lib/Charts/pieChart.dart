@@ -33,6 +33,8 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
     super.initState();
     currentUser = getCurrentUser();
 
+
+
     FirebaseFirestore.instance
         .collection('Quiz')
         .doc(widget.accessCode)
@@ -40,6 +42,10 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
         .doc(currentUser)
         .get()
         .then((value) {
+          setState(() {
+            score = value.data()['Score'];
+            inactiveState = value.data()['tabSwitch'];
+          });
       score = value.data()['Score'];
       inactiveState = value.data()['tabSwitch'];
       print("Score: $score");
@@ -78,7 +84,7 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
         } else {
           List<ResultModel> task = snapshot.data.docs
               .map((documentSnapshot) =>
-                  ResultModel.fromMap(documentSnapshot.data()))
+              ResultModel.fromMap(documentSnapshot.data()))
               .toList();
           return _buildChart(context, task);
         }
@@ -111,7 +117,7 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
                     behaviors: [
                       new charts.DatumLegend(
                         outsideJustification:
-                            charts.OutsideJustification.endDrawArea,
+                        charts.OutsideJustification.endDrawArea,
                         horizontalFirst: false,
                         desiredMaxRows: 2,
                         cellPadding: new EdgeInsets.only(

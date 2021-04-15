@@ -10,6 +10,10 @@ import 'dart:math';
 import 'package:quiz_app/CreateQuiz/addQuestion.dart';
 
 class QuizDesc extends StatefulWidget {
+  final DocumentReference groupRef;
+
+  QuizDesc(this.groupRef);
+
   @override
   _QuizDescState createState() => _QuizDescState();
 }
@@ -33,6 +37,10 @@ class _QuizDescState extends State<QuizDesc> {
       'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
   Random _rnd = Random();
   String accessCode;
+
+  String groupName, group;
+  int groupLen;
+
   String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
       length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 
@@ -186,6 +194,12 @@ class _QuizDescState extends State<QuizDesc> {
                 _buildSubjectNameField(),
                 _scoreCountSlider(),
                 _questionCount(),
+                Text("Group Selected: " + groupName,
+                    style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 17,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -382,10 +396,12 @@ class _QuizDescState extends State<QuizDesc> {
                             });
                           } else {
                             print("hello");
-                            print(description);
-                            print(subjectName);
+                            print(descriptionController.text);
+                            print(subjectNameController.text);
                             print(descriptionController.toString());
                             if (_formKey.currentState.validate()) {
+
+
                               FirebaseFirestore.instance
                                   .collection('Quiz')
                                   .doc(accessCode)
@@ -399,9 +415,23 @@ class _QuizDescState extends State<QuizDesc> {
                                 "startDate": startDate,
                                 "endDate": endDate,
                                 "CreationDate": requestDate,
-                                "Creator": docRef
-                              }).then((_) {
+                                "Creator": docRef,
+                                "QuizGroup": widget.groupRef,
+                                "GroupName": groupName,
+                              })
+
+
+                                  .then((_) {
                                 _displaySnackBar(context);
+
+                                FirebaseFirestore.instance
+                                    .collection('Faculty')
+                                    .doc(userID)
+                                    .update({
+                                  "QuizCreated": FieldValue.arrayUnion(
+                                      [accessCode + " " + subjectNameController.text])
+                                });
+
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -531,6 +561,12 @@ class _QuizDescState extends State<QuizDesc> {
     super.initState();
     userID = getCurrentUser();
     accessCode = getRandomString(5);
+
+    group = widget.groupRef.toString();
+    groupLen = group.length - 1;
+    groupName = group.substring(65, groupLen);
+
+    print(groupName);
   }
 
   @override

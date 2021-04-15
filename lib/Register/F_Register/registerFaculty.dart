@@ -280,9 +280,20 @@ class _FacultyRegisterState extends State<FacultyRegister> {
                           contactNumberInputController.text,
                           "F_EmpID": empIDController.text,
                           "F_DeptNm": deptNameController.text,
+                          "QuizCreated":FieldValue.arrayUnion([]),
+
                         })
                             .then((result) => {
                           sendEmailVerification(),
+                          FirebaseFirestore.instance
+                              .collection("User")
+                              .doc(currentUser.user.uid)
+                              . set ({
+                            'U_Name':
+                            facultyNameController.text.toUpperCase(),
+                            'Role': role, "UserID": currentUser.user.uid,
+
+                          }),
                           Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
