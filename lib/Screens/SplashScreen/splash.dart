@@ -2,10 +2,12 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:quiz_app/Dashboard/F_Dashboard/dashboardFaculty.dart';
 import 'package:quiz_app/Dashboard/S_Dashboard/dashboardStudent.dart';
 import 'package:quiz_app/Screens/Welcome/welcomeScreen.dart';
-
+import 'package:quiz_app/Theme/components/background.dart';
+import 'package:quiz_app/Theme/components/fadeAnimation.dart';
 
 //Status: Minor Issues are there
 
@@ -13,11 +15,10 @@ import 'package:quiz_app/Screens/Welcome/welcomeScreen.dart';
 Persistent Login and Role Check
 */
 
-
 class SplashScreen extends StatefulWidget {
   final String text;
 
-  SplashScreen({this.text});
+  SplashScreen({@required this.text});
 
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -28,23 +29,24 @@ class _SplashScreenState extends State<SplashScreen> {
   String _switchCode;
 
   Future<void> startTimer() async {
-     var _duration = Duration(seconds: 5);
-    return  Timer(_duration, navigationPage);
+    var _duration = Duration(seconds: 5);
+    return Timer(_duration, navigationPage);
   }
 
   Future<void> navigationPage() async {
-     switch (_switchCode) {
+    switch (_switchCode) {
       case 'not_logged_in':
         {
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (context) => WelcomeScreen()));
         }
         break;
-      case 'not_verified':{
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => WelcomeScreen()));
-      }
-      break;
+      case 'not_verified':
+        {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => WelcomeScreen()));
+        }
+        break;
       case 'Student':
         {
           print("User is Student");
@@ -61,10 +63,8 @@ class _SplashScreenState extends State<SplashScreen> {
             context,
             MaterialPageRoute(builder: (context) => FacultyDashboard()),
           );
-
         }
         break;
-
     }
   }
 
@@ -84,26 +84,25 @@ class _SplashScreenState extends State<SplashScreen> {
     });
   }
 
-
-   initState()  {
+  initState() {
     print("inside init");
     super.initState();
-      startTimer();
+    startTimer();
     var _user = FirebaseAuth.instance.currentUser;
     if (_user != null) {
       _userID = _user.uid;
-      if (_user.emailVerified == true){
+      if (_user.emailVerified == true) {
         print("user id : $_userID");
-      _roleCheck(_userID);
-    }else{
-        _switchCode='not_verified';
+        _roleCheck(_userID);
+      } else {
+        _switchCode = 'not_verified';
         _user.sendEmailVerification();
       }
-
     } else {
       _switchCode = 'not_logged_in';
     }
   }
+
 //  void initState() {
 //    print("inside init");
 //    super.initState();
@@ -135,26 +134,33 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       //backgroundColor: darkerBlue,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Center(
-            child: Container(
-              child: Text("Please Wait"),
+      body: Background(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            FadeAnimation(
+              1.0,
+              SvgPicture.asset(
+                "assets/icons/splash.svg",
+                height: size.height * 0.35,
+              ),
             ),
-          ),
-          Container(
-            height: 50,
-            width: 50,
-            child: CircularProgressIndicator(
-              valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue),
-              strokeWidth: 5,
-            ),
-          )
-        ],
+            Text("Please Wait..."),
+            Text(widget.text),
+            Container(
+              height: 50,
+              width: 50,
+              child: CircularProgressIndicator(
+                valueColor: new AlwaysStoppedAnimation<Color>( Color(0xff631aaf)),
+                strokeWidth: 5,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

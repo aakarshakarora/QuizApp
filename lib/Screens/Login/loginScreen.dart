@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:quiz_app/Screens/SignUp/signUpScreen.dart';
-import 'package:quiz_app/SplashScreen/splash.dart';
+import 'package:quiz_app/Screens/SplashScreen/splash.dart';
 import 'package:quiz_app/Theme/components/already_have_an_account_acheck.dart';
 import 'package:quiz_app/Theme/components/fadeAnimation.dart';
 import 'package:quiz_app/Theme/components/text_field_container.dart';

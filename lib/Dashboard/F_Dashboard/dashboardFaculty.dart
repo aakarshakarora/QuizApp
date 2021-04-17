@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:quiz_app/CreateGroup/F_View/createGroup.dart';
-import 'package:quiz_app/MyProfile/F_Profile/profileFaculty.dart';
 import 'package:quiz_app/Pages/FuturePage.dart';
 import 'package:quiz_app/PreviewQuiz/previewQuizCreated.dart';
+import 'package:quiz_app/Screens/MyProfile/F_Profile/profileFaculty.dart';
 import 'package:quiz_app/Screens/Welcome/welcomeScreen.dart';
 import 'package:quiz_app/ViewResult/F_View/quizCreatedRecord.dart';
 
@@ -16,7 +16,7 @@ class FacultyDashboard extends StatefulWidget {
   _FacultyDashboardState createState() => _FacultyDashboardState();
 }
 
-class _FacultyDashboardState extends State<FacultyDashboard> {
+class _FacultyDashboardState extends State<FacultyDashboard> with AutomaticKeepAliveClientMixin {
   String contactNumber = '8837682823';
 
   Future<void> _makePhoneCall(String url) async {
@@ -33,27 +33,12 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
     Icon(Icons.update),
     Icon(Icons.file_download)
   ];
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  String currentUser;
-
-//Get Current User
-  String getCurrentUser() {
-    final User user = _auth.currentUser;
-    final uid = user.uid;
-    final uemail = user.email;
-    print(uid);
-    print(uemail);
-    return uid.toString();
-  }
+  final String currentUser=FirebaseAuth.instance.currentUser.uid;
 
   @override
-  void initState() {
-    super.initState();
-    currentUser = getCurrentUser();
-  }
-
-  @override
+  bool get wantKeepAlive => true;
   Widget build(BuildContext context) {
+    super.build(context);
     return Container(
       child: FutureBuilder<DocumentSnapshot>(
           future: FirebaseFirestore.instance
@@ -94,13 +79,13 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
                       decoration: new BoxDecoration(
                         image: new DecorationImage(
                           image: new NetworkImage(
-                              'https://mdbootstrap.com/img/new/slides/041.jpg'),
+                              'https://mdbootstrap.com/img/new/slides/003.jpg'),
                           fit: BoxFit.cover,
                         ),
                       ),
                       currentAccountPicture: CircleAvatar(
                           backgroundImage: NetworkImage(
-                              "https://randomuser.me/api/portraits/men/46.jpg")),
+                              "https://randomuser.me/api/portraits/lego/5.jpg")),
                     ),
                     new ListTile(
                       leading: Icon(Icons.account_circle),
