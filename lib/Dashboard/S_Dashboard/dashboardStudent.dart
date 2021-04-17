@@ -5,7 +5,7 @@ import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:quiz_app/CreateGroup/S_View/viewGroup.dart';
 import 'package:quiz_app/MyProfile/S_Profile/profileStudent.dart';
 import 'package:quiz_app/Pages/FuturePage.dart';
-import 'package:quiz_app/Pages/startPage.dart';
+import 'package:quiz_app/Screens/Welcome/welcomeScreen.dart';
 import 'package:quiz_app/ViewResult/S_View/oldResult.dart';
 
 
@@ -196,7 +196,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                           signOut();
                           Navigator.of(context, rootNavigator: true)
                               .pushReplacement(MaterialPageRoute(
-                                  builder: (context) => StartPage()));
+                                  builder: (context) => WelcomeScreen()));
                         }),
                   ],
                 ),

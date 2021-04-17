@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/Dashboard/F_Dashboard/dashboardFaculty.dart';
 import 'package:quiz_app/Dashboard/S_Dashboard/dashboardStudent.dart';
-import 'package:quiz_app/Pages/startPage.dart';
+import 'package:quiz_app/Screens/Welcome/welcomeScreen.dart';
 
 
 //Status: Minor Issues are there
@@ -37,12 +37,12 @@ class _SplashScreenState extends State<SplashScreen> {
       case 'not_logged_in':
         {
           Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => StartPage()));
+              .push(MaterialPageRoute(builder: (context) => WelcomeScreen()));
         }
         break;
       case 'not_verified':{
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => StartPage()));
+            .push(MaterialPageRoute(builder: (context) => WelcomeScreen()));
       }
       break;
       case 'Student':
