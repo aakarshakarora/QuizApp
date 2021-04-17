@@ -8,6 +8,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:math';
 
 import 'package:quiz_app/CreateQuiz/addQuestion.dart';
+import 'package:quiz_app/Theme/components/background.dart';
+import 'package:quiz_app/Theme/components/backgroundQuiz.dart';
+import 'package:quiz_app/Theme/components/backgroundRegister.dart';
+import 'package:quiz_app/Theme/theme.dart';
 
 class QuizDesc extends StatefulWidget {
   final DocumentReference groupRef;
@@ -19,9 +23,9 @@ class QuizDesc extends StatefulWidget {
 }
 
 class _QuizDescState extends State<QuizDesc> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final userID = FirebaseAuth.instance.currentUser.uid;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  static String userID;
+
   String description;
   final descriptionController = TextEditingController();
   String subjectName;
@@ -44,24 +48,15 @@ class _QuizDescState extends State<QuizDesc> {
   String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
       length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 
-  //Check Current User
-  String getCurrentUser() {
-    final User user = _auth.currentUser;
-    final uid = user.uid;
-
-    final uemail = user.email;
-    print(uid);
-    print(uemail);
-    return uid.toString();
-  }
-
   //Enter description
   _buildDescriptionField() {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 5),
       child: TextFormField(
         controller: descriptionController,
-        decoration: InputDecoration(labelText: 'Enter Description:'),
+        decoration: kTextFieldDecoration.copyWith(
+          labelText: 'Enter Quiz Description',
+        ),
         // ignore: missing_return
         validator: (String value) {
           if (value.isEmpty) {
@@ -81,7 +76,9 @@ class _QuizDescState extends State<QuizDesc> {
       padding: EdgeInsets.symmetric(vertical: 5),
       child: TextFormField(
         controller: subjectNameController,
-        decoration: InputDecoration(labelText: 'Enter Subject Name:'),
+        decoration: kTextFieldDecoration.copyWith(
+          labelText: 'Enter Subject Name',
+        ),
         // ignore: missing_return
         validator: (String value) {
           if (value.isEmpty) {
@@ -103,7 +100,7 @@ class _QuizDescState extends State<QuizDesc> {
             style: TextStyle(
                 fontFamily: 'Poppins',
                 fontSize: 17,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.bold,
                 color: Colors.black)),
         Container(
           width: MediaQuery.of(context).size.width,
@@ -139,7 +136,7 @@ class _QuizDescState extends State<QuizDesc> {
         Text("Question Count: ",
             style: TextStyle(
                 fontSize: 17,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.bold,
                 color: Colors.black)),
         Container(
           width: MediaQuery.of(context).size.width,
@@ -176,7 +173,7 @@ class _QuizDescState extends State<QuizDesc> {
     });
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: kPrimaryColor,
         centerTitle: true,
         title: Text(
           'Create Quiz',
@@ -184,280 +181,284 @@ class _QuizDescState extends State<QuizDesc> {
               TextStyle(fontFamily: 'PoppinsBold', fontWeight: FontWeight.bold),
         ),
       ),
-      body: SingleChildScrollView(
+      body: BackgroundQuiz(
         child: Container(
           margin: EdgeInsets.all(15),
-          child: Form(
-              key: _formKey,
-              child: Column(children: [
-                _buildDescriptionField(),
-                _buildSubjectNameField(),
-                _scoreCountSlider(),
-                _questionCount(),
-                Text("Group Selected: " + groupName,
-                    style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 17,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black)),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Start:',
-                        style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 17,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black)),
-                    //SizedBox(width: 0.1),
-                    Column(
-                      children: [
-                        Container(
-                          height: 41,
-                          child: TextButton(
-                            onPressed: () async {
-                              await _startDate(context).then((value) {
-                                if (endDate == null ||
-                                    (endDate != null &&
-                                        value.isBefore(endDate))) {
-                                  setState(() {
-                                    startDate = value.add(Duration(
-                                        hours: startDate != null
-                                            ? startDate.hour
-                                            : 0,
-                                        minutes: startDate != null
-                                            ? startDate.minute
-                                            : 0));
-                                  });
-                                } else if (endDate != null) {
-                                  setState(() {
-                                    startDate = endDate;
-                                  });
-                                }
-                              });
-                              if (startDate != null) {
-                                await _selectTime(context).then((value) {
-                                  if (value != null) {
-                                    var newDate = startDate.add(Duration(
-                                        hours: value.hour - startDate.hour,
-                                        minutes:
-                                            value.minute - startDate.minute));
-                                    if (endDate != null &&
-                                        newDate.isBefore(endDate)) {
-                                      setState(() {
-                                        startDate = newDate;
-                                      });
-                                    } else if (endDate == null) {
-                                      setState(() {
-                                        startDate = newDate;
-                                      });
-                                    } else {
-                                      setState(() {
-                                        startDate = endDate;
-                                      });
-                                    }
-                                  }
-                                });
-                              }
-                            },
-                            child: Text(
-                                startDate != null
-                                    ? DateFormat('d MMM y on h:mm a')
-                                        .format(startDate)
-                                    : 'Select Date & Time',
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 17,
-                                    color: Colors.black)),
-                          ),
-                        ),
-                        startDateError
-                            ? Text(
-                                "*Start Time is Required",
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    color: Colors.red,
-                                    fontSize: 15),
-                              )
-                            : Container(),
-                      ],
-                    ),
-                  ],
-                ),
-                SizedBox(width: 30),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('End:',
-                        style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 17,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black)),
-                    SizedBox(width: 22),
-                    Column(
-                      children: [
-                        Container(
-                          height: 41,
-                          child: TextButton(
-                            onPressed: () async {
-                              await _endDate(context).then((value) {
-                                if (startDate == null ||
-                                    (startDate != null &&
-                                        value.isAfter(startDate))) {
-                                  setState(() {
-                                    endDate = value.add(Duration(
-                                        hours:
-                                            endDate != null ? endDate.hour : 0,
-                                        minutes: endDate != null
-                                            ? endDate.minute
-                                            : 0));
-                                  });
-                                } else if (startDate != null) {
-                                  setState(() {
-                                    endDate = startDate;
-                                  });
-                                }
-                              });
-                              if (endDate != null) {
-                                await _selectTime(context).then((value) {
-                                  if (value != null) {
-                                    var newDate = endDate.add(Duration(
-                                        hours: value.hour - endDate.hour,
-                                        minutes:
-                                            value.minute - endDate.minute));
-                                    if (startDate != null &&
-                                        newDate.isAfter(startDate)) {
-                                      setState(() {
-                                        endDate = newDate;
-                                      });
-                                    } else if (startDate == null) {
-                                      setState(() {
-                                        endDate = newDate;
-                                      });
-                                    } else {
-                                      endDate = startDate;
-                                    }
-                                  }
-                                });
-                              }
-                            },
-                            child: Text(
-                                endDate != null
-                                    ? DateFormat('d MMM y on h:mm a')
-                                        .format(endDate)
-                                    : 'Select Date & Time',
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 17,
-                                    color: Colors.black)),
-                          ),
-                        ),
-                        endDateError
-                            ? Text(
-                                "*End Time is Required",
-                                style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    color: Colors.red,
-                                    fontSize: 15),
-                              )
-                            : Container(),
-                      ],
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  "Access Code :" + accessCode,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 40),
-                Container(
-                  //elevation: 5.0,
-                  //color: colour,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(30)),
-                    color: Colors.green,
-                  ),
-                  //borderRadius: BorderRadius.circular(30.0),
-                  child: Builder(
-                    builder: (BuildContext context) {
-                      return MaterialButton(
-                        onPressed: () async {
-                          if ((startDate == null || endDate == null) &&
-                              (_formKey.currentState.validate())) {
-                            setState(() {
-                              startDate == null ? startDateError = true : null;
-                              endDate == null ? endDateError = true : null;
-                            });
-                          } else {
-                            print("hello");
-                            print(descriptionController.text);
-                            print(subjectNameController.text);
-                            print(descriptionController.toString());
-                            if (_formKey.currentState.validate()) {
-
-
-                              FirebaseFirestore.instance
-                                  .collection('Quiz')
-                                  .doc(accessCode)
-                                  .set({
-                                "Description": descriptionController.text,
-                                "SubjectName": subjectNameController.text,
-                                "AccessCode": accessCode,
-                                "QuestionCount": questionCount,
-                                "MarksPerQuestion": marksPerQues,
-                                "MaxScore": marksPerQues * questionCount,
-                                "startDate": startDate,
-                                "endDate": endDate,
-                                "CreationDate": requestDate,
-                                "Creator": docRef,
-                                "QuizGroup": widget.groupRef,
-                                "GroupName": groupName,
-                              })
-
-
-                                  .then((_) {
-                                _displaySnackBar(context);
-
-                                FirebaseFirestore.instance
-                                    .collection('Faculty')
-                                    .doc(userID)
-                                    .update({
-                                  "QuizCreated": FieldValue.arrayUnion(
-                                      [accessCode + " " + subjectNameController.text])
-                                });
-
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => AddQuestion(
-                                          accessCode, questionCount)),
-                                );
-                              }).catchError((onError) {
-                                _displayError(context, onError);
-                              });
-                            }
-                          }
-                        },
-                        minWidth: 200.0,
-                        height: 50.0,
-                        child: Text(
-                          'Add Questions',
+          child: SingleChildScrollView(
+            child: Form(
+                key: _formKey,
+                child: Column(children: [
+                  SizedBox(height: 10,),
+                  _buildDescriptionField(),
+                  SizedBox(height: 10,),
+                  _buildSubjectNameField(),
+                  SizedBox(height: 10,),
+                  _scoreCountSlider(),
+                  _questionCount(),
+                  SizedBox(height: 10,),
+                  Text("Group Selected : " + groupName,
+                      style: TextStyle(
+                          fontFamily: 'Poppins',
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Start:',
                           style: TextStyle(
-                            fontFamily: 'Poppins',
-                            color: Colors.white,
+                              fontFamily: 'Poppins',
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black)),
+                      //SizedBox(width: 0.1),
+                      Column(
+                        children: [
+                          Container(
+                            height: 41,
+                            child: TextButton(
+                              onPressed: () async {
+                                await _startDate(context).then((value) {
+                                  if (endDate == null ||
+                                      (endDate != null &&
+                                          value.isBefore(endDate))) {
+                                    setState(() {
+                                      startDate = value.add(Duration(
+                                          hours: startDate != null
+                                              ? startDate.hour
+                                              : 0,
+                                          minutes: startDate != null
+                                              ? startDate.minute
+                                              : 0));
+                                    });
+                                  } else if (endDate != null) {
+                                    setState(() {
+                                      startDate = endDate;
+                                    });
+                                  }
+                                });
+                                if (startDate != null) {
+                                  await _selectTime(context).then((value) {
+                                    if (value != null) {
+                                      var newDate = startDate.add(Duration(
+                                          hours: value.hour - startDate.hour,
+                                          minutes:
+                                              value.minute - startDate.minute));
+                                      if (endDate != null &&
+                                          newDate.isBefore(endDate)) {
+                                        setState(() {
+                                          startDate = newDate;
+                                        });
+                                      } else if (endDate == null) {
+                                        setState(() {
+                                          startDate = newDate;
+                                        });
+                                      } else {
+                                        setState(() {
+                                          startDate = endDate;
+                                        });
+                                      }
+                                    }
+                                  });
+                                }
+                              },
+                              child: Text(
+                                  startDate != null
+                                      ? DateFormat('d MMM y on h:mm a')
+                                          .format(startDate)
+                                      : 'Select Date & Time',
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: 17,
+                                      color: Colors.black)),
+                            ),
                           ),
-                        ),
-                      );
-                    },
+                          startDateError
+                              ? Text(
+                                  "*Start Time is Required",
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      color: Colors.red,
+                                      fontSize: 15),
+                                )
+                              : Container(),
+                        ],
+                      ),
+                    ],
                   ),
-                ),
-              ])),
+                  SizedBox(width: 30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('End:',
+                          style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black)),
+                      SizedBox(width: 22),
+                      Column(
+                        children: [
+                          Container(
+                            height: 41,
+                            child: TextButton(
+                              onPressed: () async {
+                                await _endDate(context).then((value) {
+                                  if (startDate == null ||
+                                      (startDate != null &&
+                                          value.isAfter(startDate))) {
+                                    setState(() {
+                                      endDate = value.add(Duration(
+                                          hours:
+                                              endDate != null ? endDate.hour : 0,
+                                          minutes: endDate != null
+                                              ? endDate.minute
+                                              : 0));
+                                    });
+                                  } else if (startDate != null) {
+                                    setState(() {
+                                      endDate = startDate;
+                                    });
+                                  }
+                                });
+                                if (endDate != null) {
+                                  await _selectTime(context).then((value) {
+                                    if (value != null) {
+                                      var newDate = endDate.add(Duration(
+                                          hours: value.hour - endDate.hour,
+                                          minutes:
+                                              value.minute - endDate.minute));
+                                      if (startDate != null &&
+                                          newDate.isAfter(startDate)) {
+                                        setState(() {
+                                          endDate = newDate;
+                                        });
+                                      } else if (startDate == null) {
+                                        setState(() {
+                                          endDate = newDate;
+                                        });
+                                      } else {
+                                        endDate = startDate;
+                                      }
+                                    }
+                                  });
+                                }
+                              },
+                              child: Text(
+                                  endDate != null
+                                      ? DateFormat('d MMM y on h:mm a')
+                                          .format(endDate)
+                                      : 'Select Date & Time',
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: 17,
+                                      color: Colors.black)),
+                            ),
+                          ),
+                          endDateError
+                              ? Text(
+                                  "*End Time is Required",
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      color: Colors.red,
+                                      fontSize: 15),
+                                )
+                              : Container(),
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Access Code :" + accessCode,
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 40),
+                  Container(
+                    //elevation: 5.0,
+                    //color: colour,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(30)),
+                      color: Colors.green,
+                    ),
+                    //borderRadius: BorderRadius.circular(30.0),
+                    child: Builder(
+                      builder: (BuildContext context) {
+                        return MaterialButton(
+                          onPressed: () async {
+                            if ((startDate == null || endDate == null) &&
+                                (_formKey.currentState.validate())) {
+                              setState(() {
+                                startDate == null ? startDateError = true : null;
+                                endDate == null ? endDateError = true : null;
+                              });
+                            } else {
+                              print("hello");
+                              print(descriptionController.text);
+                              print(subjectNameController.text);
+                              print(descriptionController.toString());
+                              if (_formKey.currentState.validate()) {
+                                FirebaseFirestore.instance
+                                    .collection('Quiz')
+                                    .doc(accessCode)
+                                    .set({
+                                  "Description": descriptionController.text,
+                                  "SubjectName": subjectNameController.text,
+                                  "AccessCode": accessCode,
+                                  "QuestionCount": questionCount,
+                                  "MarksPerQuestion": marksPerQues,
+                                  "MaxScore": marksPerQues * questionCount,
+                                  "startDate": startDate,
+                                  "endDate": endDate,
+                                  "CreationDate": requestDate,
+                                  "Creator": docRef,
+                                  "QuizGroup": widget.groupRef,
+                                  "GroupName": groupName,
+                                }).then((_) {
+                                  _displaySnackBar(context);
+
+                                  FirebaseFirestore.instance
+                                      .collection('Faculty')
+                                      .doc(userID)
+                                      .update({
+                                    "QuizCreated": FieldValue.arrayUnion([
+                                      accessCode +
+                                          " " +
+                                          subjectNameController.text
+                                    ])
+                                  });
+
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => AddQuestion(
+                                            accessCode, questionCount)),
+                                  );
+                                }).catchError((onError) {
+                                  _displayError(context, onError);
+                                });
+                              }
+                            }
+                          },
+                          minWidth: 200.0,
+                          height: 50.0,
+                          child: Text(
+                            'Add Questions',
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              color: Colors.white,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ])),
+          ),
         ),
       ),
     );
@@ -559,7 +560,6 @@ class _QuizDescState extends State<QuizDesc> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    userID = getCurrentUser();
     accessCode = getRandomString(5);
 
     group = widget.groupRef.toString();

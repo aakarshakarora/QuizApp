@@ -101,7 +101,7 @@ class _FacultyRegisterState extends State<FacultyRegister> {
                     textCapitalization: TextCapitalization.words,
                     controller: facultyNameController,
                     // ignore: missing_return
-                    validator: (value) {},
+                    validator: checkEmpty,
                   ),
                   SizedBox(
                     height: 15,
@@ -183,7 +183,7 @@ class _FacultyRegisterState extends State<FacultyRegister> {
                         ),
                         controller: contactNumberInputController,
                         keyboardType: TextInputType.phone,
-                        validator: validateMobile,
+                        validator: checkEmpty,
                       ),
                       SizedBox(
                         height: 15,
@@ -194,6 +194,7 @@ class _FacultyRegisterState extends State<FacultyRegister> {
                         ),
                         controller: empIDController,
                         keyboardType: TextInputType.phone,
+                        validator: checkEmpty,
                         //validator: ,
                       ),
                       SizedBox(
@@ -205,6 +206,7 @@ class _FacultyRegisterState extends State<FacultyRegister> {
                         ),
                         controller: deptNameController,
                         keyboardType: TextInputType.text,
+                        validator: checkEmpty,
                         // validator: validateMobile,
                       ),
                     ],
