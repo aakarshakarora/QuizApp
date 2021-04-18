@@ -149,6 +149,7 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
         facultyName = value.data()['F_Name'];
       });
     });
+
   }
 
   _groupCheck(DocumentReference documentReference) async {
@@ -193,9 +194,7 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                     if (!snapshot.hasData && (facultyName == null)) {
                       return Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasData == false) {
-                      return Center(
-                          child: Text(
-                              "No Information Found!! \nKindly Enter Correct Access Code "));
+                      return Center(child: CircularProgressIndicator());
                     } else {
                       Map<String, dynamic> data = snapshot.data.data();
                       DocumentReference documentReference = data['Creator'];

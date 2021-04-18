@@ -14,27 +14,13 @@ class PieChartDisplay extends StatefulWidget {
 }
 
 class _PieChartDisplayState extends State<PieChartDisplay> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  String currentUser;
+  final String currentUser = FirebaseAuth.instance.currentUser.uid;
   int score, inactiveState;
 
-//Get Current User
-  String getCurrentUser() {
-    final User user = _auth.currentUser;
-    final uid = user.uid;
-    final uemail = user.email;
-    print(uid);
-    print(uemail);
-    return uid.toString();
-  }
 
   @override
   void initState() {
     super.initState();
-    currentUser = getCurrentUser();
-
-
-
     FirebaseFirestore.instance
         .collection('Quiz')
         .doc(widget.accessCode)
@@ -54,21 +40,23 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
   }
 
   List<charts.Series<ResultModel, String>> _seriesPieData;
-  List<ResultModel> mydata;
+  List<ResultModel> myData;
+  List<int> studentScore=[];
 
-  _generateData(mydata) {
+  
+  _generateData(myData) {
     _seriesPieData = List<charts.Series<ResultModel, String>>();
     _seriesPieData.add(
       charts.Series(
         domainFn: (ResultModel task, _) => task.score.toString(),
         measureFn: (ResultModel task, _) => task.maxScore,
-        // colorFn: (ResultModel task, _) =>
-        //     charts.ColorUtil.fromDartColor(Color(int.parse(task.colorVal))),
         id: 'tasks',
-        data: mydata,
+        data: myData,
         labelAccessorFn: (ResultModel row, _) => "${row.score}",
+
       ),
     );
+
   }
 
   Widget _buildBody(BuildContext context) {
@@ -82,19 +70,24 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
         if (!snapshot.hasData) {
           return LinearProgressIndicator();
         } else {
+
+         // final reqDoc = snapshot.data.docs;
+
           List<ResultModel> task = snapshot.data.docs
               .map((documentSnapshot) =>
               ResultModel.fromMap(documentSnapshot.data()))
               .toList();
-          return _buildChart(context, task);
+          return _buildChart(context, task,snapshot.data.docs.length,);
         }
       },
     );
   }
 
-  Widget _buildChart(BuildContext context, List<ResultModel> Resultdata) {
-    mydata = Resultdata;
-    _generateData(mydata);
+  Widget _buildChart(BuildContext context, List<ResultModel> Resultdata ,int totalSubmission) {
+    myData = Resultdata;
+    _generateData(myData);
+
+    //int sum =studentScore.reduce((a, b) => a+b);
     return Padding(
       padding: EdgeInsets.all(8.0),
       child: Container(
@@ -107,6 +100,8 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
               ),
               Text("Your Score is: "+score.toString()),
               Text("Inactive State Count: " +inactiveState.toString()),
+              Text("Average: "+totalSubmission.toString()),
+             // Text("Sum is: "+sum.toString()),
               SizedBox(
                 height: 10.0,
               ),
@@ -132,7 +127,7 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
                         arcWidth: 100,
                         arcRendererDecorators: [
                           new charts.ArcLabelDecorator(
-                              labelPosition: charts.ArcLabelPosition.inside)
+                              labelPosition: charts.ArcLabelPosition.auto)
                         ])),
               ),
             ],

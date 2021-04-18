@@ -10,26 +10,10 @@ class OldResult extends StatefulWidget {
 }
 
 class _OldResultState extends State<OldResult> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  String currentUser,accessCode;
+  final currentUser = FirebaseAuth.instance.currentUser.uid;
+  String accessCode;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-//Get Current User
-  String getCurrentUser() {
-    final User user = _auth.currentUser;
-    final uid = user.uid;
-    final uemail = user.email;
-    // print(uid);
-    // print(uemail);
-    return uid.toString();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    currentUser = getCurrentUser();
-  }
 
   @override
   Widget build(BuildContext context) {
