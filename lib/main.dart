@@ -1,10 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quiz_app/Screens/SplashScreen/splash.dart';
-
+import 'package:quiz_app/Screens/SplashScreen/roleCheck.dart';
 import 'package:quiz_app/Theme/theme.dart';
 import 'CreateGroup/F_View/createGroup.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
             visualDensity: VisualDensity.adaptivePlatformDensity,
             fontFamily: 'Poppins'),
         debugShowCheckedModeBanner: false,
-        home: SplashScreen(text: "",),
+        home: RoleCheck(),
       ),
     );
   }
