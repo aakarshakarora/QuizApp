@@ -304,7 +304,7 @@ class _GroupNameInfoState extends State<GroupNameInfo> {
                   ),
                   Flexible(
                     fit: FlexFit.tight,
-                    flex: 1,
+                    flex: 10,
                     child: IconButton(
                       icon: Icon(Icons.delete),
                       onPressed: () {
@@ -313,7 +313,7 @@ class _GroupNameInfoState extends State<GroupNameInfo> {
                     ),
                   ),
                   Flexible(
-                      flex: 1,
+                      flex: 5,
                       fit: FlexFit.tight,
                       child: IconButton(
                           icon: Icon(Icons.edit),

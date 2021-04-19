@@ -33,49 +33,49 @@ class _OldResultState extends State<OldResult> {
               Map<String, dynamic> data = snapshot.data.data();
               final reqDoc = data['QuizGiven'];
               return
-                  // Column(mainAxisAlignment: MainAxisAlignment.start,
-                  //     //crossAxisAlignment: CrossAxisAlignment.start,
-                  //     children: <Widget>[
-                  //       Text(data['QuizGiven'].toString()),
-                  //       Text(data['QuizGiven'].length.toString()),
+                // Column(mainAxisAlignment: MainAxisAlignment.start,
+                //     //crossAxisAlignment: CrossAxisAlignment.start,
+                //     children: <Widget>[
+                //       Text(data['QuizGiven'].toString()),
+                //       Text(data['QuizGiven'].length.toString()),
 
-                  Container(
-                width: MediaQuery.of(context).size.width,
-                child: new ListView.builder(
-                    itemCount: data['QuizGiven'].length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return ListTile(
-                        title: Column(
-                          children: [
-                            Container(
-                                width: MediaQuery.of(context).size.width,
-                                child: Card(
-                                    elevation: 3.5,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(12.0),
-                                      child: FlatButton(
-                                        child: Text(reqDoc[index].toString()),
-                                        onPressed: () {
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: new ListView.builder(
+                      itemCount: data['QuizGiven'].length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return ListTile(
+                          title: Column(
+                            children: [
+                              Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Card(
+                                      elevation: 3.5,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(12.0),
+                                        child: FlatButton(
+                                          child: Text(reqDoc[index].toString()),
+                                          onPressed: () {
 
-                                          setState(() {
-                                            accessCode=reqDoc[index].toString().substring(0,5);
-                                          });
-                                          print(accessCode);
+                                            setState(() {
+                                              accessCode=reqDoc[index].toString().substring(0,5);
+                                            });
+                                            print(accessCode);
 
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => PieChartDisplay(accessCode)),
-                                          );
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) => PieChartDisplay(accessCode)),
+                                            );
 
-                                        },
-                                      ),
-                                    ))),
-                          ],
-                        ),
-                      );
-                    }),
-              );
+                                          },
+                                        ),
+                                      ))),
+                            ],
+                          ),
+                        );
+                      }),
+                );
             }),
       ),
     );
