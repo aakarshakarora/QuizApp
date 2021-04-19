@@ -28,10 +28,10 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
         .doc(currentUser)
         .get()
         .then((value) {
-          setState(() {
-            score = value.data()['Score'];
-            inactiveState = value.data()['tabSwitch'];
-          });
+      setState(() {
+        score = value.data()['Score'];
+        inactiveState = value.data()['tabSwitch'];
+      });
       score = value.data()['Score'];
       inactiveState = value.data()['tabSwitch'];
       print("Score: $score");
@@ -43,7 +43,7 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
   List<ResultModel> myData;
   List<int> studentScore=[];
 
-  
+
   _generateData(myData) {
     _seriesPieData = List<charts.Series<ResultModel, String>>();
     _seriesPieData.add(
@@ -71,7 +71,7 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
           return LinearProgressIndicator();
         } else {
 
-         // final reqDoc = snapshot.data.docs;
+          // final reqDoc = snapshot.data.docs;
 
           List<ResultModel> task = snapshot.data.docs
               .map((documentSnapshot) =>
@@ -101,7 +101,7 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
               Text("Your Score is: "+score.toString()),
               Text("Inactive State Count: " +inactiveState.toString()),
               Text("Average: "+totalSubmission.toString()),
-             // Text("Sum is: "+sum.toString()),
+              // Text("Sum is: "+sum.toString()),
               SizedBox(
                 height: 10.0,
               ),

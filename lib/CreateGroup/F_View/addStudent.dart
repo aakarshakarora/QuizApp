@@ -133,8 +133,8 @@ class _ViewDetailsState extends State<ViewDetails> {
                 color: Colors.white,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: ListTile(
-                    title: Column(
+                  child: Column(
+                    children: [Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Row(
@@ -171,7 +171,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                         // ignore: deprecated_member_use
                       ],
                     ),
-                    trailing: Column(
+                    Column(
                       children: [
                         GestureDetector(
                             child: MaterialButton(
@@ -209,7 +209,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                           fontSize: 13
                         ),)
                       ],
-                    ),
+                    ),]
                   ),
                 ),
               ),

@@ -302,26 +302,26 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                           ),
                           groupCheck == true
                               ? Row(
-                                  children: [
-                                    Text(
-                                      "You are allowed to give Quiz ",
-                                      style: darkSmallTextBold,
-                                    ),
-                                    Icon(
-                                      Icons.verified,
-                                      color: Colors.green,
-                                    )
-                                  ],
-                                )
+                            children: [
+                              Text(
+                                "You are allowed to give Quiz ",
+                                style: darkSmallTextBold,
+                              ),
+                              Icon(
+                                Icons.verified,
+                                color: Colors.green,
+                              )
+                            ],
+                          )
                               : Row(
-                                  children: [
-                                    Text(
-                                      "You are not allowed to give Quiz ",
-                                      style: darkSmallTextBold,
-                                    ),
-                                    Icon(Icons.not_interested, color: Colors.red)
-                                  ],
-                                ),
+                            children: [
+                              Text(
+                                "You are not allowed to give Quiz ",
+                                style: darkSmallTextBold,
+                              ),
+                              Icon(Icons.not_interested, color: Colors.red)
+                            ],
+                          ),
                           SizedBox(
                             height: 20,
                           ),
@@ -375,15 +375,15 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => AttemptQuiz(
-                                              marksPerQuestion:
-                                                  data['MarksPerQuestion'],
-                                              subjectName: data['SubjectName'],
-                                              accessCode: code,
-                                              questionCount:
-                                                  data['QuestionCount'],
-                                              maximumScore: data['MaxScore'],
-                                              timeCount: endTime,
-                                            )),
+                                          marksPerQuestion:
+                                          data['MarksPerQuestion'],
+                                          subjectName: data['SubjectName'],
+                                          accessCode: code,
+                                          questionCount:
+                                          data['QuestionCount'],
+                                          maximumScore: data['MaxScore'],
+                                          timeCount: endTime,
+                                        )),
                                   );
                                 } else {
                                   Navigator.push(
