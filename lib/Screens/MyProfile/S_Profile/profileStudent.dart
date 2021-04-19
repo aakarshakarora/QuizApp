@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:quiz_app/Dashboard/S_Dashboard/dashboardStudent.dart';
+import 'file:///D:/Minor%20Project/quiz_app/lib/Screens/Dashboard/S_Dashboard/dashboardStudent.dart';
 import 'package:quiz_app/Theme/components/backgroundRegister.dart';
 
 class StudentProfile extends StatefulWidget {

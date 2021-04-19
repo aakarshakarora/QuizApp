@@ -5,7 +5,7 @@ import 'package:quiz_app/CreateGroup/F_View/addStudent.dart';
 import 'package:quiz_app/CreateQuiz/quizDesc.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:provider/provider.dart';
-import 'package:quiz_app/Dashboard/F_Dashboard/dashboardFaculty.dart';
+import 'file:///D:/Minor%20Project/quiz_app/lib/Screens/Dashboard/F_Dashboard/dashboardFaculty.dart';
 
 import 'editGroup.dart';
 

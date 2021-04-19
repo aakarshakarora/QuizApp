@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:quiz_app/Dashboard/S_Dashboard/dashboardStudent.dart';
+import 'file:///D:/Minor%20Project/quiz_app/lib/Screens/Dashboard/S_Dashboard/dashboardStudent.dart';
 import 'package:quiz_app/GiveQuiz/attemptQuiz.dart';
 import 'package:quiz_app/Theme/theme.dart';
 
@@ -149,7 +149,6 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
         facultyName = value.data()['F_Name'];
       });
     });
-
   }
 
   _groupCheck(DocumentReference documentReference) async {
@@ -181,7 +180,6 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
         padding: EdgeInsets.all(50),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
-
           children: [
             Container(
               child: FutureBuilder<DocumentSnapshot>(
@@ -193,7 +191,8 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                       AsyncSnapshot<DocumentSnapshot> snapshot) {
                     if (!snapshot.hasData && (facultyName == null)) {
                       return Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasData == false) {
+                    } else if (snapshot.hasData == false &&
+                        (facultyName == null)) {
                       return Center(child: CircularProgressIndicator());
                     } else {
                       Map<String, dynamic> data = snapshot.data.data();
@@ -207,10 +206,12 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                         children: [
                           Image.asset(
                             "assets/images/attemptQuiz.png",
-
                           ),
-                          SizedBox(height: 10,),
-                          Row(mainAxisAlignment: MainAxisAlignment.center,
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
@@ -223,7 +224,9 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 10,),
+                          SizedBox(
+                            height: 10,
+                          ),
                           Row(
                             children: [
                               Text(
@@ -242,8 +245,10 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                                 'Description: ',
                                 style: darkSmallTextBold,
                               ),
-                              Text(data['Description'],
-                                style: darkSmallText,),
+                              Text(
+                                data['Description'],
+                                style: darkSmallText,
+                              ),
                             ],
                           ),
                           Row(
@@ -252,8 +257,10 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                                 'Question Count: ',
                                 style: darkSmallTextBold,
                               ),
-                              Text(data['QuestionCount'].toString(),
-                                style: darkSmallText,),
+                              Text(
+                                data['QuestionCount'].toString(),
+                                style: darkSmallText,
+                              ),
                             ],
                           ),
                           Row(
@@ -262,8 +269,10 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                                 'Max  Score: ',
                                 style: darkSmallTextBold,
                               ),
-                              Text(data['MaxScore'].toString(),
-                                style: darkSmallText,),
+                              Text(
+                                data['MaxScore'].toString(),
+                                style: darkSmallText,
+                              ),
                             ],
                           ),
                           Row(
@@ -272,10 +281,12 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                                 'Start Time: ',
                                 style: darkSmallTextBold,
                               ),
-                              Text((data['startDate'] as Timestamp)
-                                  .toDate()
-                                  .toString(),
-                                style: darkSmallText,),
+                              Text(
+                                (data['startDate'] as Timestamp)
+                                    .toDate()
+                                    .toString(),
+                                style: darkSmallText,
+                              ),
                             ],
                           ),
                           Row(
@@ -284,10 +295,12 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                                 'End Time: ',
                                 style: darkSmallTextBold,
                               ),
-                              Text((data['endDate'] as Timestamp)
-                                  .toDate()
-                                  .toString(),
-                                style: darkSmallText,),
+                              Text(
+                                (data['endDate'] as Timestamp)
+                                    .toDate()
+                                    .toString(),
+                                style: darkSmallText,
+                              ),
                             ],
                           ),
                           Row(
@@ -296,8 +309,10 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                                 "Creator Name: ",
                                 style: darkSmallTextBold,
                               ),
-                              Text(facultyName,
-                                style: darkSmallText,)
+                              Text(
+                                facultyName,
+                                style: darkSmallText,
+                              )
                             ],
                           ),
                           groupCheck == true
@@ -319,7 +334,8 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                                       "You are not allowed to give Quiz ",
                                       style: darkSmallTextBold,
                                     ),
-                                    Icon(Icons.not_interested, color: Colors.red)
+                                    Icon(Icons.not_interested,
+                                        color: Colors.red)
                                   ],
                                 ),
                           SizedBox(
@@ -333,7 +349,8 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                                   sTime.millisecondsSinceEpoch + 1000 * 30;
 
                               eTime = (data['endDate']);
-                              endTime = eTime.millisecondsSinceEpoch + 1000 * 30;
+                              endTime =
+                                  eTime.millisecondsSinceEpoch + 1000 * 30;
 
                               currentTime =
                                   DateTime.now().millisecondsSinceEpoch +
@@ -389,7 +406,8 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => StudentDashboard()),
+                                        builder: (context) =>
+                                            StudentDashboard()),
                                   );
                                 }
                               }
@@ -402,7 +420,6 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                           SizedBox(
                             height: 20,
                           ),
-
                         ],
                       );
                     }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:quiz_app/Dashboard/F_Dashboard/dashboardFaculty.dart';
-import 'package:quiz_app/Dashboard/S_Dashboard/dashboardStudent.dart';
+import 'package:quiz_app/Common/facultyBar.dart';
+import 'package:quiz_app/Common/studentBar.dart';
 import 'package:quiz_app/Screens/SplashScreen/authHelper.dart';
 import 'package:quiz_app/Screens/SplashScreen/splash.dart';
 import 'package:quiz_app/Screens/Welcome/welcomeScreen.dart';
@@ -26,9 +26,9 @@ class RoleCheck extends StatelessWidget {
                   final userDoc = snapshot.data;
                   final user = userDoc.data();
                   if (user['Role'] == 'Student') {
-                    return StudentDashboard();
+                    return StudentBar();
                   } else if (user['Role'] == 'Faculty') {
-                    return FacultyDashboard();
+                    return FacultyBar();
                   } else {
                     return WelcomeScreen();
                   }

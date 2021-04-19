@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quiz_app/Dashboard/S_Dashboard/dashboardStudent.dart';
+import 'file:///D:/Minor%20Project/quiz_app/lib/Screens/Dashboard/S_Dashboard/dashboardStudent.dart';
 
 
 class PostQuiz extends StatefulWidget {

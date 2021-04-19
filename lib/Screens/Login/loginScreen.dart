@@ -169,12 +169,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(30)),
-                          color: buttonColor,
+                          color: kPrimaryColor,
                         ),
                         child: MaterialButton(
                           textColor: white,
                           padding: EdgeInsets.all(10.0),
-                          splashColor: buttonColor,
+                          splashColor: kPrimaryColor,
                           onPressed: () async {
                             await Future.value(_error);
                             setState(() {
