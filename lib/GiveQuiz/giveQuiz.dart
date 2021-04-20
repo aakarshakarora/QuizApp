@@ -80,10 +80,10 @@ class _EnterCodeState extends State<EnterCode> {
               SizedBox(
                 height: 20,
               ),
-              // Image.asset(
-              //   "assets/images/enterCode.jpg",
-              //   height: 200,
-              // )
+              Image.asset(
+                "assets/images/enterCode.jpg",
+                height: 200,
+              )
             ],
           ),
         ));
@@ -205,9 +205,9 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          // Image.asset(
-                          //   "assets/images/attemptQuiz.png",
-                          // ),
+                          Image.asset(
+                            "assets/images/attemptQuiz.png",
+                          ),
                           SizedBox(
                             height: 10,
                           ),
