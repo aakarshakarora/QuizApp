@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'file:///D:/Minor%20Project/quiz_app/lib/Screens/Dashboard/S_Dashboard/dashboardStudent.dart';
+import 'package:quiz_app/Common/studentBar.dart';
+
 import 'package:quiz_app/GiveQuiz/attemptQuiz.dart';
 import 'package:quiz_app/Theme/theme.dart';
 
@@ -79,10 +80,10 @@ class _EnterCodeState extends State<EnterCode> {
               SizedBox(
                 height: 20,
               ),
-              Image.asset(
-                "assets/images/enterCode.jpg",
-                height: 200,
-              )
+              // Image.asset(
+              //   "assets/images/enterCode.jpg",
+              //   height: 200,
+              // )
             ],
           ),
         ));
@@ -204,9 +205,9 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Image.asset(
-                            "assets/images/attemptQuiz.png",
-                          ),
+                          // Image.asset(
+                          //   "assets/images/attemptQuiz.png",
+                          // ),
                           SizedBox(
                             height: 10,
                           ),
@@ -367,7 +368,7 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => StudentDashboard()),
+                                      builder: (context) => StudentBar()),
                                 );
                               } else if (attempted == false &&
                                   groupCheck == true) {
@@ -407,7 +408,7 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            StudentDashboard()),
+                                            StudentBar()),
                                   );
                                 }
                               }

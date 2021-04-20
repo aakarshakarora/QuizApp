@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'file:///D:/Minor%20Project/quiz_app/lib/Screens/Dashboard/S_Dashboard/dashboardStudent.dart';
 import 'package:quiz_app/Theme/components/backgroundRegister.dart';
 
 class StudentProfile extends StatefulWidget {
@@ -24,19 +23,7 @@ class _StudentProfileState extends State<StudentProfile>
         backgroundColor: Colors.deepPurple,
         title: Text('User Profile'),
         centerTitle: true,
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.pop(
-                  context,
-                  MaterialPageRoute(builder: (context) => StudentDashboard()),
-                );
-              },
-            );
-          },
-        ),
+
       ),
       body: Container(
         child: FutureBuilder<DocumentSnapshot>(

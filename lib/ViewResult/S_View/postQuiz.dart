@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'file:///D:/Minor%20Project/quiz_app/lib/Screens/Dashboard/S_Dashboard/dashboardStudent.dart';
+import 'package:quiz_app/Common/studentBar.dart';
+
 
 
 class PostQuiz extends StatefulWidget {
@@ -16,7 +17,7 @@ class _PostQuizState extends State<PostQuiz> {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => StudentDashboard()),
+          builder: (context) => StudentBar()),
     );
   }
 
@@ -47,7 +48,7 @@ class _PostQuizState extends State<PostQuiz> {
             TextButton(onPressed: (){
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => StudentDashboard()),
+                MaterialPageRoute(builder: (context) => StudentBar()),
               );
             }, child: Text("Go to Home"))
           ],

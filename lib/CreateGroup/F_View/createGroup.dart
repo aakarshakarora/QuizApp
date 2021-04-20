@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:quiz_app/Common/facultyBar.dart';
 import 'package:quiz_app/CreateGroup/F_View/addStudent.dart';
 import 'package:quiz_app/CreateQuiz/quizDesc.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:provider/provider.dart';
-import 'file:///D:/Minor%20Project/quiz_app/lib/Screens/Dashboard/F_Dashboard/dashboardFaculty.dart';
+
 
 import 'editGroup.dart';
 
@@ -136,7 +137,7 @@ class _CreateGroupState extends State<CreateGroup> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => FacultyDashboard()),
+                    MaterialPageRoute(builder: (context) => FacultyBar()),
                   );
                 })
 

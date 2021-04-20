@@ -1,8 +1,9 @@
 import 'package:cuberto_bottom_bar/cuberto_bottom_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'file:///D:/Minor%20Project/quiz_app/lib/Screens/Dashboard/F_Dashboard/dashboardFaculty.dart';
+
 import 'package:quiz_app/Pages/userSupport.dart';
+import 'package:quiz_app/Screens/Dashboard/F_Dashboard/dashboardFaculty.dart';
 import 'package:quiz_app/Screens/MyProfile/F_Profile/profileFaculty.dart';
 
 

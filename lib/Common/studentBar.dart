@@ -2,8 +2,9 @@ import 'package:cuberto_bottom_bar/cuberto_bottom_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'file:///D:/Minor%20Project/quiz_app/lib/Screens/Dashboard/S_Dashboard/dashboardStudent.dart';
+
 import 'package:quiz_app/Pages/userSupport.dart';
+import 'package:quiz_app/Screens/Dashboard/S_Dashboard/dashboardStudent.dart';
 import 'package:quiz_app/Screens/MyProfile/S_Profile/profileStudent.dart';
 
 class StudentBar extends StatefulWidget {
