@@ -12,8 +12,6 @@ void main() async {
   runApp(MyApp());
 }
 
-const dayColor = Color(0xFFd56352);
-var nightColor = Color(0xFF1e2230);
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
