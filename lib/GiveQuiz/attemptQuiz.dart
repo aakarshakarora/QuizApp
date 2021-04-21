@@ -410,6 +410,7 @@ class _QuestionTileState extends State<QuestionTile>
 
   @override
   void initState() {
+    secureScreen();
     // TODO: implement initState
     options = [
       widget.reqDoc.get("01"),
