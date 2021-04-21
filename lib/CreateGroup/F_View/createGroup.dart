@@ -6,6 +6,7 @@ import 'package:quiz_app/CreateGroup/F_View/addStudent.dart';
 import 'package:quiz_app/CreateQuiz/quizDesc.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:provider/provider.dart';
+import 'package:quiz_app/Theme/theme.dart';
 
 import 'editGroup.dart';
 
@@ -15,20 +16,11 @@ class CreateGroup extends StatefulWidget {
 }
 
 class _CreateGroupState extends State<CreateGroup> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  String currentUser;
+  final currentUser = FirebaseAuth.instance.currentUser.uid;
+
   final _groupNameController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-//Get Current User
-  String getCurrentUser() {
-    final User user = _auth.currentUser;
-    final uid = user.uid;
-    final uemail = user.email;
-    // print(uid);
-    // print(uemail);
-    return uid.toString();
-  }
 
   createGroupDialog(BuildContext context) {
     return showDialog(
@@ -123,27 +115,20 @@ class _CreateGroupState extends State<CreateGroup> {
         });
   }
 
-  @override
-  void initState() {
-    super.initState();
-    currentUser = getCurrentUser();
-    //print("The document reference of the teacher is:"+(Provider.of<Data>(context).docRef).toString());
-  }
 
   @override
   Widget build(BuildContext context) {
     return ModalProgressHUD(
       inAsyncCall: Provider.of<Data>(context).showSpinner,
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(
+        floatingActionButton: FloatingActionButton(backgroundColor: kPrimaryColor,
           child: Icon(Icons.add),
           onPressed: () {
             createGroupDialog(context);
           },
         ),
         appBar: AppBar(
-            backgroundColor: Colors.deepPurpleAccent,
-            title: Text("Quiz Groups"),
+            title: Text("Quiz Groups"),centerTitle: true,
             leading: IconButton(
                 icon: Icon(Icons.arrow_back),
                 onPressed: () {

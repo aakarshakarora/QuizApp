@@ -24,6 +24,7 @@ class _ViewQuizDescState extends State<ViewQuizDesc> {
         appBar: AppBar(
           backgroundColor: Colors.pink,
           title: Text("Preview Quiz"),
+          centerTitle: true,
         ),
         body: Background(
           child: Column(

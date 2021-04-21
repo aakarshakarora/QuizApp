@@ -11,7 +11,6 @@ import 'dart:convert';
 
 import 'package:syncfusion_flutter_xlsio/xlsio.dart' as genExcel;
 
-
 class QuizCreatedRecord extends StatefulWidget {
   @override
   _QuizCreatedRecordState createState() => _QuizCreatedRecordState();
@@ -19,10 +18,11 @@ class QuizCreatedRecord extends StatefulWidget {
 
 class _QuizCreatedRecordState extends State<QuizCreatedRecord> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  String currentUser,accessCode;
+  String currentUser, accessCode;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  ColorTween color = ColorTween(begin: Colors.orange[100], end: Colors.orange[400]);
+  ColorTween color =
+      ColorTween(begin: Colors.orange[100], end: Colors.orange[400]);
 
 //Get Current User
   String getCurrentUser() {
@@ -43,29 +43,27 @@ class _QuizCreatedRecordState extends State<QuizCreatedRecord> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor:Colors.orange,title: Text("Quiz Created")),
+      appBar: AppBar(
+        backgroundColor: Colors.orange,
+        title: Text("Quiz Created"),
+        centerTitle: true,
+      ),
       body: Background(
-        child: Container(
-          child: FutureBuilder<DocumentSnapshot>(
-              future: FirebaseFirestore.instance
-                  .collection('Faculty')
-                  .doc(currentUser)
-                  .get(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<DocumentSnapshot> snapshot) {
-                if (!snapshot.hasData) {
-                  return Center(child: CircularProgressIndicator());
-                }
-                Map<String, dynamic> data = snapshot.data.data();
-                final reqDoc = data['QuizCreated'];
-                return
-                  // Column(mainAxisAlignment: MainAxisAlignment.start,
-                  //     //crossAxisAlignment: CrossAxisAlignment.start,
-                  //     children: <Widget>[
-                  //       Text(data['QuizGiven'].toString()),
-                  //       Text(data['QuizGiven'].length.toString()),
-
-                  Container(
+        child: SafeArea(
+          child: Container(
+            child: FutureBuilder<DocumentSnapshot>(
+                future: FirebaseFirestore.instance
+                    .collection('Faculty')
+                    .doc(currentUser)
+                    .get(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<DocumentSnapshot> snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  Map<String, dynamic> data = snapshot.data.data();
+                  final reqDoc = data['QuizCreated'];
+                  return Container(
                     width: MediaQuery.of(context).size.width,
                     child: new ListView.builder(
                         itemCount: data['QuizCreated'].length,
@@ -73,6 +71,7 @@ class _QuizCreatedRecordState extends State<QuizCreatedRecord> {
                           return ListTile(
                             title: Column(
                               children: [
+
                                 Container(
                                     width: MediaQuery.of(context).size.width,
                                     child: Card(
@@ -82,21 +81,22 @@ class _QuizCreatedRecordState extends State<QuizCreatedRecord> {
                                           ),
                                         ),
                                         elevation: 5,
-                                        color: color.lerp(index / (data['QuizCreated'].length)),
+                                        color: color.lerp(
+                                            index / (data['QuizCreated'].length)),
                                         child: Padding(
                                           padding: const EdgeInsets.all(12.0),
                                           child: FlatButton(
                                             child: Text(reqDoc[index].toString()),
                                             onPressed: () {
-
                                               setState(() {
-                                                accessCode=reqDoc[index].toString().substring(0,5);
+                                                accessCode = reqDoc[index]
+                                                    .toString()
+                                                    .substring(0, 5);
                                               });
                                               print(accessCode);
 
-                                              generateExcel(accessCode+'Result');
-
-
+                                              generateExcel(
+                                                  accessCode + 'Result');
                                             },
                                           ),
                                         ))),
@@ -105,14 +105,14 @@ class _QuizCreatedRecordState extends State<QuizCreatedRecord> {
                           );
                         }),
                   );
-              }),
+                }),
+          ),
         ),
       ),
     );
   }
 
-  int count=2;
-
+  int count = 2;
 
   Future<void> generateExcel(String accessCode) async {
     print("Function Called");
@@ -139,7 +139,7 @@ class _QuizCreatedRecordState extends State<QuizCreatedRecord> {
     sheet.getRangeByName('H1').setText('Max Score');
     String subjectName;
     String code;
-    code=accessCode.substring(0,5);
+    code = accessCode.substring(0, 5);
 
     final cloud = await FirebaseFirestore.instance
         .collection('Quiz')
@@ -147,35 +147,44 @@ class _QuizCreatedRecordState extends State<QuizCreatedRecord> {
         .collection(accessCode)
         .get();
 
-
     print("Code is: $accessCode");
 
-
-
-    for(var document in cloud.docs){
-
-
-
-
-      sheet.getRangeByName('A'+count.toString()).setText(document.data()['S_Name'].toString());
-      sheet.getRangeByName('B'+count.toString()).setText(document.data()['S_RegNo'].toString());
-      sheet.getRangeByName('C'+count.toString()).setText(document.data()['S_EmailID'].toString());
-      sheet.getRangeByName('D'+count.toString()).setText(document.data()['Score'].toString());
-      sheet.getRangeByName('E'+count.toString()).setText(document.data()['tabSwitch'].toString());
-      sheet.getRangeByName('F'+count.toString()).setText(document.data()['attempted'].toString());
-      sheet.getRangeByName('G'+count.toString()).setText(document.data()['S_UID'].toString());
-      sheet.getRangeByName('H'+count.toString()).setText(document.data()['maxScore'].toString());
+    for (var document in cloud.docs) {
+      sheet
+          .getRangeByName('A' + count.toString())
+          .setText(document.data()['S_Name'].toString());
+      sheet
+          .getRangeByName('B' + count.toString())
+          .setText(document.data()['S_RegNo'].toString());
+      sheet
+          .getRangeByName('C' + count.toString())
+          .setText(document.data()['S_EmailID'].toString());
+      sheet
+          .getRangeByName('D' + count.toString())
+          .setText(document.data()['Score'].toString());
+      sheet
+          .getRangeByName('E' + count.toString())
+          .setText(document.data()['tabSwitch'].toString());
+      sheet
+          .getRangeByName('F' + count.toString())
+          .setText(document.data()['attempted'].toString());
+      sheet
+          .getRangeByName('G' + count.toString())
+          .setText(document.data()['S_UID'].toString());
+      sheet
+          .getRangeByName('H' + count.toString())
+          .setText(document.data()['maxScore'].toString());
 
       count++;
     }
 
-
-
-    await FirebaseFirestore.instance.collection('Quiz').doc(code).get().then((value) {
-      subjectName=value.data()['SubjectName'];
+    await FirebaseFirestore.instance
+        .collection('Quiz')
+        .doc(code)
+        .get()
+        .then((value) {
+      subjectName = value.data()['SubjectName'];
     });
-
-
 
     sheet.getRangeByName('A1:E1').cellStyle.backColor = '#FFFF00';
     sheet.getRangeByName('A1:E1').cellStyle.bold = true;
@@ -187,7 +196,7 @@ class _QuizCreatedRecordState extends State<QuizCreatedRecord> {
 
     //Get the storage folder location using path_provider package.
     final Directory directory =
-    await path_provider.getApplicationDocumentsDirectory();
+        await path_provider.getApplicationDocumentsDirectory();
     final String path = directory.path;
     final File file = File('$path/$subjectName $code.xlsx');
     await file.writeAsBytes(bytes);
@@ -200,6 +209,4 @@ class _QuizCreatedRecordState extends State<QuizCreatedRecord> {
     print("Code is: $accessCode");
     print("Result is: $code");
   }
-
-
 }

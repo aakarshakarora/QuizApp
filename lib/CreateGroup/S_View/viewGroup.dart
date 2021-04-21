@@ -5,7 +5,6 @@ import 'dart:math' as test;
 
 import 'package:quiz_app/Theme/components/background.dart';
 
-
 class ViewGroups extends StatefulWidget {
   @override
   _ViewGroupsState createState() => _ViewGroupsState();
@@ -15,12 +14,17 @@ class _ViewGroupsState extends State<ViewGroups> {
   final currentUser = FirebaseAuth.instance.currentUser.uid;
   String accessCode;
 
-  ColorTween color = ColorTween(begin: Colors.orange[300], end: Colors.orange[700]);
+  ColorTween color =
+      ColorTween(begin: Color(0xffe5ae5c), end: Color(0xffe5ae5c));
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("View Group"),backgroundColor: Colors.orange,),
+      appBar: AppBar(
+        title: Text("Groups You are Added "),
+        backgroundColor: Color(0xffFF9900),
+        centerTitle: true,
+      ),
       body: Background(
         child: Container(
           child: FutureBuilder<DocumentSnapshot>(
@@ -37,42 +41,41 @@ class _ViewGroupsState extends State<ViewGroups> {
                 final reqDoc = data['GroupAdded'];
                 int docLen = data['GroupAdded'].length;
                 print(docLen);
-                return
-                  Container(
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width,
-                    child: new ListView.builder(
-                        itemCount: docLen,
-                        itemBuilder: (BuildContext context, int index) {
-                          return ListTile(
-                            title: Column(
-                              children: [
-                                Container(
-                                    child: Card(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(25),
-                                          ),
-                                        ),
-                                        color: color.lerp(index / (docLen)),
-                                        elevation: 5,
-                                        child: Center(
-                                          child: Text(
-                                            reqDoc[index].toString().substring(
-                                                65, reqDoc[index]
-                                                .toString()
-                                                .length - 1), style: TextStyle(
-                                              color: Colors.white),),
-                                        )),
+                return Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: new ListView.builder(
+                      itemCount: docLen,
+                      itemBuilder: (BuildContext context, int index) {
+                        return ListTile(
+                          title: Column(
+                            children: [
+                              Container(
+                                child: Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(25),
+                                      ),
+                                    ),
+                                    color: color.lerp(index / (docLen)),
+                                    elevation: 5,
+                                    child: Center(
+                                      child: Text(
+                                        reqDoc[index].toString().substring(
+                                            65,
+                                            reqDoc[index].toString().length -
+                                                1),
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    )),
                                 width: double.infinity,
-                                height: MediaQuery.of(context).size.height*0.1,),
-                              ],
-                            ),
-                          );
-                        }),
-                  );
+                                height:
+                                    MediaQuery.of(context).size.height * 0.1,
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
+                );
               }),
         ),
       ),

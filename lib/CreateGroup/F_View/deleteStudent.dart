@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:quiz_app/Theme/theme.dart';
 
 import 'createGroup.dart';
 class DeleteStudent extends StatefulWidget {
@@ -35,8 +36,8 @@ class _DeleteStudentState extends State<DeleteStudent> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            backgroundColor: Colors.blue,
-            title: Text("Delete Student from " + widget.groupName),
+
+            title: Text("Remove Student from " + widget.groupName),
             leading: IconButton(
                 icon: Icon(Icons.arrow_back),
                 onPressed: () {
@@ -128,6 +129,11 @@ class _ViewDetailsState extends State<ViewDetails> {
               child: Card(
                 elevation: 5,
                 color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(50),
+                  ),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
@@ -138,6 +144,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                           children: [
                             Text(
                               'Student Name: ',
+                              style: darkSmallTextBold,
                               // style: darkSmallTextBold,
                             ),
                             Text(
@@ -149,6 +156,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                           children: [
                             Text(
                               'Registration Number: ',
+                              style: darkSmallTextBold,
                               // style: darkSmallTextBold,
                             ),
                             Text(
@@ -158,7 +166,8 @@ class _ViewDetailsState extends State<ViewDetails> {
                         ),
                         Row(
                           children: [
-                            Text('Course Name: '
+                            Text('Course Name: ',
+                              style: darkSmallTextBold,
                               // style: darkSmallTextBold,
                             ),
                             Text('$courseName'),
@@ -207,7 +216,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                               },
                               child: Icon(Icons.delete),
                             )),
-                        Text("Delete User",
+                        Text("Remove User",
                           style: TextStyle(
                               fontSize: 13
                           ),)

@@ -15,7 +15,7 @@ class EditGroup extends StatefulWidget {
 class _EditGroupState extends State<EditGroup> {
   String currentUser;
 
-  final titles = [ 'Delete Students','Add Students'];
+  final titles = [ 'Remove Students','Add Students'];
 
   final titleIcon = [
     Icon(Icons.delete),
@@ -25,23 +25,6 @@ class _EditGroupState extends State<EditGroup> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-//Get Current User
-  String getCurrentUser() {
-    final User user = _auth.currentUser;
-    final uid = user.uid;
-    final uemail = user.email;
-    print(uid);
-    print(uemail);
-    return uid.toString();
-  }
-
-
-  @override
-  void initState() {
-    super.initState();
-    currentUser = getCurrentUser();
-
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,15 +32,16 @@ class _EditGroupState extends State<EditGroup> {
       appBar: AppBar(
         title: Text("Edit ${widget.groupName}"),
       ),
-      body: Column(
+      body: Column(mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            SizedBox(height: 20,),
             ListView.builder(
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount: titles.length,
               itemBuilder: (ctx, index) {
                 return InkWell(
-                  child: Card(
+                  child: Card(elevation: 4,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(
                         Radius.circular(25),

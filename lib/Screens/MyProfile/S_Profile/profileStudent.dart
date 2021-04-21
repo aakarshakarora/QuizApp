@@ -19,12 +19,7 @@ class _StudentProfileState extends State<StudentProfile>
     super.build(context);
     return Scaffold(
       backgroundColor: Colors.deepPurpleAccent,
-      appBar: AppBar(
-        backgroundColor: Colors.deepPurple,
-        title: Text('User Profile'),
-        centerTitle: true,
 
-      ),
       body: Container(
         child: FutureBuilder<DocumentSnapshot>(
             future: FirebaseFirestore.instance
