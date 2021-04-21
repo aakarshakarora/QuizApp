@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quiz_app/Charts/pieChart.dart';
+import 'package:quiz_app/Theme/components/background.dart';
 
 import 'dart:convert';
 
@@ -21,6 +22,7 @@ class _QuizCreatedRecordState extends State<QuizCreatedRecord> {
   String currentUser,accessCode;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  ColorTween color = ColorTween(begin: Colors.orange[100], end: Colors.orange[400]);
 
 //Get Current User
   String getCurrentUser() {
@@ -41,62 +43,70 @@ class _QuizCreatedRecordState extends State<QuizCreatedRecord> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Quiz Created")),
-      body: Container(
-        child: FutureBuilder<DocumentSnapshot>(
-            future: FirebaseFirestore.instance
-                .collection('Faculty')
-                .doc(currentUser)
-                .get(),
-            builder: (BuildContext context,
-                AsyncSnapshot<DocumentSnapshot> snapshot) {
-              if (!snapshot.hasData) {
-                return Center(child: CircularProgressIndicator());
-              }
-              Map<String, dynamic> data = snapshot.data.data();
-              final reqDoc = data['QuizCreated'];
-              return
-                // Column(mainAxisAlignment: MainAxisAlignment.start,
-                //     //crossAxisAlignment: CrossAxisAlignment.start,
-                //     children: <Widget>[
-                //       Text(data['QuizGiven'].toString()),
-                //       Text(data['QuizGiven'].length.toString()),
+      appBar: AppBar(backgroundColor:Colors.orange,title: Text("Quiz Created")),
+      body: Background(
+        child: Container(
+          child: FutureBuilder<DocumentSnapshot>(
+              future: FirebaseFirestore.instance
+                  .collection('Faculty')
+                  .doc(currentUser)
+                  .get(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<DocumentSnapshot> snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                Map<String, dynamic> data = snapshot.data.data();
+                final reqDoc = data['QuizCreated'];
+                return
+                  // Column(mainAxisAlignment: MainAxisAlignment.start,
+                  //     //crossAxisAlignment: CrossAxisAlignment.start,
+                  //     children: <Widget>[
+                  //       Text(data['QuizGiven'].toString()),
+                  //       Text(data['QuizGiven'].length.toString()),
 
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  child: new ListView.builder(
-                      itemCount: data['QuizCreated'].length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return ListTile(
-                          title: Column(
-                            children: [
-                              Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Card(
-                                      elevation: 3.5,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(12.0),
-                                        child: FlatButton(
-                                          child: Text(reqDoc[index].toString()),
-                                          onPressed: () {
-
-                                            setState(() {
-                                              accessCode=reqDoc[index].toString().substring(0,5);
-                                            });
-                                            print(accessCode);
-
-                                            generateExcel(accessCode+'Result');
-
-
-                                          },
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: new ListView.builder(
+                        itemCount: data['QuizCreated'].length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return ListTile(
+                            title: Column(
+                              children: [
+                                Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Card(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(25),
+                                          ),
                                         ),
-                                      ))),
-                            ],
-                          ),
-                        );
-                      }),
-                );
-            }),
+                                        elevation: 5,
+                                        color: color.lerp(index / (data['QuizCreated'].length)),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(12.0),
+                                          child: FlatButton(
+                                            child: Text(reqDoc[index].toString()),
+                                            onPressed: () {
+
+                                              setState(() {
+                                                accessCode=reqDoc[index].toString().substring(0,5);
+                                              });
+                                              print(accessCode);
+
+                                              generateExcel(accessCode+'Result');
+
+
+                                            },
+                                          ),
+                                        ))),
+                              ],
+                            ),
+                          );
+                        }),
+                  );
+              }),
+        ),
       ),
     );
   }

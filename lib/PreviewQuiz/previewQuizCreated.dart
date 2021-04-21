@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:quiz_app/PreviewQuiz/previewQuizDesc.dart';
+import 'package:quiz_app/Theme/components/background.dart';
+import 'package:quiz_app/Theme/components/rounded_button.dart';
 
 class ViewQuizDesc extends StatefulWidget {
   @override
@@ -20,53 +22,59 @@ class _ViewQuizDescState extends State<ViewQuizDesc> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.pink,
           title: Text("Preview Quiz"),
         ),
-        body: Column(
-          children: [
-            Expanded(
-              child: Container(
-                child: StreamBuilder(
-                  stream: firestoreDB,
-                  builder: (ctx, opSnapshot) {
-                    if (opSnapshot.connectionState == ConnectionState.waiting)
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    final reqDocs = opSnapshot.data.documents;
-                    print('length ${reqDocs.length}');
-                    return ListView.builder(
-                      itemCount: reqDocs.length,
-                      itemBuilder: (ctx, index) {
-                        if (reqDocs[index]
-                            .get('Creator')
-                            .toString()
-                            .contains(userId))
-                          return ViewDetails(reqDocs[index]);
-                        return Container(
-                          height: 0,
+        body: Background(
+          child: Column(
+            children: [
+              Expanded(
+                child: Container(
+                  child: StreamBuilder(
+                    stream: firestoreDB,
+                    builder: (ctx, opSnapshot) {
+                      if (opSnapshot.connectionState == ConnectionState.waiting)
+                        return Center(
+                          child: CircularProgressIndicator(),
                         );
-                      },
-                    );
-                  },
+                      final reqDocs = opSnapshot.data.documents;
+                      print('length ${reqDocs.length}');
+                      return ListView.builder(
+                        itemCount: reqDocs.length,
+                        itemBuilder: (ctx, index) {
+                          if (reqDocs[index]
+                              .get('Creator')
+                              .toString()
+                              .contains(userId))
+                            return ViewDetails(reqDocs[index],reqDocs.length,index);
+                          return Container(
+                            height: 0,
+                          );
+                        },
+                      );
+                    },
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ));
   }
 }
 
 class ViewDetails extends StatefulWidget {
-  final dynamic reqDoc;
+  final dynamic reqDoc,docLength,index;
 
-  ViewDetails(this.reqDoc);
+  ViewDetails(this.reqDoc,this.docLength,this.index);
 
   @override
   _ViewDetailsState createState() => _ViewDetailsState();
 }
 
 class _ViewDetailsState extends State<ViewDetails> {
+
+  ColorTween color = ColorTween(begin: Colors.pink[100], end: Colors.pink[400]);
+
   @override
   Widget build(BuildContext context) {
     String message;
@@ -93,8 +101,13 @@ class _ViewDetailsState extends State<ViewDetails> {
       child: Container(
         width: double.infinity,
         child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(25),
+            ),
+          ),
           elevation: 5,
-          color: Colors.blue,
+          color: color.lerp(widget.index / (widget.docLength)),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -155,32 +168,57 @@ class _ViewDetailsState extends State<ViewDetails> {
                     ),
                   ],
                 ),
-                ElevatedButton(
-                  child: Text('Share Quiz'),
-                  onPressed: () async {
-                    var response =
-                    await FlutterShareMe().shareToSystem(msg: message);
-                    if (response == 'success') {
-                      print('navigate success');
-                    }
-                  },
-                ),
-                ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => PreviewQuizDesc(
-                                description: description,
-                                eDate: eDate,
-                                sDate: sDate,
-                                accessCode: accessCode,
-                                subjectName: subjectName,
-                                questionCount: questionCount,
-                                maximumScore: maxScore)),
-                      );
-                    },
-                    child: Text("Edit Quiz"))
+                // ElevatedButton(
+                //   child: Text('Share Quiz'),
+                //   onPressed: () async {
+                //     var response =
+                //     await FlutterShareMe().shareToSystem(msg: message);
+                //     if (response == 'success') {
+                //       print('navigate success');
+                //     }
+                //   },
+                // ),
+                RoundedButton(text: 'Share Quiz',press: () async {
+                  var response;
+                  await FlutterShareMe().shareToSystem(msg: message);
+                  if (response == 'success') {
+                    print('navigate success');
+                  }
+                },
+                color: Colors.blue,
+                textColor: Colors.black,),
+                RoundedButton(text: "Edit Quiz",press: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PreviewQuizDesc(
+                            description: description,
+                            eDate: eDate,
+                            sDate: sDate,
+                            accessCode: accessCode,
+                            subjectName: subjectName,
+                            questionCount: questionCount,
+                            maximumScore: maxScore)),
+                  );
+                },
+                  color: Colors.grey[800],
+                  textColor: Colors.white,),
+                // ElevatedButton(
+                //     onPressed: () {
+                //       Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //             builder: (context) => PreviewQuizDesc(
+                //                 description: description,
+                //                 eDate: eDate,
+                //                 sDate: sDate,
+                //                 accessCode: accessCode,
+                //                 subjectName: subjectName,
+                //                 questionCount: questionCount,
+                //                 maximumScore: maxScore)),
+                //       );
+                //     },
+                //     child: Text("Edit Quiz"))
               ],
             ),
           ),

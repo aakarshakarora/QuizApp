@@ -42,49 +42,52 @@ class _EnterCodeState extends State<EnterCode> {
           title: Text("Give Quiz"),
         ),
         body: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 50,
-              ),
-              Text("Enter Access Code to Give Quiz"),
-              SizedBox(
-                height: 50,
-              ),
-              _buildAccessCodeField(),
-              SizedBox(
-                height: 50,
-              ),
-              MaterialButton(
-                color: kPrimaryColor,
-                onPressed: () async {
-                  setState(() {
-                    //print("The access code is: " + _accessCodeController.text);
-                    if (_accessCodeController.text.isNotEmpty) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => QuizCodeDesc(
-                                _accessCodeController.text.trim())),
-                      );
-                    }
-                  });
-                },
-                child: Text(
-                  "Submit",
-                  style: TextStyle(color: white),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 50,
                 ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Image.asset(
-                "assets/images/enterCode.jpg",
-                height: 200,
-              )
-            ],
+                Text("Enter Access Code to Give Quiz"),
+                SizedBox(
+                  height: 50,
+                ),
+                _buildAccessCodeField(),
+                SizedBox(
+                  height: 50,
+                ),
+                MaterialButton(
+                  color: kPrimaryColor,
+                  onPressed: () async {
+                    setState(() {
+                      //print("The access code is: " + _accessCodeController.text);
+                      if (_accessCodeController.text.isNotEmpty) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => QuizCodeDesc(
+                                  _accessCodeController.text.trim())),
+                        );
+                      }
+                    });
+                  },
+                  child: Text(
+                    "Submit",
+                    style: TextStyle(color: white),
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Image.asset(
+                  "assets/images/enterCode.jpg",
+                  height: 200,
+                )
+              ],
+            ),
           ),
         ));
   }
@@ -246,9 +249,11 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
                                 'Description: ',
                                 style: darkSmallTextBold,
                               ),
-                              Text(
-                                data['Description'],
-                                style: darkSmallText,
+                              Flexible(
+                                child: Text(
+                                  data['Description'],
+                                  style: darkSmallText,
+                                ),
                               ),
                             ],
                           ),

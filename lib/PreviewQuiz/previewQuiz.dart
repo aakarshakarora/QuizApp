@@ -52,97 +52,124 @@ class _PreviewQuizState extends State<PreviewQuiz> {
         .collection(widget.accessCode)
         .snapshots();
     return Scaffold(
-      backgroundColor: Colors.lightBlueAccent,
       appBar: AppBar(
         title: Text(widget.subjectName),
       ),
-      body: Column(
+      body: Stack(
         children: [
-          Expanded(
-            child: Container(
-              child: StreamBuilder(
-                stream: firestoreDB,
-                builder: (ctx, opSnapshot) {
-                  if (opSnapshot.connectionState == ConnectionState.waiting)
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  final reqDocs = opSnapshot.data.documents..shuffle();
-                  print('length ${reqDocs.length}');
-                  return PageView.builder(
-                    controller: pageController,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: reqDocs.length,
-                    itemBuilder: (ctx, index) {
-                      return SingleChildScrollView(
-                        child: Container(
-                          margin: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: (BorderRadius.circular(20)),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              PreviewQuestionTile(
-                                index: index,
-                                reqDoc: reqDocs[index],
-                                correctAnswerMarks:
-                                    (widget.maximumScore) / (reqDocs.length),
-                                code: widget.accessCode,
+          Positioned(
+            top: 0,
+            left: 0,
+            child: Image.asset(
+              "assets/images/main_top.png",
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width * 0.35,
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            right: 0,
+            child: Image.asset(
+              "assets/images/login_bottom.png",
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width * 0.4,
+            ),
+          ),
+          Column(
+            children: [
+              Expanded(
+                child: StreamBuilder(
+                  stream: firestoreDB,
+                  builder: (ctx, opSnapshot) {
+                    if (opSnapshot.connectionState == ConnectionState.waiting)
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    final reqDocs = opSnapshot.data.documents..shuffle();
+                    print('length ${reqDocs.length}');
+                    return PageView.builder(
+                      controller: pageController,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: reqDocs.length,
+                      itemBuilder: (ctx, index) {
+                        return SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Card(
+                              elevation: 5,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(30),
+                                ),
                               ),
-                              SizedBox(
-                                height: 100,
-                              ),
-                              Row(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  index == 0
-                                      ? Container()
-                                      : roundedButton(
-                                          color: Colors.blue,
-                                          context: context,
-                                          text: "Prev",
-                                          onPressed: () {
-                                            print("Prev Button is pressed!");
-                                            print(index);
-                                            print(widget.questionCount);
-                                            pageController.animateToPage(
-                                                index - 1,
-                                                duration:
-                                                    Duration(milliseconds: 200),
-                                                curve: Curves.easeIn);
-                                          }),
-                                  index != widget.questionCount - 1
-                                      ? roundedButton(
-                                          color: Colors.blue,
-                                          context: context,
-                                          text: "Next",
-                                          onPressed: () {
-                                            print("Next Button is pressed!");
-                                            print(index);
-                                            print(widget.questionCount);
+                                  PreviewQuestionTile(
+                                    index: index,
+                                    reqDoc: reqDocs[index],
+                                    correctAnswerMarks:
+                                        (widget.maximumScore) / (reqDocs.length),
+                                    code: widget.accessCode,
+                                  ),
+                                  SizedBox(
+                                    height: 100,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      index == 0
+                                          ? Container()
+                                          : roundedButton(
+                                              color: Colors.purple,
+                                              context: context,
+                                              text: "Prev",
+                                              onPressed: () {
+                                                print("Prev Button is pressed!");
+                                                print(index);
+                                                print(widget.questionCount);
+                                                pageController.animateToPage(
+                                                    index - 1,
+                                                    duration:
+                                                        Duration(milliseconds: 200),
+                                                    curve: Curves.easeIn);
+                                              }),
+                                      index != widget.questionCount - 1
+                                          ? roundedButton(
+                                              color: Colors.purple,
+                                              context: context,
+                                              text: "Next",
+                                              onPressed: () {
+                                                print("Next Button is pressed!");
+                                                print(index);
+                                                print(widget.questionCount);
 
-                                            pageController.animateToPage(
-                                                index + 1,
-                                                duration:
-                                                    Duration(milliseconds: 200),
-                                                curve: Curves.bounceInOut);
-                                          })
-                                      : Container(),
+                                                pageController.animateToPage(
+                                                    index + 1,
+                                                    duration:
+                                                        Duration(milliseconds: 200),
+                                                    curve: Curves.bounceInOut);
+                                              })
+                                          : Container(),
+                                    ],
+                                  ),
+                                  SizedBox(height: 20),
                                 ],
                               ),
-                              SizedBox(height: 20),
-                            ],
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                  );
-                },
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
-            ),
+            ],
           ),
         ],
       ),

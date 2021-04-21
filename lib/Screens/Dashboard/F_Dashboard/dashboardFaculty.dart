@@ -73,105 +73,92 @@ class _FacultyDashboardState extends State<FacultyDashboard>
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SafeArea(
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(30.0),bottomRight: Radius.circular(30.0)),
+                        color: Color(0xf07e2ae3),
+                      ),
+                      height: MediaQuery.of(context).size.height * 0.3,
+                      width: double.infinity,
                       child: Padding(
-                        padding: const EdgeInsets.only(
-                          left: 1.0,
-                          right: 2.0,
-                        ),
-                        child: Card(
-                          elevation: 2,
-                          color: Color(0xf07e2ae3),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.vertical(
-                              //top: Radius.circular(10),
-                              bottom: Radius.circular(30),
+                        padding: const EdgeInsets.all(15.0),
+                        child: Column(
+                          mainAxisAlignment:
+                              MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 30,),
+                            Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                          "https://randomuser.me/api/portraits/lego/5.jpg"),
+                                      radius: 30,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(' Welcome, \n${data['F_Name']}',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                            fontFamily: 'Poppins',
+                                            fontSize: 25)),
+                                  ],
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    signOut();
+                                    Navigator.of(context,
+                                            rootNavigator: true)
+                                        .pushReplacement(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    WelcomeScreen()));
+                                  },
+                                  icon: Icon(Icons.logout,
+                                      color: Color(0xffeeecf5)),
+                                ),
+                              ],
                             ),
-                          ),
-                          child: Container(
-                            height: MediaQuery.of(context).size.height * 0.22,
-                            width: double.infinity,
-                            child: Padding(
-                              padding: const EdgeInsets.all(15.0),
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          CircleAvatar(
-                                            backgroundImage: NetworkImage(
-                                                "https://randomuser.me/api/portraits/lego/5.jpg"),
-                                            radius: 30,
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text(' Welcome, \n${data['F_Name']}',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white,
-                                                  fontFamily: 'Poppins',
-                                                  fontSize: 25)),
-                                        ],
-                                      ),
-                                      IconButton(
-                                        onPressed: () {
-                                          signOut();
-                                          Navigator.of(context,
-                                                  rootNavigator: true)
-                                              .pushReplacement(
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          WelcomeScreen()));
-                                        },
-                                        icon: Icon(Icons.logout,
-                                            color: Color(0xffeeecf5)),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      IconButton(
-                                          icon: Icon(
-                                            Icons.brightness_medium,
-                                            color: Color(0xfff7f1ff),
-                                            size: 35,
-                                          ),
-                                          onPressed: () {
-                                            // Navigator.push(
-                                            //   context,
-                                            //   MaterialPageRoute(
-                                            //       builder: (context) =>
-                                            //           StudentProfile()),
-                                            // );
-                                          }),
-                                      IconButton(
-                                          icon: Icon(
-                                            Icons.notifications_sharp,
-                                            color: Color(0xfff7f1ff),
-                                            size: 35,
-                                          ),
-                                          onPressed: () {
-                                            // Navigator.push(
-                                            //   context,
-                                            //   MaterialPageRoute(
-                                            //       builder: (context) =>
-                                            //           StudentProfile()),
-                                            // );
-                                          }),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                IconButton(
+                                    icon: Icon(
+                                      Icons.brightness_medium,
+                                      color: Color(0xfff7f1ff),
+                                      size: 35,
+                                    ),
+                                    onPressed: () {
+                                      // Navigator.push(
+                                      //   context,
+                                      //   MaterialPageRoute(
+                                      //       builder: (context) =>
+                                      //           StudentProfile()),
+                                      // );
+                                    }),
+                                IconButton(
+                                    icon: Icon(
+                                      Icons.notifications_sharp,
+                                      color: Color(0xfff7f1ff),
+                                      size: 35,
+                                    ),
+                                    onPressed: () {
+                                      // Navigator.push(
+                                      //   context,
+                                      //   MaterialPageRoute(
+                                      //       builder: (context) =>
+                                      //           StudentProfile()),
+                                      // );
+                                    }),
+                              ],
+                            )
+                          ],
                         ),
                       ),
                     ),

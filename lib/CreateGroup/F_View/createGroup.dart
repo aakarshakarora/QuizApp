@@ -7,7 +7,6 @@ import 'package:quiz_app/CreateQuiz/quizDesc.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:provider/provider.dart';
 
-
 import 'editGroup.dart';
 
 class CreateGroup extends StatefulWidget {
@@ -20,7 +19,6 @@ class _CreateGroupState extends State<CreateGroup> {
   String currentUser;
   final _groupNameController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
 
 //Get Current User
   String getCurrentUser() {
@@ -37,7 +35,11 @@ class _CreateGroupState extends State<CreateGroup> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Create Group"),
+            title: Text("Create Group",
+            style: TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.bold
+            ),),
             content: Form(
               key: _formKey,
               child: Container(
@@ -54,7 +56,7 @@ class _CreateGroupState extends State<CreateGroup> {
                       )),
                   keyboardType: TextInputType.text,
                   controller: _groupNameController,
-                  // ignore: missing_return
+                  //ignore: missing_return
                   validator: (String value) {
                     if (value.isEmpty) {
                       return 'Field is required';
@@ -66,12 +68,12 @@ class _CreateGroupState extends State<CreateGroup> {
             actions: [
               TextButton(
                   onPressed: () {
-
-                    DocumentReference documentReference = FirebaseFirestore.instance
-                          .collection('Faculty')
-                          .doc(currentUser)
-                          .collection('QuizGroup')
-                          .doc(_groupNameController.text);
+                    // DocumentReference documentReference = FirebaseFirestore
+                    //     .instance
+                    //     .collection('Faculty')
+                    //     .doc(currentUser)
+                    //     .collection('QuizGroup')
+                    //     .doc(_groupNameController.text);
                     if (_groupNameController.text.isNotEmpty) {
                       FirebaseFirestore.instance
                           .collection('Faculty')
@@ -80,16 +82,25 @@ class _CreateGroupState extends State<CreateGroup> {
                           .doc(_groupNameController.text)
                           .set({"AllottedStudent": null});
                       Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                AddStudent(_groupNameController.text, documentReference)));
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AddStudent(
+                                  _groupNameController.text,
+                                  FirebaseFirestore
+                                      .instance
+                                      .collection('Faculty')
+                                      .doc(currentUser)
+                                      .collection('QuizGroup')
+                                      .doc(_groupNameController.text))));
                     } else {
                       showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text("Error"),
+                              title: Text("Warning!",style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold
+                              ),),
                               content: Text("Group Name Should Not be Empty"),
                               actions: <Widget>[
                                 TextButton(
@@ -103,7 +114,10 @@ class _CreateGroupState extends State<CreateGroup> {
                           });
                     }
                   },
-                  child: Text("Add"))
+                  child: Text("Add",style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16
+                  ),))
             ],
           );
         });
@@ -128,20 +142,16 @@ class _CreateGroupState extends State<CreateGroup> {
           },
         ),
         appBar: AppBar(
-          title: Text("Quiz Groups"),
-
+            backgroundColor: Colors.deepPurpleAccent,
+            title: Text("Quiz Groups"),
             leading: IconButton(
-
-
                 icon: Icon(Icons.arrow_back),
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => FacultyBar()),
                   );
-                })
-
-        ),
+                })),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Container(
@@ -157,12 +167,14 @@ class _CreateGroupState extends State<CreateGroup> {
                     child: CircularProgressIndicator(),
                   );
                 final reqDocs = opSnapshot.data.documents;
-               // print('length ${reqDocs.length}');
+                // print('length ${reqDocs.length}');
                 return ListView.builder(
                   itemCount: reqDocs.length,
                   itemBuilder: (ctx, index) {
                     if (reqDocs != null)
                       return GroupNameInfo(
+                        docLength: reqDocs.length,
+                        index: index,
                         reqDoc: reqDocs[index],
                         currentUser: currentUser,
                       );
@@ -181,10 +193,10 @@ class _CreateGroupState extends State<CreateGroup> {
 }
 
 class GroupNameInfo extends StatefulWidget {
-  final dynamic reqDoc;
+  final dynamic reqDoc, index, docLength;
   final String currentUser;
 
-  GroupNameInfo({this.reqDoc, this.currentUser});
+  GroupNameInfo({this.reqDoc, this.currentUser, this.docLength, this.index});
 
   @override
   _GroupNameInfoState createState() => _GroupNameInfoState();
@@ -208,13 +220,15 @@ class _GroupNameInfoState extends State<GroupNameInfo> {
         allottedStudentList.toString());
   }
 
-
   createDeleteConfirmation(BuildContext context, dynamic reqDoc) {
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Delete"),
+            title: Text("Delete",style: TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.bold
+            ),),
             content: Text(
                 "Do you want to delete this group? \n All the students added will be removed as well"),
             actions: [
@@ -222,13 +236,17 @@ class _GroupNameInfoState extends State<GroupNameInfo> {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text("Cancel"),
+                child: Text("Cancel",style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16
+                ),),
               ),
               TextButton(
                   onPressed: () async {
                     Provider.of<Data>(context, listen: false)
                         .changeSpinnerStatus(true);
-                    DocumentReference documentReference = FirebaseFirestore.instance
+                    DocumentReference documentReference = FirebaseFirestore
+                        .instance
                         .collection('Faculty')
                         .doc(widget.currentUser)
                         .collection('QuizGroup')
@@ -239,9 +257,10 @@ class _GroupNameInfoState extends State<GroupNameInfo> {
                           .doc(studentDocumentID);
                       DocumentSnapshot doc = await docRef.get();
                       List tags = doc.data()['GroupAdded'];
-                      if(tags.contains(documentReference.toString())==true){
+                      if (tags.contains(documentReference.toString()) == true) {
                         docRef.update({
-                          'GroupAdded': FieldValue.arrayRemove([documentReference.toString()])
+                          'GroupAdded': FieldValue.arrayRemove(
+                              [documentReference.toString()])
                         });
                       }
                     }
@@ -253,11 +272,17 @@ class _GroupNameInfoState extends State<GroupNameInfo> {
                     Provider.of<Data>(context, listen: false)
                         .changeSpinnerStatus(false);
                   },
-                  child: Text("Delete")),
+                  child: Text("Delete",style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    fontSize: 16
+                  ),)),
             ],
           );
         });
   }
+
+  ColorTween color =
+      ColorTween(begin: Colors.purple[300], end: Colors.purple[900]);
 
   @override
   void initState() {
@@ -281,7 +306,6 @@ class _GroupNameInfoState extends State<GroupNameInfo> {
         width: double.infinity,
         height: 100,
         child: InkWell(
-          hoverColor: Colors.blue,
           onTap: () {
             //print(docRef.toString());
             Navigator.push(
@@ -290,34 +314,52 @@ class _GroupNameInfoState extends State<GroupNameInfo> {
             );
           },
           child: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(25),
+              ),
+            ),
             elevation: 5,
-            color: Colors.blue,
+            color: color.lerp(widget.index / (widget.docLength)),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: [
+                  SizedBox(
+                    width: 20,
+                  ),
                   Flexible(
                     flex: 30,
                     fit: FlexFit.tight,
                     child: Text(
                       '$name',
+                      style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white),
                     ),
                   ),
                   Flexible(
                     fit: FlexFit.tight,
                     flex: 10,
                     child: IconButton(
-                      icon: Icon(Icons.delete),
+                      icon: Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                      ),
                       onPressed: () {
                         createDeleteConfirmation(context, widget.reqDoc);
                       },
                     ),
                   ),
                   Flexible(
-                      flex: 5,
+                      flex: 10,
                       fit: FlexFit.tight,
                       child: IconButton(
-                          icon: Icon(Icons.edit),
+                          icon: Icon(
+                            Icons.edit,
+                            color: Colors.white,
+                          ),
                           onPressed: () {
                             Navigator.push(
                               context,
@@ -337,6 +379,7 @@ class _GroupNameInfoState extends State<GroupNameInfo> {
 
 class Data extends ChangeNotifier {
   bool showSpinner = false;
+
   void changeSpinnerStatus(bool isSpinning) {
     showSpinner = isSpinning;
     notifyListeners();
