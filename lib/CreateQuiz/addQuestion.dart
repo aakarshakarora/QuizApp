@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:quiz_app/Dashboard/F_Dashboard/dashboardFaculty.dart';
+import 'package:quiz_app/Common/facultyBar.dart';
 import 'package:quiz_app/Utilities/buttons.dart';
 
-int currentCount = 1;
+
 
 class AddQuestion extends StatefulWidget {
   @override
@@ -24,7 +24,7 @@ class _AddQuestionState extends State<AddQuestion> {
     super.initState();
     imagePresent = false;
   }
-
+  int currentCount = 1;
   final TextEditingController _imageLink = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _buildQuestionController =
@@ -268,7 +268,7 @@ class _AddQuestionState extends State<AddQuestion> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            FacultyDashboard()),
+                                            FacultyBar()),
                                   );
                                 }).catchError((error) {
                                   print(error);

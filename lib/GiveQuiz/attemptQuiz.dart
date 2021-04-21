@@ -8,19 +8,19 @@ import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:quiz_app/Utilities/buttons.dart';
 import 'package:quiz_app/ViewResult/S_View/postQuiz.dart';
 
+import '../Theme/theme.dart';
 import 'globals.dart' as global;
 
 class AttemptQuiz extends StatefulWidget {
   final String subjectName, accessCode;
   final int questionCount, maximumScore, timeCount, marksPerQuestion;
 
-  AttemptQuiz(
-      {@required this.accessCode,
-      @required this.subjectName,
-      @required this.questionCount,
-      @required this.marksPerQuestion,
-      @required this.maximumScore,
-      @required this.timeCount});
+  AttemptQuiz({@required this.accessCode,
+    @required this.subjectName,
+    @required this.questionCount,
+    @required this.marksPerQuestion,
+    @required this.maximumScore,
+    @required this.timeCount});
 
   @override
   _AttemptQuizState createState() => _AttemptQuizState();
@@ -43,7 +43,10 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
     await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
   }
 
-  int pause = 0, resume = 0, inactive = 0, dead = 0;
+  int pause = 0,
+      resume = 0,
+      inactive = 0,
+      dead = 0;
 
   PageController pageController = PageController(initialPage: 0);
 
@@ -83,6 +86,14 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
           inactive++;
           print(inactive);
           FirebaseFirestore.instance
+              .collection('Student')
+              .doc(uId)
+              .update({
+            "QuizGiven": FieldValue.arrayUnion(
+                [widget.accessCode + " " + widget.subjectName])
+          });
+
+          FirebaseFirestore.instance
               .collection('Quiz')
               .doc(widget.accessCode)
               .collection(widget.accessCode + 'Result')
@@ -97,7 +108,8 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => PostQuiz(
+                  builder: (context) =>
+                      PostQuiz(
                         score: finalScore,
                         inactive: inactive,
                         totalScore: widget.maximumScore,
@@ -126,182 +138,248 @@ class _AttemptQuizState extends State<AttemptQuiz> with WidgetsBindingObserver {
         .collection(widget.accessCode)
         .snapshots();
     return Scaffold(
-      backgroundColor: Colors.lightBlueAccent,
       appBar: AppBar(
         title: Text(widget.subjectName),
       ),
-      body: Column(
+      body: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: CountdownTimer(
-              endTime: widget.timeCount,
-              widgetBuilder: (_, CurrentRemainingTime time) {
-                if (time == null) {
-                  FirebaseFirestore.instance
-                      .collection('Quiz')
-                      .doc(widget.accessCode)
-                      .collection(widget.accessCode + 'Result')
-                      .doc(uId)
-                      .update({
-                    "S_UID": uId,
-                    "Score": finalScore,
-                    'tabSwitch': inactive,
-                    'attempted': attempted,
-                  }).then((_) {
-                    //_displaySnackBar(context);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PostQuiz(
-                                score: finalScore,
-                                inactive: inactive,
-                                totalScore: widget.maximumScore,
-                              )),
-                    );
-                  });
-                }
-                return Text(
-                  ' ${time.hours == null ? "" : (time.hours.toString()) + ":"} ${time.min == null ? "" : (time.min).toString() + ":"} ${time.sec == null ? "" : (time.sec).toString()}',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
-                );
-              },
+          Positioned(
+            top: 0,
+            left: 0,
+            child: Image.asset(
+              "assets/images/main_top.png",
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width * 0.35,
             ),
           ),
-          Expanded(
-            child: Container(
-              child: StreamBuilder(
-                stream: firestoreDB,
-                builder: (ctx, opSnapshot) {
-                  if (opSnapshot.connectionState == ConnectionState.waiting)
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  final reqDocs = opSnapshot.data.documents..shuffle();
-                  print('length ${reqDocs.length}');
-                  return PageView.builder(
-                    controller: pageController,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: reqDocs.length,
-                    itemBuilder: (ctx, index) {
-                      return SingleChildScrollView(
-                        child: Container(
-                          margin: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: (BorderRadius.circular(20)),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              reqDocs[index].get("imgURL") == null
-                                  ? CircularProgressIndicator()
-                                  : Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      child: Image.network(
-                                          reqDocs[index].get("imgURL")),
-                                    ),
-                              QuestionTile(
-                                index: index,
-                                reqDoc: reqDocs[index],
-                                correctAnswerMarks: widget.marksPerQuestion,
-                              ),
-                              SizedBox(
-                                height: 100,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  index == 0
-                                      ? Container()
-                                      : roundedButton(
-                                          color: Colors.blue,
-                                          context: context,
-                                          text: "Prev",
-                                          onPressed: () {
-                                            print("Prev Button is pressed!");
-                                            print(index);
-                                            print(widget.questionCount);
-                                            pageController.animateToPage(
-                                                index - 1,
-                                                duration:
-                                                    Duration(milliseconds: 200),
-                                                curve: Curves.easeIn);
-                                          }),
-                                  index != widget.questionCount - 1
-                                      ? roundedButton(
-                                          color: Colors.blue,
-                                          context: context,
-                                          text: "Next",
-                                          onPressed: () {
-                                            print("Next Button is pressed!");
-                                            print(index);
-                                            print(widget.questionCount);
-                                            pageController.animateToPage(
-                                                index + 1,
-                                                duration:
-                                                    Duration(milliseconds: 200),
-                                                curve: Curves.bounceInOut);
-                                          })
-                                      : Container(),
-                                ],
-                              ),
-                              SizedBox(height: 20),
-                              roundedButton(
-                                  color: Colors.orange,
-                                  context: context,
-                                  text: "Submit",
-                                  onPressed: () {
-                                    print("Submit Button is pressed!");
-                                    print(
-                                        "Total Score:${(global.correct.reduce((a, b) => a + b)) * widget.marksPerQuestion}");
+          Positioned(
+            bottom: 0,
+            right: 0,
+            child: Image.asset(
+              "assets/images/login_bottom.png",
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width * 0.4,
+            ),
+          ),
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: CountdownTimer(
+                  endTime: widget.timeCount,
+                  widgetBuilder: (_, CurrentRemainingTime time) {
+                    if (time == null) {
+                      FirebaseFirestore.instance
+                          .collection('Student')
+                          .doc(uId)
+                          .update({
+                        "QuizGiven": FieldValue.arrayUnion([widget.accessCode +
+                            " " + widget.subjectName
+                        ])
+                      });
 
-                                    setState(() {
-                                      finalScore = (global.correct
-                                              .reduce((a, b) => a + b)) *
-                                          widget.marksPerQuestion;
-                                    });
-                                    FirebaseFirestore.instance
-                                        .collection('Quiz')
-                                        .doc(widget.accessCode)
-                                        .collection(
-                                            widget.accessCode + 'Result')
-                                        .doc(uId)
-                                        .update({
-                                      "S_UID": uId,
-                                      "Score": finalScore,
-                                      'tabSwitch': inactive,
-                                      'attempted': attempted,
-                                    }).then((_) {
-                                      //_displaySnackBar(context);
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => PostQuiz(
-                                                  score: finalScore,
-                                                  inactive: inactive,
-                                                  totalScore:
-                                                      widget.maximumScore,
-                                                )),
-                                      );
-                                      global.attempted = [];
-                                      global.correct = [];
-                                    });
-                                  }),
-                              SizedBox(height: 20),
-                            ],
-                          ),
-                        ),
+                      FirebaseFirestore.instance
+                          .collection('Quiz')
+                          .doc(widget.accessCode)
+                          .collection(widget.accessCode + 'Result')
+                          .doc(uId)
+                          .update({
+                        "S_UID": uId,
+                        "Score": finalScore,
+                        'tabSwitch': inactive,
+                        'attempted': attempted,
+                      }).then((_) {
+                        //_displaySnackBar(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  PostQuiz(
+                                    score: finalScore,
+                                    inactive: inactive,
+                                    totalScore: widget.maximumScore,
+                                  )),
+                        );
+                      });
+                    }
+                    return Text(
+                        ' ${time.hours == null ? "" : (time.hours.toString()) +
+                            ":"} ${time.min == null ? "" : (time.min)
+                            .toString() + ":"} ${time.sec == null ? "" : (time
+                            .sec).toString()}',
+                        style: TextStyle(
+                            color: (time.min ==null && time.hours == null && time.sec<60)?Colors.red:Colors.black,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),);
+                  },
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  child: StreamBuilder(
+                    stream: firestoreDB,
+                    builder: (ctx, opSnapshot) {
+                      if (opSnapshot.connectionState == ConnectionState.waiting)
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      final reqDocs = opSnapshot.data.documents..shuffle();
+                      print('length ${reqDocs.length}');
+                      return PageView.builder(
+                        controller: pageController,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: reqDocs.length,
+                        itemBuilder: (ctx, index) {
+                          return SingleChildScrollView(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Card(
+                                elevation: 5,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(30),
+                                  ),
+                                ),
+                                child: Container(
+                                  margin: EdgeInsets.all(10),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment
+                                        .center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      reqDocs[index].get("imgURL") == null
+                                          ? CircularProgressIndicator()
+                                          : Container(
+                                        width: MediaQuery
+                                            .of(context)
+                                            .size
+                                            .width,
+                                        child: Image.network(
+                                            reqDocs[index].get("imgURL")),
+                                      ),
+                                      QuestionTile(
+                                        index: index,
+                                        reqDoc: reqDocs[index],
+                                        correctAnswerMarks: widget
+                                            .marksPerQuestion,
+                                      ),
+                                      SizedBox(
+                                        height: 100,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment
+                                            .center,
+                                        children: [
+                                          index == 0
+                                              ? Container()
+                                              : roundedButton(
+                                              color: darkblue,
+                                              context: context,
+                                              text: "Prev",
+                                              onPressed: () {
+                                                print(
+                                                    "Prev Button is pressed!");
+                                                print(index);
+                                                print(widget.questionCount);
+                                                pageController.animateToPage(
+                                                    index - 1,
+                                                    duration:
+                                                    Duration(milliseconds: 200),
+                                                    curve: Curves.easeIn);
+                                              }),
+                                          index != widget.questionCount - 1
+                                              ? roundedButton(
+                                              color: darkblue,
+                                              context: context,
+                                              text: "Next",
+                                              onPressed: () {
+                                                print(
+                                                    "Next Button is pressed!");
+                                                print(index);
+                                                print(widget.questionCount);
+                                                pageController.animateToPage(
+                                                    index + 1,
+                                                    duration:
+                                                    Duration(milliseconds: 200),
+                                                    curve: Curves.bounceInOut);
+                                              })
+                                              : Container(),
+                                        ],
+                                      ),
+                                      SizedBox(height: 20),
+                                      roundedButton(
+                                          color: Colors.orange,
+                                          context: context,
+                                          text: "Submit",
+                                          onPressed: () {
+                                            print("Submit Button is pressed!");
+                                            print(
+                                                "Total Score:${(global.correct
+                                                    .reduce((a, b) => a + b)) *
+                                                    widget.marksPerQuestion}");
+
+                                            setState(() {
+                                              finalScore = (global.correct
+                                                  .reduce((a, b) => a + b)) *
+                                                  widget.marksPerQuestion;
+                                            });
+
+                                            FirebaseFirestore.instance
+                                                .collection('Student')
+                                                .doc(uId)
+                                                .update({
+                                              "QuizGiven": FieldValue
+                                                  .arrayUnion([
+                                                widget.accessCode + " " +
+                                                    widget.subjectName
+                                              ])
+                                            });
+                                            FirebaseFirestore.instance
+                                                .collection('Quiz')
+                                                .doc(widget.accessCode)
+                                                .collection(
+                                                widget.accessCode + 'Result')
+                                                .doc(uId)
+                                                .update({
+                                              "S_UID": uId,
+                                              "Score": finalScore,
+                                              'tabSwitch': inactive,
+                                              'attempted': attempted,
+                                            }).then((_) {
+                                              //_displaySnackBar(context);
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        PostQuiz(
+                                                          score: finalScore,
+                                                          inactive: inactive,
+                                                          totalScore:
+                                                          widget.maximumScore,
+                                                        )),
+                                              );
+                                              global.attempted = [];
+                                              global.correct = [];
+                                            });
+                                          }),
+                                      SizedBox(height: 20),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
                       );
                     },
-                  );
-                },
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
         ],
       ),
@@ -313,10 +391,9 @@ class QuestionTile extends StatefulWidget {
   // TODO:defined totalDocs
   final dynamic reqDoc, index, correctAnswerMarks;
 
-  QuestionTile(
-      {@required this.reqDoc,
-      @required this.index,
-      @required this.correctAnswerMarks});
+  QuestionTile({@required this.reqDoc,
+    @required this.index,
+    @required this.correctAnswerMarks});
 
   @override
   _QuestionTileState createState() => _QuestionTileState();
@@ -367,10 +444,13 @@ class _QuestionTileState extends State<QuestionTile>
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Q${widget.index + 1} ${widget.reqDoc.get("Ques")}",style: TextStyle(
-            fontWeight: FontWeight.w400,
-            fontSize: 20
-          ),),
+          Text(
+            "Q${widget.index + 1}: ${widget.reqDoc.get("Ques")}",
+            style: TextStyle(fontWeight: FontWeight.w400, fontSize: 20),
+          ),
+          Divider(
+            thickness: 1,
+          ),
           ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
@@ -411,10 +491,11 @@ class _QuestionTileState extends State<QuestionTile>
                           //     "Total Score:${(global.correct.reduce((a,
                           //         b) => a + b)) * widget.correctAnswerMarks}");
                         }),
-                    Flexible(child: Text(options[index],
-                    style: TextStyle(
-                      fontSize: 17
-                    ),)),
+                    Flexible(
+                        child: Text(
+                          options[index],
+                          style: TextStyle(fontSize: 17),
+                        )),
                   ],
                 );
               }),

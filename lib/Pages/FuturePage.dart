@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quiz_app/Dashboard/S_Dashboard/dashboardStudent.dart';
+import 'package:quiz_app/Common/studentBar.dart';
 
 class FuturePage extends StatefulWidget {
   @override
@@ -44,7 +44,7 @@ class _FuturePageState extends State<FuturePage> with WidgetsBindingObserver {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => StudentDashboard()),
+                builder: (context) => StudentBar()),
           );
           break;
         case AppLifecycleState.detached:
