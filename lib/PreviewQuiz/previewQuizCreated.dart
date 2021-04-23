@@ -118,67 +118,88 @@ class _ViewDetailsState extends State<ViewDetails> {
                   children: [
                     Text(
                       'Question Count:',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black
+                      ),
                       // style: darkSmallTextBold,
                     ),
                     Text(
-                      '$questionCount',
+                      '$questionCount',style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black
+                    ),
                     ),
                   ],
                 ),
                 Row(
                   children: [
                     Text(
-                      'Access Code:',
+                      'Access Code:',style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black
+                    ),
                       // style: darkSmallTextBold,
                     ),
                     Text(
-                      '$accessCode',
+                      '$accessCode',style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black
+                    ),
                     ),
                   ],
                 ),
                 Row(
                   children: [
                     Text(
-                      'Subject Name:',
+                      'Subject Name:',style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black
+                    ),
                       // style: darkSmallTextBold,
                     ),
                     Text(
-                      '$subjectName',
+                      '$subjectName',style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black
+                    ),
                     ),
                   ],
                 ),
                 Row(
                   children: [
                     Text(
-                      'MaxScore:',
+                      'MaxScore:',style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black
+                    ),
                       // style: darkSmallTextBold,
                     ),
                     Text(
-                      '$maxScore',
+                      '$maxScore',style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black
+                    ),
                     ),
                   ],
                 ),
                 Row(
                   children: [
                     Text(
-                      'Start Date:',
+                      'Start Date:',style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black
+                    ),
                       // style: darkSmallTextBold,
                     ),
                     Text(
-                      '$startDate',
+                      '$startDate',style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black
+                    ),
                     ),
                   ],
                 ),
-                // ElevatedButton(
-                //   child: Text('Share Quiz'),
-                //   onPressed: () async {
-                //     var response =
-                //     await FlutterShareMe().shareToSystem(msg: message);
-                //     if (response == 'success') {
-                //       print('navigate success');
-                //     }
-                //   },
-                // ),
                 RoundedButton(text: 'Share Quiz',press: () async {
                   var response;
                   await FlutterShareMe().shareToSystem(msg: message);
