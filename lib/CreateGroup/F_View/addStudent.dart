@@ -2,7 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/CreateGroup/F_View/createGroup.dart';
-import 'package:quiz_app/Theme/theme.dart';
+
+
+import '../../Theme/components/background.dart';
+
 
 class AddStudent extends StatefulWidget {
   final String groupName;
@@ -45,53 +48,61 @@ class _AddStudentState extends State<AddStudent> {
                     context,
                     MaterialPageRoute(builder: (context) => CreateGroup()),
                   );
-                })),
-        body: Column(
-          children: [
-            Expanded(
-              child: Container(
-                child: StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection('Student')
-                      .snapshots(),
-                  builder: (ctx, opSnapshot) {
-                    if (opSnapshot.connectionState == ConnectionState.waiting)
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    var reqDocs = opSnapshot.data.documents;
-                    print('length ${reqDocs.length}');
-                    return ListView.builder(
-                      itemCount: reqDocs.length,
-                      itemBuilder: (ctx, index) {
-                        if (opSnapshot.hasData) {
-                          if (reqDocs[index]
-                                  .get('GroupAdded')
-                                  .contains(widget.docRef.toString()) ==
-                              false) {
-                            return ViewDetails(
-                              reqDoc: reqDocs[index],
-                              userID: currentUser.uid,
-                              groupName: widget.groupName,
-                              docRef: widget.docRef,
-                            );
-                          } else {
-                            return Container(
-                              height: 0,
-                            );
-                          }
-                        }
 
-                        return Container(
-                          height: 0,
+                })
+
+        ),
+        body: Background(
+          child: Column(
+            children: [
+              Expanded(
+                child: Container(
+                  child: StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection('Student')
+                        .snapshots(),
+                    builder: (ctx, opSnapshot) {
+                      if (opSnapshot.connectionState == ConnectionState.waiting)
+                        return Center(
+                          child: CircularProgressIndicator(),
                         );
-                      },
-                    );
-                  },
+                      var reqDocs = opSnapshot.data.documents;
+                      print('length ${reqDocs.length}');
+                      return ListView.builder(
+                        itemCount: reqDocs.length,
+                        itemBuilder: (ctx, index) {
+                          if (opSnapshot.hasData) {
+                            if (reqDocs[index]
+                                .get('GroupAdded')
+                                .contains(widget.docRef.toString()) ==
+                                false) {
+                              return ViewDetails(
+                                reqDoc: reqDocs[index],
+                                userID: currentUser.uid,
+                                groupName: widget.groupName,
+                                docRef: widget.docRef,
+                              );
+                            } else
+                            {
+                              return Container(
+                                height: 0,
+                              );
+                            }
+
+
+                          }
+
+                          return Container(
+                            height: 0,
+                          );
+                        },
+                      );
+                    },
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ));
   }
 }
@@ -125,6 +136,14 @@ class _ViewDetailsState extends State<ViewDetails> {
               width: double.infinity,
               child: Card(
                 elevation: 5,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topRight:Radius.circular(70),
+                    topLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10),
+                    bottomLeft: Radius.circular(10),
+                  ),
+                ),
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
@@ -133,8 +152,11 @@ class _ViewDetailsState extends State<ViewDetails> {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Column(children: [
-                    Column(
+
+                  child: Column(
+                    children: [Column(
+
+
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Row(
@@ -212,8 +234,10 @@ class _ViewDetailsState extends State<ViewDetails> {
                           style: TextStyle(fontSize: 13),
                         )
                       ],
-                    ),
-                  ]),
+
+                    ),]
+                  ),
+
                 ),
               ),
             )));

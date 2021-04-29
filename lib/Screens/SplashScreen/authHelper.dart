@@ -6,8 +6,10 @@ class UserHelper {
   static FirebaseFirestore _db = FirebaseFirestore.instance;
 
   static saveUser(User user) async {
-    // PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    // int buildNumber = int.parse(packageInfo.buildNumber);
+
+   // PackageInfo packageInfo = await PackageInfo.fromPlatform();
+   // int buildNumber = int.parse(packageInfo.buildNumber);
+
 
     Map<String, dynamic> userData = {
       "UserID": user.uid,
@@ -21,6 +23,9 @@ class UserHelper {
         //"buildNumber": buildNumber,
       });
     } else {
+
+
+
       await _db.collection("User").doc(user.uid).set(userData);
     }
   }
@@ -32,4 +37,5 @@ class UserHelper {
 
     }
   }
+
 }

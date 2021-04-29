@@ -85,8 +85,14 @@ class _QuizCreatedRecordState extends State<QuizCreatedRecord> {
                                             index / (data['QuizCreated'].length)),
                                         child: Padding(
                                           padding: const EdgeInsets.all(12.0),
-                                          child: FlatButton(
-                                            child: Text(reqDoc[index].toString()),
+
+                                          child: TextButton(
+                                            child: Text(reqDoc[index].toString(),style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.black
+                                            ),),
+
+
                                             onPressed: () {
                                               setState(() {
                                                 accessCode = reqDoc[index]
