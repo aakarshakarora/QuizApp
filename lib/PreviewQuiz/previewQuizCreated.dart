@@ -200,6 +200,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                     ),
                   ],
                 ),
+
                 RoundedButton(text: 'Share Quiz',press: () async {
                   var response;
                   await FlutterShareMe().shareToSystem(msg: message);

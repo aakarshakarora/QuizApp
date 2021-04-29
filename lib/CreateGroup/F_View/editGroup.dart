@@ -17,8 +17,10 @@ class EditGroup extends StatefulWidget {
 class _EditGroupState extends State<EditGroup> {
   String currentUser;
 
-  final titles = [ 'Delete Students','Add Students'];
-  final cardColors = [Colors.indigo,Colors.green];
+
+  final titles = [ 'Remove Students','Add Students'];
+
+
   final titleIcon = [
     Icon(Icons.delete,color: Colors.white,),
     Icon(Icons.add,color: Colors.white,)
@@ -27,23 +29,6 @@ class _EditGroupState extends State<EditGroup> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-//Get Current User
-  String getCurrentUser() {
-    final User user = _auth.currentUser;
-    final uid = user.uid;
-    final uemail = user.email;
-    print(uid);
-    print(uemail);
-    return uid.toString();
-  }
-
-
-  @override
-  void initState() {
-    super.initState();
-    currentUser = getCurrentUser();
-
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +36,7 @@ class _EditGroupState extends State<EditGroup> {
       appBar: AppBar(
         title: Text("Edit ${widget.groupName}"),
       ),
+
       body: Background(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -88,6 +74,7 @@ class _EditGroupState extends State<EditGroup> {
                                   ),
                                 ),
                               ],
+
                             ),
                           ),
                         ),

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/CreateGroup/F_View/createGroup.dart';
 
+
 import '../../Theme/components/background.dart';
 
 
@@ -38,17 +39,16 @@ class _AddStudentState extends State<AddStudent> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            backgroundColor: Colors.blue,
             title: Text("Add Student in " + widget.groupName),
+            centerTitle: true,
             leading: IconButton(
-
-
                 icon: Icon(Icons.arrow_back),
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => CreateGroup()),
                   );
+
                 })
 
         ),
@@ -88,6 +88,8 @@ class _AddStudentState extends State<AddStudent> {
                                 height: 0,
                               );
                             }
+
+
                           }
 
                           return Container(
@@ -143,16 +145,25 @@ class _ViewDetailsState extends State<ViewDetails> {
                   ),
                 ),
                 color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(50),
+                  ),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
+
                   child: Column(
                     children: [Column(
+
+
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Row(
                           children: [
                             Text(
                               'Student Name: ',
+                              style: darkSmallTextBold,
                               // style: darkSmallTextBold,
                             ),
                             Text(
@@ -164,6 +175,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                           children: [
                             Text(
                               'Registration Number: ',
+                              style: darkSmallTextBold,
                               // style: darkSmallTextBold,
                             ),
                             Text(
@@ -173,9 +185,10 @@ class _ViewDetailsState extends State<ViewDetails> {
                         ),
                         Row(
                           children: [
-                            Text('Course Name: '
-                              // style: darkSmallTextBold,
-                            ),
+                            Text('Course Name: ',
+                              style: darkSmallTextBold,
+                                // style: darkSmallTextBold,
+                                ),
                             Text('$courseName'),
                           ],
                         ),
@@ -187,42 +200,44 @@ class _ViewDetailsState extends State<ViewDetails> {
                       children: [
                         GestureDetector(
                             child: MaterialButton(
-                              onPressed: () {
-                                print("User ADDED");
+                          onPressed: () {
+                            print("User ADDED");
 
-                                print(widget.userID);
-                                print(widget.groupName);
+                            print(widget.userID);
+                            print(widget.groupName);
 
-                                print("Hello: " + widget.docRef.toString());
-                                setState(() {
-                                  FirebaseFirestore.instance
-                                      .collection('Faculty')
-                                      .doc(widget.userID)
-                                      .collection('QuizGroup')
-                                      .doc(widget.groupName)
-                                      .update({
-                                    "AllottedStudent":
+                            print("Hello: " + widget.docRef.toString());
+                            setState(() {
+                              FirebaseFirestore.instance
+                                  .collection('Faculty')
+                                  .doc(widget.userID)
+                                  .collection('QuizGroup')
+                                  .doc(widget.groupName)
+                                  .update({
+                                "AllottedStudent":
                                     FieldValue.arrayUnion([userID])
-                                  });
-                                  print(userID);
-                                  FirebaseFirestore.instance
-                                      .collection('Student')
-                                      .doc(userID)
-                                      .update({
-                                    "GroupAdded": FieldValue.arrayUnion(
-                                        [widget.docRef.toString()])
-                                  });
-                                });
-                              },
-                              child: Icon(Icons.group_add),
-                            )),
-                        Text("Add User",
-                        style: TextStyle(
-                          fontSize: 13
-                        ),)
+                              });
+                              print(userID);
+                              FirebaseFirestore.instance
+                                  .collection('Student')
+                                  .doc(userID)
+                                  .update({
+                                "GroupAdded": FieldValue.arrayUnion(
+                                    [widget.docRef.toString()])
+                              });
+                            });
+                          },
+                          child: Icon(Icons.group_add),
+                        )),
+                        Text(
+                          "Add User",
+                          style: TextStyle(fontSize: 13),
+                        )
                       ],
+
                     ),]
                   ),
+
                 ),
               ),
             )));
