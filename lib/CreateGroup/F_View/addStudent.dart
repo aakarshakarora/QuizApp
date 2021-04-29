@@ -5,6 +5,7 @@ import 'package:quiz_app/CreateGroup/F_View/createGroup.dart';
 
 
 import '../../Theme/components/background.dart';
+import '../../Theme/theme.dart';
 
 
 class AddStudent extends StatefulWidget {
@@ -145,11 +146,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                   ),
                 ),
                 color: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(50),
-                  ),
-                ),
+
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
 

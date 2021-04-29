@@ -9,6 +9,8 @@ import 'package:quiz_app/ViewResult/S_View/oldResult.dart';
 import '../../../GiveQuiz/giveQuiz.dart';
 import 'package:quiz_app/Theme/theme.dart';
 
+import '../../SplashScreen/splash.dart';
+
 class StudentDashboard extends StatefulWidget {
   @override
   _StudentDashboardState createState() => _StudentDashboardState();
@@ -66,7 +68,7 @@ class _StudentDashboardState extends State<StudentDashboard>
           builder:
               (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
             if (!snapshot.hasData) {
-              return Center(child: CircularProgressIndicator());
+              return Center(child: SplashScreen());
             }
             Map<String, dynamic> data = snapshot.data.data();
             return Scaffold(

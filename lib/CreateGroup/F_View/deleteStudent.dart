@@ -140,11 +140,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                 ),
                 elevation: 5,
                 color: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(50),
-                  ),
-                ),
+
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
