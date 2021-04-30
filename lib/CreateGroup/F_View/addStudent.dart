@@ -68,6 +68,7 @@ class _AddStudentState extends State<AddStudent> {
                           child: CircularProgressIndicator(),
                         );
                       var reqDocs = opSnapshot.data.documents;
+                      print(widget.docRef);
                       print('length ${reqDocs.length}');
                       return ListView.builder(
                         itemCount: reqDocs.length,

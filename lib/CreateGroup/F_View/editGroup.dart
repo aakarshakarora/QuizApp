@@ -7,9 +7,10 @@ import 'package:quiz_app/CreateGroup/F_View/deleteStudent.dart';
 import '../../Theme/components/background.dart';
 
 class EditGroup extends StatefulWidget {
+  final DocumentReference groupRef;
   final String groupName;
 
-  EditGroup(this.groupName);
+  EditGroup(this.groupRef,this.groupName);
 
   @override
   _EditGroupState createState() => _EditGroupState();
@@ -82,17 +83,13 @@ class _EditGroupState extends State<EditGroup> {
                       ),
                     ),
                     onTap: () {
-                      DocumentReference docRef = FirebaseFirestore.instance
-                          .collection('Faculty')
-                          .doc(currentUser)
-                          .collection('QuizGroup')
-                          .doc(widget.groupName);
+
                       if (index == 0) {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  DeleteStudent(widget.groupName, docRef)),
+                                  DeleteStudent(widget.groupName, widget.groupRef)),
                         );
                       }
                       if (index == 1) {
@@ -100,7 +97,7 @@ class _EditGroupState extends State<EditGroup> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  AddStudent(widget.groupName, docRef)),
+                                  AddStudent(widget.groupName, widget.groupRef)),
                         );
                       }
                     },
