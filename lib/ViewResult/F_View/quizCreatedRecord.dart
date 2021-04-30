@@ -192,8 +192,8 @@ class _QuizCreatedRecordState extends State<QuizCreatedRecord> {
       subjectName = value.data()['SubjectName'];
     });
 
-    sheet.getRangeByName('A1:E1').cellStyle.backColor = '#FFFF00';
-    sheet.getRangeByName('A1:E1').cellStyle.bold = true;
+    sheet.getRangeByName('A1:H1').cellStyle.backColor = '#FFFF00';
+    sheet.getRangeByName('A1:H1').cellStyle.bold = true;
 
     //Save and launch the excel.
     final List<int> bytes = workbook.saveAsStream();
