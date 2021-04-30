@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/Theme/theme.dart';
 
+import '../../Theme/components/background.dart';
 import 'createGroup.dart';
 class DeleteStudent extends StatefulWidget {
   final String groupName;
@@ -46,55 +47,57 @@ class _DeleteStudentState extends State<DeleteStudent> {
                     MaterialPageRoute(builder: (context) => CreateGroup()),
                   );
                 })),
-        body: Column(
-          children: [
-            Expanded(
-              child: Container(
-                child: StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection('Student')
-                      .where("GroupAdded",arrayContains: widget.docRef.toString())
-                      .snapshots(),
-                  builder: (ctx, opSnapshot) {
-                    if (opSnapshot.connectionState == ConnectionState.waiting)
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    var reqDocs = opSnapshot.data.documents;
-                    print('length ${reqDocs.length}');
-                    return ListView.builder(
-                      itemCount: reqDocs.length,
-                      itemBuilder: (ctx, index) {
-                        if (opSnapshot.hasData) {
-                          if (reqDocs[index]
-                              .get('GroupAdded')
-                              .contains(widget.docRef.toString()) ==
-                              true) {
-                            return ViewDetails(
-                              reqDoc: reqDocs[index],
-                              userID: currentUser.uid,
-                              groupName: widget.groupName,
-                              docRef: widget.docRef,
-                            );
-                          } else
-                          {
-                            return Container(
-                              height: 0,
-
-                            );
-                          }
-                        }
-
-                        return Container(
-                          height: 0,
+        body: Background(
+          child: Column(
+            children: [
+              Expanded(
+                child: Container(
+                  child: StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection('Student')
+                        .where("GroupAdded",arrayContains: widget.docRef.toString())
+                        .snapshots(),
+                    builder: (ctx, opSnapshot) {
+                      if (opSnapshot.connectionState == ConnectionState.waiting)
+                        return Center(
+                          child: CircularProgressIndicator(),
                         );
-                      },
-                    );
-                  },
+                      var reqDocs = opSnapshot.data.documents;
+                      print('length ${reqDocs.length}');
+                      return ListView.builder(
+                        itemCount: reqDocs.length,
+                        itemBuilder: (ctx, index) {
+                          if (opSnapshot.hasData) {
+                            if (reqDocs[index]
+                                .get('GroupAdded')
+                                .contains(widget.docRef.toString()) ==
+                                true) {
+                              return ViewDetails(
+                                reqDoc: reqDocs[index],
+                                userID: currentUser.uid,
+                                groupName: widget.groupName,
+                                docRef: widget.docRef,
+                              );
+                            } else
+                            {
+                              return Container(
+                                height: 0,
+
+                              );
+                            }
+                          }
+
+                          return Container(
+                            height: 0,
+                          );
+                        },
+                      );
+                    },
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ));
   }
 }
@@ -127,13 +130,17 @@ class _ViewDetailsState extends State<ViewDetails> {
             child: Container(
               width: double.infinity,
               child: Card(
-                elevation: 5,
-                color: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(50),
+                    topRight:Radius.circular(70),
+                    topLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10),
+                    bottomLeft: Radius.circular(10),
                   ),
                 ),
+                elevation: 5,
+                color: Colors.white,
+
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
@@ -216,8 +223,10 @@ class _ViewDetailsState extends State<ViewDetails> {
                               },
                               child: Icon(Icons.delete),
                             )),
+
+
                         Text("Remove User",
-                          style: TextStyle(
+                         style: TextStyle(
                               fontSize: 13
                           ),)
                       ],

@@ -85,8 +85,14 @@ class _QuizCreatedRecordState extends State<QuizCreatedRecord> {
                                             index / (data['QuizCreated'].length)),
                                         child: Padding(
                                           padding: const EdgeInsets.all(12.0),
-                                          child: FlatButton(
-                                            child: Text(reqDoc[index].toString()),
+
+                                          child: TextButton(
+                                            child: Text(reqDoc[index].toString(),style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.black
+                                            ),),
+
+
                                             onPressed: () {
                                               setState(() {
                                                 accessCode = reqDoc[index]
@@ -186,8 +192,8 @@ class _QuizCreatedRecordState extends State<QuizCreatedRecord> {
       subjectName = value.data()['SubjectName'];
     });
 
-    sheet.getRangeByName('A1:E1').cellStyle.backColor = '#FFFF00';
-    sheet.getRangeByName('A1:E1').cellStyle.bold = true;
+    sheet.getRangeByName('A1:H1').cellStyle.backColor = '#FFFF00';
+    sheet.getRangeByName('A1:H1').cellStyle.bold = true;
 
     //Save and launch the excel.
     final List<int> bytes = workbook.saveAsStream();

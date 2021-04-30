@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/Common/studentBar.dart';
-
 import 'package:quiz_app/GiveQuiz/attemptQuiz.dart';
 import 'package:quiz_app/Theme/theme.dart';
 
@@ -161,12 +160,12 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
     });
 
     if (studentGroup.contains(userId)) {
-      print("Yes, It contains UID");
+      // print("Yes, It contains UID");
       setState(() {
         groupCheck = true;
       });
     } else {
-      print("No,It doesn't UID");
+      // print("No,It doesn't UID");
       setState(() {
         groupCheck = false;
       });
@@ -186,251 +185,269 @@ class _QuizCodeDescState extends State<QuizCodeDesc> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
-              child: FutureBuilder<DocumentSnapshot>(
-                  future: FirebaseFirestore.instance
-                      .collection('Quiz')
-                      .doc(code)
-                      .get(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<DocumentSnapshot> snapshot) {
-                    if (!snapshot.hasData && (facultyName == null)) {
-                      return Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasData == false &&
-                        (facultyName == null)) {
-                      return Center(child: CircularProgressIndicator());
-                    } else {
-                      Map<String, dynamic> data = snapshot.data.data();
-                      DocumentReference documentReference = data['Creator'];
-                      DocumentReference groupRef = data['QuizGroup'];
-                      _getFacultyName(documentReference);
-                      _groupCheck(groupRef);
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            "assets/images/attemptQuiz.png",
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                child: FutureBuilder<DocumentSnapshot>(
+                    future: FirebaseFirestore.instance
+                        .collection('Quiz')
+                        .doc(code)
+                        .get(),
+                    // ignore: missing_return
+                    builder: (BuildContext context,
+                        AsyncSnapshot<DocumentSnapshot> snapshot) {
+                      if (snapshot.hasData == false) {
+                        return Center(child: CircularProgressIndicator(
+                          valueColor: new AlwaysStoppedAnimation<Color>( Color(0xff631aaf)),
+                          strokeWidth: 5,
+                        ));
+                      } else {
+                        if (snapshot.requireData.exists == false) {
+                          return Column(mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text("No Quiz Found!!"),
+                              SizedBox(height: 2,),
+                              Text("Enter Correct Access Code"),
+                              Image.asset(
+                                "assets/images/search.png",
+                              ),
+                            ],
+                          );
+                        } else {
+
+                          Map<String, dynamic> data = snapshot.data.data();
+                          DocumentReference documentReference = data['Creator'];
+                          DocumentReference groupRef = data['QuizGroup'];
+                          _getFacultyName(documentReference);
+                          _groupCheck(groupRef);
+
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(
-                                'Access Code: ',
-                                style: darkSmallTextBold,
+                              Image.asset(
+                                "assets/images/attemptQuiz.png",
                               ),
-                              Text(
-                                widget.accessCode,
-                                style: darkSmallText,
+                              SizedBox(
+                                height: 10,
                               ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                'Subject Name: ',
-                                style: darkSmallTextBold,
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Access Code: ',
+                                    style: darkSmallTextBold,
+                                  ),
+                                  Text(
+                                    widget.accessCode,
+                                    style: darkSmallText,
+                                  ),
+                                ],
                               ),
-                              Text(
-                                data['SubjectName'],
-                                style: darkSmallText,
+                              SizedBox(
+                                height: 10,
                               ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                'Description: ',
-                                style: darkSmallTextBold,
+                              Row(
+                                children: [
+                                  Text(
+                                    'Subject Name: ',
+                                    style: darkSmallTextBold,
+                                  ),
+                                  Text(
+                                    data['SubjectName'],
+                                    style: darkSmallText,
+                                  ),
+                                ],
                               ),
-                              Flexible(
-                                child: Text(
-                                  data['Description'],
-                                  style: darkSmallText,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                'Question Count: ',
-                                style: darkSmallTextBold,
-                              ),
-                              Text(
-                                data['QuestionCount'].toString(),
-                                style: darkSmallText,
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                'Max  Score: ',
-                                style: darkSmallTextBold,
-                              ),
-                              Text(
-                                data['MaxScore'].toString(),
-                                style: darkSmallText,
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                'Start Time: ',
-                                style: darkSmallTextBold,
-                              ),
-                              Text(
-                                (data['startDate'] as Timestamp)
-                                    .toDate()
-                                    .toString(),
-                                style: darkSmallText,
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                'End Time: ',
-                                style: darkSmallTextBold,
-                              ),
-                              Text(
-                                (data['endDate'] as Timestamp)
-                                    .toDate()
-                                    .toString(),
-                                style: darkSmallText,
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                "Creator Name: ",
-                                style: darkSmallTextBold,
-                              ),
-                              Text(
-                                facultyName,
-                                style: darkSmallText,
-                              )
-                            ],
-                          ),
-                          groupCheck == true
-                              ? Row(
-                                  children: [
-                                    Text(
-                                      "You are allowed to give Quiz ",
-                                      style: darkSmallTextBold,
+                              Row(
+                                children: [
+                                  Text(
+                                    'Description: ',
+                                    style: darkSmallTextBold,
+                                  ),
+                                  Flexible(
+                                    child: Text(
+                                      data['Description'],
+                                      style: darkSmallText,
                                     ),
-                                    Icon(
-                                      Icons.verified,
-                                      color: Colors.green,
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Question Count: ',
+                                    style: darkSmallTextBold,
+                                  ),
+                                  Text(
+                                    data['QuestionCount'].toString(),
+                                    style: darkSmallText,
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Max  Score: ',
+                                    style: darkSmallTextBold,
+                                  ),
+                                  Text(
+                                    data['MaxScore'].toString(),
+                                    style: darkSmallText,
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Start Time: ',
+                                    style: darkSmallTextBold,
+                                  ),
+                                  Text(
+                                    (data['startDate'] as Timestamp)
+                                        .toDate()
+                                        .toString(),
+                                    style: darkSmallText,
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    'End Time: ',
+                                    style: darkSmallTextBold,
+                                  ),
+                                  Text(
+                                    (data['endDate'] as Timestamp)
+                                        .toDate()
+                                        .toString(),
+                                    style: darkSmallText,
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "Creator Name: ",
+                                    style: darkSmallTextBold,
+                                  ),
+                                  Text(
+                                    facultyName,
+                                    style: darkSmallText,
+                                  )
+                                ],
+                              ),
+                              groupCheck == true
+                                  ? Row(
+                                      children: [
+                                        Text(
+                                          "You are allowed to give Quiz ",
+                                          style: darkSmallTextBold,
+                                        ),
+                                        Icon(
+                                          Icons.verified,
+                                          color: Colors.green,
+                                        )
+                                      ],
                                     )
-                                  ],
-                                )
-                              : Row(
-                                  children: [
-                                    Text(
-                                      "You are not allowed to give Quiz ",
-                                      style: darkSmallTextBold,
+                                  : Row(
+                                      children: [
+                                        Text(
+                                          "You are not allowed to give Quiz ",
+                                          style: darkSmallTextBold,
+                                        ),
+                                        Icon(Icons.not_interested,
+                                            color: Colors.red)
+                                      ],
                                     ),
-                                    Icon(Icons.not_interested,
-                                        color: Colors.red)
-                                  ],
+                              SizedBox(
+                                height: 20,
+                              ),
+                              MaterialButton(
+                                color: kPrimaryColor,
+                                onPressed: () async {
+                                  sTime = (data['startDate']);
+                                  startTime =
+                                      sTime.millisecondsSinceEpoch + 1000 * 30;
+
+                                  eTime = (data['endDate']);
+                                  endTime =
+                                      eTime.millisecondsSinceEpoch + 1000 * 30;
+
+                                  currentTime =
+                                      DateTime.now().millisecondsSinceEpoch +
+                                          1000 * 30;
+
+                                  print("Start Date: $startTime");
+                                  print("End Date: $endTime");
+                                  print("Current Date: $currentTime");
+                                  print("Attempted Check: " +
+                                      attempted.toString());
+                                  print("Group Check:" + groupCheck.toString());
+
+                                  if (attempted == true &&
+                                      groupCheck == false) {
+                                    //print("This is being called");
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => StudentBar()),
+                                    );
+                                  } else if (attempted == false &&
+                                      groupCheck == true) {
+                                    if (startTime <= currentTime &&
+                                        endTime >= currentTime) {
+                                      FirebaseFirestore.instance
+                                          .collection('Quiz')
+                                          .doc(code)
+                                          .collection(code + 'Result')
+                                          .doc(userId)
+                                          .set({
+                                        'S_Name': uName,
+                                        'S_UID': userId,
+                                        'S_RegNo': uRegNo,
+                                        'S_EmailID': uEmailId,
+                                        'attempted': attempted,
+                                        'Score': score,
+                                        'tabSwitch': tabSwitch,
+                                        'maxScore': data['MaxScore']
+                                      });
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => AttemptQuiz(
+                                                  marksPerQuestion:
+                                                      data['MarksPerQuestion'],
+                                                  subjectName:
+                                                      data['SubjectName'],
+                                                  accessCode: code,
+                                                  questionCount:
+                                                      data['QuestionCount'],
+                                                  maximumScore:
+                                                      data['MaxScore'],
+                                                  timeCount: endTime,
+                                                )),
+                                      );
+                                    } else {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => StudentBar()),
+                                      );
+                                    }
+                                  }
+                                },
+                                child: Text(
+                                  "Give Quiz",
+                                  style: TextStyle(color: white),
                                 ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          MaterialButton(
-                            color: kPrimaryColor,
-                            onPressed: () async {
-                              sTime = (data['startDate']);
-                              startTime =
-                                  sTime.millisecondsSinceEpoch + 1000 * 30;
-
-                              eTime = (data['endDate']);
-                              endTime =
-                                  eTime.millisecondsSinceEpoch + 1000 * 30;
-
-                              currentTime =
-                                  DateTime.now().millisecondsSinceEpoch +
-                                      1000 * 30;
-
-                              print("Start Date: $startTime");
-                              print("End Date: $endTime");
-                              print("Current Date: $currentTime");
-                              print("Attempted Check: " + attempted.toString());
-                              print("Group Check:" + groupCheck.toString());
-
-                              if (attempted == true && groupCheck == false) {
-                                //print("This is being called");
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => StudentBar()),
-                                );
-                              } else if (attempted == false &&
-                                  groupCheck == true) {
-                                if (startTime <= currentTime &&
-                                    endTime >= currentTime) {
-                                  FirebaseFirestore.instance
-                                      .collection('Quiz')
-                                      .doc(code)
-                                      .collection(code + 'Result')
-                                      .doc(userId)
-                                      .set({
-                                    'S_Name': uName,
-                                    'S_UID': userId,
-                                    'S_RegNo': uRegNo,
-                                    'S_EmailID': uEmailId,
-                                    'attempted': attempted,
-                                    'Score': score,
-                                    'tabSwitch': tabSwitch,
-                                    'maxScore': data['MaxScore']
-                                  });
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => AttemptQuiz(
-                                              marksPerQuestion:
-                                                  data['MarksPerQuestion'],
-                                              subjectName: data['SubjectName'],
-                                              accessCode: code,
-                                              questionCount:
-                                                  data['QuestionCount'],
-                                              maximumScore: data['MaxScore'],
-                                              timeCount: endTime,
-                                            )),
-                                  );
-                                } else {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            StudentBar()),
-                                  );
-                                }
-                              }
-                            },
-                            child: Text(
-                              "Give Quiz",
-                              style: TextStyle(color: white),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                        ],
-                      );
-                    }
-                  }),
-            ),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                            ],
+                          );
+                        }
+                      }
+                    })),
           ],
         ),
       ),

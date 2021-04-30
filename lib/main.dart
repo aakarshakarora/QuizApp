@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider<Data>(
       create: (context) => Data(),
       child: MaterialApp(
-        title: 'Proctored Quiz App',
+        title: 'Quizzle',
         theme: ThemeData(
             primaryColor: kPrimaryColor,
             scaffoldBackgroundColor: Colors.white,

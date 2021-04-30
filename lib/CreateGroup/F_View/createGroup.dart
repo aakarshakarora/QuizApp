@@ -21,17 +21,15 @@ class _CreateGroupState extends State<CreateGroup> {
   final _groupNameController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-
   createGroupDialog(BuildContext context) {
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Create Group",
-            style: TextStyle(
-              fontSize: 25,
-              fontWeight: FontWeight.bold
-            ),),
+            title: Text(
+              "Create Group",
+              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            ),
             content: Form(
               key: _formKey,
               child: Container(
@@ -72,27 +70,27 @@ class _CreateGroupState extends State<CreateGroup> {
                           .doc(currentUser)
                           .collection('QuizGroup')
                           .doc(_groupNameController.text)
-                          .set({"AllottedStudent": null});
+                          .set({});
+                     final DocumentReference groupRef = FirebaseFirestore.instance
+                          .collection('Faculty')
+                          .doc(currentUser)
+                          .collection('QuizGroup')
+                          .doc(_groupNameController.text);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => AddStudent(
-                                  _groupNameController.text,
-                                  FirebaseFirestore
-                                      .instance
-                                      .collection('Faculty')
-                                      .doc(currentUser)
-                                      .collection('QuizGroup')
-                                      .doc(_groupNameController.text))));
+                                  _groupNameController.text, groupRef)));
                     } else {
                       showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text("Warning!",style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold
-                              ),),
+                              title: Text(
+                                "Warning!",
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
+                              ),
                               content: Text("Group Name Should Not be Empty"),
                               actions: <Widget>[
                                 TextButton(
@@ -106,29 +104,30 @@ class _CreateGroupState extends State<CreateGroup> {
                           });
                     }
                   },
-                  child: Text("Add",style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16
-                  ),))
+                  child: Text(
+                    "Add",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ))
             ],
           );
         });
   }
-
 
   @override
   Widget build(BuildContext context) {
     return ModalProgressHUD(
       inAsyncCall: Provider.of<Data>(context).showSpinner,
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(backgroundColor: kPrimaryColor,
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: kPrimaryColor,
           child: Icon(Icons.add),
           onPressed: () {
             createGroupDialog(context);
           },
         ),
         appBar: AppBar(
-            title: Text("Quiz Groups"),centerTitle: true,
+            title: Text("Quiz Groups"),
+            centerTitle: true,
             leading: IconButton(
                 icon: Icon(Icons.arrow_back),
                 onPressed: () {
@@ -210,10 +209,10 @@ class _GroupNameInfoState extends State<GroupNameInfo> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Delete",style: TextStyle(
-              fontSize: 25,
-              fontWeight: FontWeight.bold
-            ),),
+            title: Text(
+              "Delete",
+              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            ),
             content: Text(
                 "Do you want to delete this group? \n All the students added will be removed as well"),
             actions: [
@@ -221,10 +220,10 @@ class _GroupNameInfoState extends State<GroupNameInfo> {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text("Cancel",style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16
-                ),),
+                child: Text(
+                  "Cancel",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
               ),
               TextButton(
                   onPressed: () async {
@@ -257,10 +256,10 @@ class _GroupNameInfoState extends State<GroupNameInfo> {
                     Provider.of<Data>(context, listen: false)
                         .changeSpinnerStatus(false);
                   },
-                  child: Text("Delete",style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    fontSize: 16
-                  ),)),
+                  child: Text(
+                    "Delete",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  )),
             ],
           );
         });
@@ -346,10 +345,12 @@ class _GroupNameInfoState extends State<GroupNameInfo> {
                             color: Colors.white,
                           ),
                           onPressed: () {
+                            print(name);
+                            print(docRef);
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => EditGroup(name)),
+                                  builder: (context) => EditGroup(docRef,name)),
                             );
                           }))
                 ],

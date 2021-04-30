@@ -19,7 +19,7 @@ class SplashScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             FadeAnimation(
-              1.0,
+              0.75,
               SvgPicture.asset(
                 "assets/icons/splash.svg",
                 height: size.height * 0.35,
