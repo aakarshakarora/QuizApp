@@ -19,7 +19,8 @@ class UserHelper {
     final userRef = _db.collection("User").doc(user.uid);
     if ((await userRef.get()).exists) {
       await userRef.update({
-        "lastLogin": user.metadata.lastSignInTime.millisecondsSinceEpoch,
+        "Last Login": user.metadata.lastSignInTime.millisecondsSinceEpoch,
+        "Verify": user.emailVerified,
         //"buildNumber": buildNumber,
       });
     } else {
