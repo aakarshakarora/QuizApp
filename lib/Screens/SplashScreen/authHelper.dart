@@ -13,7 +13,7 @@ class UserHelper {
 
     Map<String, dynamic> userData = {
       "UserID": user.uid,
-      "lastLogin": user.metadata.lastSignInTime.millisecondsSinceEpoch,
+      "Last Login": user.metadata.lastSignInTime.millisecondsSinceEpoch,
       //"build_number": buildNumber,
     };
     final userRef = _db.collection("User").doc(user.uid);
