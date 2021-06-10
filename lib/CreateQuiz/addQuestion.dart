@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:quiz_app/Common/facultyBar.dart';
 import 'package:quiz_app/Utilities/buttons.dart';
 
-
+int currentCount = 1;
 
 class AddQuestion extends StatefulWidget {
   @override
@@ -24,7 +24,7 @@ class _AddQuestionState extends State<AddQuestion> {
     super.initState();
     imagePresent = false;
   }
-  int currentCount = 1;
+  
   final TextEditingController _imageLink = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _buildQuestionController =
