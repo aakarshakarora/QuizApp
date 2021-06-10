@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:quiz_app/Common/facultyBar.dart';
 import 'package:quiz_app/Utilities/buttons.dart';
 
-
 int currentCount = 1;
 
 class AddQuestion extends StatefulWidget {
