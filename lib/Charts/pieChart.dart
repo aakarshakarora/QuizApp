@@ -100,7 +100,7 @@ class _PieChartDisplayState extends State<PieChartDisplay> {
               ),
               Text("Your Score is: "+score.toString()),
               Text("Inactive State Count: " +inactiveState.toString()),
-              Text("Average: "+totalSubmission.toString()),
+             // Text("Average: "+totalSubmission.toString()),
               // Text("Sum is: "+sum.toString()),
               SizedBox(
                 height: 10.0,
